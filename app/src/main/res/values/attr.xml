@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="back_color"/>
+    <attr name="element_back_color"/>
+    <attr name="shadow_color"/>
+    <attr name="text_color"/>
+</resources>

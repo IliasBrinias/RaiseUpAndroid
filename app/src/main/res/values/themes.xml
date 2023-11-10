@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RaiseUpAndroid" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/light_primary</item>
+         <item name="back_color">@color/light_back</item>
+         <item name="element_back_color">@color/light_element_back</item>
+         <item name="shadow_color">@color/light_shadow_back</item>
+         <item name="text_color">@color/light_text</item>
+    </style>
+
+    <style name="Theme.RaiseUpAndroid" parent="Base.Theme.RaiseUpAndroid" />
+</resources>

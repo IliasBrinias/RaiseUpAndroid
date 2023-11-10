@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RaiseUpAndroid" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="back_color">@color/dark_back</item>
+        <item name="element_back_color">@color/dark_element_back</item>
+        <item name="shadow_color">@color/dark_shadow_back</item>
+        <item name="text_color">@color/dark_text</item>
+    </style>
+</resources>
