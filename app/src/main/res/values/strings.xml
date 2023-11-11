@@ -5,4 +5,17 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_your_account">Create \n your account</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="privacy_amp_terms"><![CDATA[Privacy & terms]]></string>
+    <string name="sign_up">Sign Up</string>
+    <string name="get_started">Get Started</string>
+    <string name="raise_with_us">Raise With Us</string>
+    <string name="boards">Boards</string>
+    <string name="tasks">Tasks</string>
+    <string name="tags">Tags</string>
+    <string name="statistics">Statistics</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -9,6 +9,7 @@
     <color name="dark_element_back">#0AFFFFFF</color>
     <color name="dark_shadow_back">#80FFFFFF</color>
     <color name="dark_text">@color/white</color>
+    <color name="dark_submit_button">@color/white</color>
 
     <!--    Light Colors     -->
     <color name="light_primary">#7E7CCF</color>
@@ -16,4 +17,5 @@
     <color name="light_element_back">#0A2F3047</color>
     <color name="light_shadow_back">#802F3047</color>
     <color name="light_text">#2F3047</color>
+    <color name="light_submit_button">@color/white</color>
 </resources>

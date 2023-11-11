@@ -1,8 +1,10 @@
-package com.unipi.msc.raiseupandroid;
+package com.unipi.msc.raiseupandroid.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.unipi.msc.raiseupandroid.R;
 
 public class MainActivity extends AppCompatActivity {
 

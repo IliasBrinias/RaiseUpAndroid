@@ -12,10 +12,6 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="title_reg_log" parent="title">
-        <item name="android:textSize">18sp</item>
-    </style>
-
     <style name="activity">
         <item name="android:padding">@dimen/basic_padding_20dp</item>
         <item name="android:background">?back_color</item>
@@ -28,10 +24,9 @@
         <item name="android:background">@drawable/ic_input_field_back</item>
         <item name="android:layout_marginTop">15dp</item>
     </style>
-
     <style name="submit_button">
         <item name="android:backgroundTint">?colorPrimary</item>
-        <item name="android:textColor">?text_color</item>
+        <item name="android:textColor">?submit_button_color</item>
         <item name="android:padding">15dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/Euclid_Circular_A_Bold</item>
@@ -39,7 +34,29 @@
 
     <style name="alternative_option_login" parent="title_reg_log">
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">?shadow_color</item>
+        <item name="android:textColor">?text_color</item>
         <item name="android:padding">15dp</item>
+    </style>
+
+    <style name="toolbar_button">
+        <item name="android:paddingLeft">@dimen/basic_padding_20dp</item>
+        <item name="android:paddingTop">@dimen/basic_padding_20dp</item>
+        <item name="android:paddingBottom">@dimen/basic_padding_20dp</item>
+    </style>
+
+    <style name="drawer_button">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/ic_input_field_back</item>
+        <item name="android:padding">@dimen/basic_padding_20dp</item>
+        <item name="android:orientation">vertical</item>
+
+    </style>
+
+    <style name="drawer_button_txt">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?text_color</item>
+        <item name="android:fontFamily">@font/Euclid_Circular_A_Regular</item>
     </style>
 </resources>

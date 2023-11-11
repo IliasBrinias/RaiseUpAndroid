@@ -7,5 +7,6 @@
         <item name="element_back_color">@color/dark_element_back</item>
         <item name="shadow_color">@color/dark_shadow_back</item>
         <item name="text_color">@color/dark_text</item>
+        <item name="submit_button_color">@color/dark_submit_button</item>
     </style>
 </resources>

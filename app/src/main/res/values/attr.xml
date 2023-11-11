@@ -4,4 +4,5 @@
     <attr name="element_back_color"/>
     <attr name="shadow_color"/>
     <attr name="text_color"/>
+    <attr name="submit_button_color"/>
 </resources>
