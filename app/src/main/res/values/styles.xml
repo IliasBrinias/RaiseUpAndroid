@@ -3,7 +3,7 @@
     <style name="title">
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">?text_color</item>
-        <item name="android:fontFamily">@font/Euclid_Circular_A_Bold</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
         <item name="android:paddingBottom">@dimen/basic_padding_20dp</item>
         <item name="android:paddingTop">@dimen/basic_padding_20dp</item>
     </style>
@@ -18,18 +18,21 @@
     </style>
 
     <style name="input_field">
-        <item name="android:fontFamily">@font/Euclid_Circular_A_Regular</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_regular</item>
         <item name="android:textSize">18sp</item>
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/ic_input_field_back</item>
         <item name="android:layout_marginTop">15dp</item>
+    </style>
+    <style name="edit_field" parent="input_field">
+        <item name="android:drawableEnd">@drawable/ic_edit</item>
     </style>
     <style name="submit_button">
         <item name="android:backgroundTint">?colorPrimary</item>
         <item name="android:textColor">?submit_button_color</item>
         <item name="android:padding">15dp</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@font/Euclid_Circular_A_Bold</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
     </style>
 
     <style name="alternative_option_login" parent="title_reg_log">
@@ -57,6 +60,6 @@
     <style name="drawer_button_txt">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">?text_color</item>
-        <item name="android:fontFamily">@font/Euclid_Circular_A_Regular</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_regular</item>
     </style>
 </resources>

@@ -37,6 +37,7 @@
         style="@style/submit_button"
         android:text="@string/get_started"/>
     <TextView
+        android:id="@+id/textViewLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/alternative_option_login"
