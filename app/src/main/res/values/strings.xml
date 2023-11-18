@@ -26,4 +26,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="change">Change</string>
     <string name="save">Save</string>
+    <string name="employees">Employees</string>
+    <string name="total_tasks">Total Tasks</string>
+    <string name="create_board">Create Board</string>
+    <string name="board_name">Board Name</string>
+    <string name="add_employees">Add Employees</string>
+    <string name="add_progress_columns">Add Progress Columns</string>
 </resources>

@@ -51,15 +51,31 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/ic_input_field_back</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/nav_button_back_selector</item>
         <item name="android:padding">@dimen/basic_padding_20dp</item>
         <item name="android:orientation">vertical</item>
-
     </style>
 
     <style name="drawer_button_txt">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">?text_color</item>
+        <item name="android:textColor">@drawable/nav_button_color_selector</item>
         <item name="android:fontFamily">@font/euclid_circular_a_regular</item>
     </style>
+
+    <style name="nav_button_color">
+        <item name="tint">@drawable/nav_button_color_selector</item>
+    </style>
+
+    <style name="fragment">
+        <item name="android:background">?back_color</item>
+    </style>
+
+    <style name="bottomSheet">
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">@dimen/basic_padding_20dp</item>
+        <item name="android:background">@drawable/ic_alert_dialog_back</item>
+        <item name="layout_behavior">android.support.design.widget.BottomSheetBehavior</item>
+    </style>
+
 </resources>

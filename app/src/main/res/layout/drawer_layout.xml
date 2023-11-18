@@ -15,9 +15,10 @@
         android:layout_gravity="end"/>
 
     <LinearLayout
+        android:id="@+id/linearLayoutProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_input_field_back"
+        android:background="@drawable/nav_button_back_selector"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/basic_padding_20dp"
         android:gravity="center_vertical">
@@ -39,18 +40,11 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/title_reg_log"
-            android:fontFamily="@font/euclid_circular_a_semibold"
+            style="@style/drawer_button_txt"
+            android:padding="@dimen/basic_padding_20dp"
             android:text="Username"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"/>
-        <ImageButton
-            android:id="@+id/imageButtonProfileEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit"
-            android:padding="@dimen/basic_padding_20dp"
-            android:background="@null"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -64,7 +58,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_board"/>
+                android:src="@drawable/ic_board"
+                style="@style/nav_button_color"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/basic_padding_20dp"/>
@@ -72,7 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/boards"
-                style="@style/drawer_button_txt"/>
+                style="@style/drawer_button_txt"
+                />
         </LinearLayout>
         <View
             android:layout_width="10dp"
@@ -83,7 +79,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_task"/>
+                android:src="@drawable/ic_task"
+                style="@style/nav_button_color"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/basic_padding_20dp"/>
@@ -106,7 +103,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_tag"/>
+                android:src="@drawable/ic_tag"
+                style="@style/nav_button_color"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/basic_padding_20dp"/>
@@ -125,7 +123,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_statistics"/>
+                android:src="@drawable/ic_statistics"
+                style="@style/nav_button_color"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/basic_padding_20dp"/>
@@ -150,18 +149,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logout"
-            android:fontFamily="@font/euclid_circular_a_semibold"
-            android:textSize="18dp"
+            android:textSize="18sp"
+            style="@style/drawer_button_txt"
         />
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_logout"
             android:layout_gravity="center_vertical"
-            android:background="@null"/>
+            style="@style/nav_button_color"/>
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
