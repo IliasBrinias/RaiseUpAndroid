@@ -32,4 +32,7 @@
     <string name="board_name">Board Name</string>
     <string name="add_employees">Add Employees</string>
     <string name="add_progress_columns">Add Progress Columns</string>
+    <string name="create">Create</string>
+    <string name="search">Search...</string>
+    <string name="progress_column">Progress Column</string>
 </resources>

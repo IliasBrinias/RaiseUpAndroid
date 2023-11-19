@@ -59,12 +59,12 @@
 
     <style name="drawer_button_txt">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@drawable/nav_button_color_selector</item>
+        <item name="android:textColor">@drawable/button_color_selector</item>
         <item name="android:fontFamily">@font/euclid_circular_a_regular</item>
     </style>
 
     <style name="nav_button_color">
-        <item name="tint">@drawable/nav_button_color_selector</item>
+        <item name="tint">@drawable/button_color_selector</item>
     </style>
 
     <style name="fragment">

@@ -42,12 +42,13 @@
             android:src="@drawable/ic_search"
             android:paddingStart="@dimen/basic_padding_20dp"/>
         <EditText
+            android:id="@+id/editTextSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             style="@style/input_field"
             android:layout_marginTop="0dp"
-            android:hint="@string/board_name"
+            android:hint="@string/search"
             android:gravity="center_vertical"
             android:background="@null"/>
     </LinearLayout>

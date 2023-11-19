@@ -2,33 +2,28 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ic_input_field_back"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
+    app:tint="@drawable/button_color_selector"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:paddingStart="@dimen/basic_padding_20dp"
+    android:paddingEnd="@dimen/basic_padding_20dp"
     android:gravity="center_vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_profile"
-        android:padding="@dimen/basic_padding_20dp"/>
+        android:id="@+id/imageViewProfile"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_profile"/>
     <View
         android:layout_width="10dp"
         android:layout_height="0dp"/>
     <TextView
+        android:id="@+id/textViewName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Dimitris"
+        android:textColor="@drawable/button_color_selector"
         style="@style/title_reg_log"/>
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/basic_padding_20dp"
-        android:src="@drawable/ic_add"
-        android:background="@null"/>
-
 </androidx.appcompat.widget.LinearLayoutCompat>

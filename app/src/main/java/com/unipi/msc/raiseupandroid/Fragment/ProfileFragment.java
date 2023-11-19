@@ -1,9 +1,7 @@
 package com.unipi.msc.raiseupandroid.Fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -12,11 +10,9 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +22,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.unipi.msc.raiseupandroid.R;
-import com.unipi.msc.raiseupandroid.Tools.CustomAlertDialog;
+import com.unipi.msc.raiseupandroid.Tools.CustomBottomSheet;
 import com.unipi.msc.raiseupandroid.Tools.FileUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
 
 public class ProfileFragment extends Fragment {
     ConstraintLayout constraintLayoutProfile;
@@ -98,7 +91,7 @@ public class ProfileFragment extends Fragment {
     private void initListeners() {
         textListener = view -> {
             TextView textView = (TextView) view;
-            CustomAlertDialog.showEdit(requireActivity(), getLabel(view.getId()), textView.getText().toString(), textView::setText);
+            CustomBottomSheet.showEdit(requireActivity(), getLabel(view.getId()), textView.getText().toString(), textView::setText);
         };
         textViewFirstName.setOnClickListener(textListener);
         textViewLastName.setOnClickListener(textListener);
@@ -122,15 +115,15 @@ public class ProfileFragment extends Fragment {
         launchSomeActivity.launch(i);
     }
 
-    private int getLabel(int viewId){
+    private String getLabel(int viewId){
         if (textViewFirstName.getId() == viewId){
-            return R.string.first_name;
+            return getString(R.string.first_name);
         }else if (textViewLastName.getId() == viewId){
-            return R.string.last_name;
+            return getString(R.string.last_name);
         }else if (textViewPassword.getId() == viewId){
-            return R.string.password;
+            return getString(R.string.password);
         }
-        return 0;
+        return "";
     }
 
     private void initViews(View view) {

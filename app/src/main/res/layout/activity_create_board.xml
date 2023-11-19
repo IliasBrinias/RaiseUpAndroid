@@ -111,8 +111,9 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"/>
     <Button
+        android:id="@+id/buttonCreate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/submit_button"
-        android:text="Create"/>
+        android:text="@string/create"/>
 </androidx.appcompat.widget.LinearLayoutCompat>
