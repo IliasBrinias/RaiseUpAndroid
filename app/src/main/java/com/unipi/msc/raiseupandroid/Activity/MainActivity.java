@@ -18,7 +18,9 @@ import android.widget.LinearLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.unipi.msc.raiseupandroid.Fragment.BoardFragment;
 import com.unipi.msc.raiseupandroid.Fragment.ProfileFragment;
+import com.unipi.msc.raiseupandroid.Fragment.TasksFragment;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
             replaceFragment(new ProfileFragment());
         } else if (view.getId() == linearLayoutBoards.getId()) {
             replaceFragment(new BoardFragment());
+        } else if (view.getId() == linearLayoutTasks.getId()) {
+            replaceFragment(new TasksFragment());
+        } else if (view.getId() == linearLayoutTags.getId()) {
+        } else if (view.getId() == linearLayoutLogout.getId()) {
+            UserUtils.logout(this);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
     }

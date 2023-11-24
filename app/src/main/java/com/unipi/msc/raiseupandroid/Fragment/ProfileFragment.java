@@ -101,11 +101,6 @@ public class ProfileFragment extends Fragment {
 
     private void openImage(View view) {
         openImageDialog();
-//        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//            // You can use the API that requires the permission.
-//        } else {
-//            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-//        }
     }
 
     private void openImageDialog() {
