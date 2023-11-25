@@ -1,6 +1,5 @@
 package com.unipi.msc.raiseupandroid.Activity;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,23 +7,21 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.android.material.navigation.NavigationView;
 import com.unipi.msc.raiseupandroid.Fragment.BoardFragment;
 import com.unipi.msc.raiseupandroid.Fragment.ProfileFragment;
-import com.unipi.msc.raiseupandroid.Fragment.TasksFragment;
+import com.unipi.msc.raiseupandroid.Fragment.TagFragment;
+import com.unipi.msc.raiseupandroid.Fragment.TaskFragment;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class MainActivity extends AppCompatActivity {
     ImageButton imageButtonClose;
@@ -65,8 +62,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (view.getId() == linearLayoutBoards.getId()) {
             replaceFragment(new BoardFragment());
         } else if (view.getId() == linearLayoutTasks.getId()) {
-            replaceFragment(new TasksFragment());
+            replaceFragment(new TaskFragment());
         } else if (view.getId() == linearLayoutTags.getId()) {
+            replaceFragment(new TagFragment());
         } else if (view.getId() == linearLayoutLogout.getId()) {
             UserUtils.logout(this);
         }

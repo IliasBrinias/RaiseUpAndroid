@@ -17,7 +17,7 @@ import com.unipi.msc.raiseupandroid.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TasksFragment extends Fragment {
+public class TaskFragment extends Fragment {
 
     RecyclerView recyclerView;
     TaskAdapter taskAdapter;
@@ -25,7 +25,7 @@ public class TasksFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_tasks, container, false);
+        View v = inflater.inflate(R.layout.fragment_task, container, false);
         initViews(v);
         initListener();
         return v;

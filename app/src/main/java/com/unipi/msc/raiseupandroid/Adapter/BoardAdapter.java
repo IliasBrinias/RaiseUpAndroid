@@ -71,7 +71,6 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
             textViewDueDate = view.findViewById(R.id.textViewDueDate);
             textViewTasks = view.findViewById(R.id.textViewTotalTasks);
             textViewEmployees = view.findViewById(R.id.textViewTotalEmployees);
-
         }
 
         public void bindData(Context c, Board board){

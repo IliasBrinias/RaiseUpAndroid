@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.TasksFragment"
-    android:orientation="vertical">
+    tools:context=".Fragment.TaskFragment"
+    android:orientation="vertical"
+    style="@style/fragment">
     <TextView
         android:id="@+id/textView"
         style="@style/title"

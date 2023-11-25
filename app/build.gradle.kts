@@ -29,6 +29,9 @@ android {
 }
 
 dependencies {
+    //Color Picker
+    implementation("com.github.skydoves:colorpickerview:2.3.0")
+    implementation("com.github.madrapps:pikolo:2.0.2")
     // Glide
     implementation("androidx.core:core-ktx:1.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")

@@ -36,4 +36,8 @@
     <string name="search">Search...</string>
     <string name="progress_column">Progress Column</string>
     <string name="due_date">Due Date</string>
+    <string name="edit">Edit</string>
+    <string name="tag_name">Tag Name</string>
+    <string name="create_tag">Create Tag</string>
+    <string name="edit_tag">Edit Tag</string>
 </resources>

@@ -1,31 +1,35 @@
 package com.unipi.msc.raiseupandroid.Tools;
 
 import android.app.Activity;
+import android.graphics.PorterDuff;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.madrapps.pikolo.HSLColorPicker;
+import com.madrapps.pikolo.listeners.OnColorSelectionListener;
 import com.unipi.msc.raiseupandroid.Adapter.AddEmployeeAdapter;
 import com.unipi.msc.raiseupandroid.Interface.OnAddColumnResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnAddEmployeesResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnEditPersonalData;
 import com.unipi.msc.raiseupandroid.Interface.OnSingleValueResponse;
 import com.unipi.msc.raiseupandroid.Model.Employee;
+import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.LongStream;
 
 public class CustomBottomSheet {
     public static void showEdit(Activity activity, String name, String initValue, OnEditPersonalData onEditPersonalData){
