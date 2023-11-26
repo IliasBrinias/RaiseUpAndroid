@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.unipi.msc.raiseupandroid.Activity.BoardActivity;
 import com.unipi.msc.raiseupandroid.Activity.CreateBoardActivity;
 import com.unipi.msc.raiseupandroid.Adapter.BoardAdapter;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Tools.NameTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,9 @@ public class BoardFragment extends Fragment {
         boardList.add(new Board(05L,"Lenovo",232436151235L,new ArrayList<>(),22L));
         boardList.add(new Board(06L,"IBM",232436151235L,new ArrayList<>(),15L));
         boardAdapter = new BoardAdapter(requireActivity(), boardList, (v, position) -> {
-
+            Intent intent = new Intent(requireActivity(), BoardActivity.class);
+            intent.putExtra(NameTag.BOARD_ID,boardList.get(position).getId());
+            startActivity(intent);
         });
         recyclerView.setAdapter(boardAdapter);
         return view;
