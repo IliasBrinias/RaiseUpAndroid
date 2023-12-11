@@ -7,15 +7,33 @@ public class Task {
     private String name;
     private String dsc;
     private Long dueDate;
-    private List<Employee> employees;
+    private Column column;
+    private List<User> users;
     private List<Tag> tags;
 
-    public Task(Long id, String name, String dsc, Long dueDate, List<Employee> employees, List<Tag> tags) {
+    public Task(Long id, String name, String dsc, Long dueDate, Column column, List<User> users, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.dsc = dsc;
         this.dueDate = dueDate;
-        this.employees = employees;
+        this.column = column;
+        this.users = users;
+        this.tags = tags;
+    }
+
+    public Column getColumn() {
+        return column;
+    }
+
+    public void setColumn(Column column) {
+        this.column = column;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
@@ -51,11 +69,11 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
+    public List<User> getEmployees() {
+        return users;
     }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setEmployees(List<User> users) {
+        this.users = users;
     }
 }

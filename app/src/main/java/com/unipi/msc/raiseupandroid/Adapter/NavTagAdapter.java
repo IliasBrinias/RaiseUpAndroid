@@ -75,7 +75,7 @@ public class NavTagAdapter extends RecyclerView.Adapter<NavTagAdapter.NatTagView
         }
 
         public void bindData(Context c, Tag task){
-            imageViewTaskColor.setColorFilter(Color.parseColor(task.getColor()), PorterDuff.Mode.SRC_IN);
+            imageViewTaskColor.setColorFilter(Color.parseColor(task.getColor()), PorterDuff.Mode.ADD);
             textViewTagName.setText(task.getName());
         }
 

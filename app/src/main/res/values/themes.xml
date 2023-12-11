@@ -8,6 +8,7 @@
          <item name="shadow_color">@color/light_shadow_back</item>
          <item name="text_color">@color/light_text</item>
          <item name="submit_button_color">@color/light_submit_button</item>
+         <item name="task_add">@color/light_task_add</item>
     </style>
 
     <style name="Theme.RaiseUpAndroid" parent="Base.Theme.RaiseUpAndroid" />

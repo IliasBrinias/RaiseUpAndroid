@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 public class StartActivity extends AppCompatActivity {
     Button buttonSignUp;
@@ -18,6 +19,7 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         initViews();
+        if (UserUtils.userExists(this)) startActivity(new Intent(this, MainActivity.class));
         getOnBackPressedDispatcher().addCallback(new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

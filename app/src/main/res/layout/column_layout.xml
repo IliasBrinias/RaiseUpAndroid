@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="@drawable/ic_input_field_back"
     android:padding="@dimen/basic_padding_20dp"
-    android:paddingBottom="0dp"
-    android:layout_marginStart="15dp">
+    android:layout_marginStart="-20dp"
+    android:layout_marginEnd="40dp"
+    android:paddingBottom="0dp">
     <TextView
         android:id="@+id/textViewColumnTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Column Name"
         style="@style/title_reg_log"/>
@@ -24,15 +26,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/basic_padding_20dp">
+        android:paddingTop="@dimen/basic_padding_20dp">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingEnd="10dp"
-            android:src="@drawable/ic_add"/>
+            android:src="@drawable/ic_task_add"
+            app:tint='?task_add'/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_tak"/>
+            android:text="@string/add_tak"
+            android:textSize="18sp"
+            android:fontFamily="@font/euclid_circular_a_regular"
+            android:textColor="?task_add"/>
     </LinearLayout>
 </LinearLayout>

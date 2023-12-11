@@ -46,13 +46,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/username"
+        android:text="brinel"
         style="@style/input_field"/>
     <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
+        android:text="brinel"
+        android:inputType="textPassword"
         style="@style/input_field"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
+    <include
+        android:id="@+id/includeErrorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        layout="@layout/error_msg_layout"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

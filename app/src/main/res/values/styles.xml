@@ -11,7 +11,6 @@
     <style name="title_reg_log" parent="title">
         <item name="android:textSize">18sp</item>
     </style>
-
     <style name="activity">
         <item name="android:padding">@dimen/basic_padding_20dp</item>
         <item name="android:background">?back_color</item>
@@ -23,9 +22,18 @@
         <item name="android:padding">15dp</item>
         <item name="android:background">@drawable/ic_input_field_back</item>
         <item name="android:layout_marginTop">15dp</item>
+        <item name="android:singleLine">true</item>
     </style>
     <style name="edit_field" parent="input_field">
         <item name="android:drawableEnd">@drawable/ic_edit</item>
+    </style>
+    <style name="edit_field_task_dsc" parent="edit_field">
+        <item name="android:drawableEnd">@drawable/ic_edit</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">0sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableTint">?text_color</item>
+
     </style>
     <style name="submit_button">
         <item name="android:backgroundTint">?colorPrimary</item>
@@ -42,9 +50,9 @@
     </style>
 
     <style name="toolbar_button">
-        <item name="android:paddingLeft">@dimen/basic_padding_20dp</item>
-        <item name="android:paddingTop">@dimen/basic_padding_20dp</item>
-        <item name="android:paddingBottom">@dimen/basic_padding_20dp</item>
+
+        <item name="android:padding">@dimen/basic_padding_20dp</item>
+        <item name="android:layout_marginEnd">-20dp</item>
     </style>
 
     <style name="drawer_button">
@@ -94,6 +102,24 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?text_color</item>
         <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
+    </style>
+
+    <style name="task_activity_label">
+        <item name="android:textColor">?text_color</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="payment_of_terms_item_head">
+        <item name="android:textColor">?text_color</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="payment_of_terms_item">
+        <item name="android:textColor">?text_color</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_regular</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

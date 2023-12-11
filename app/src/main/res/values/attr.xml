@@ -5,4 +5,5 @@
     <attr name="shadow_color"/>
     <attr name="text_color"/>
     <attr name="submit_button_color"/>
+    <attr name="task_add"/>
 </resources>

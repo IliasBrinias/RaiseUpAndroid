@@ -1,5 +1,6 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +17,16 @@ import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHolder> {
-    Context c;
+    Activity a;
     List<Board> boardList;
     OnBoardClick onBoardClick;
 
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM");
-    public BoardAdapter(Context c, List<Board> boardList, OnBoardClick onBoardClick) {
-        this.c = c;
+    public BoardAdapter(Activity a, List<Board> boardList, OnBoardClick onBoardClick) {
+        this.a = a;
         this.boardList = boardList;
         this.onBoardClick = onBoardClick;
     }
@@ -41,7 +41,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
     @Override
     public void onBindViewHolder(@NonNull BoardAdapter.BoardViewHolder holder, int position) {
         holder.setOnBoardClick(onBoardClick);
-        holder.bindData(c, boardList.get(position));
+        holder.bindData(a, boardList.get(position));
     }
 
     @Override
@@ -73,15 +73,15 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
             textViewEmployees = view.findViewById(R.id.textViewTotalEmployees);
         }
 
-        public void bindData(Context c, Board board){
+        public void bindData(Activity a, Board board){
             textViewDueDate.setText(simpleDateFormat.format(board.getDueDate()));
             textViewTasks.setText(String.valueOf(board.getTasks()));
             textViewEmployees.setText(String.valueOf(board.getEmployees().size()));
             textViewTitle.setText(String.valueOf(board.getTitle()));
             try{
-                ImageUtils.loadProfileToImageView(c,board.getEmployees().get(0),imageView0);
-                ImageUtils.loadProfileToImageView(c,board.getEmployees().get(1),imageView1);
-                ImageUtils.loadProfileToImageView(c,board.getEmployees().get(2),imageView2);
+                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(0),imageView0);
+                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(1),imageView1);
+                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(2),imageView2);
             }catch (Exception ignore){}
         }
     }

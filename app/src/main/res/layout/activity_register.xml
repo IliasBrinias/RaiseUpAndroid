@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     style="@style/activity"
     android:orientation="vertical"
-    tools:context=".Activity.RegisterActivity">
+    tools:context=".Activity.RegisterActivity"
+    android:fitsSystemWindows="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -36,48 +37,62 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_your_account"
-            android:textAlignment="center"
-            style="@style/title"/>
-
-        <EditText
-            android:id="@+id/editTextFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/first_name"
-            style="@style/input_field"/>
-        <EditText
-            android:id="@+id/editTextLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/last_name"
-            style="@style/input_field"/>
-        <EditText
-            android:id="@+id/editTextEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email"
-            style="@style/input_field"
-            tools:ignore="LabelFor" />
-        <EditText
-            android:id="@+id/editTextUsername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/username"
-            style="@style/input_field"/>
-        <EditText
-            android:id="@+id/editTextPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            style="@style/input_field"/>
-        <View
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/create_your_account"
+                            android:textAlignment="center"
+                            style="@style/title"/>
+
+                        <EditText
+                            android:id="@+id/editTextFirstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/first_name"
+                            style="@style/input_field"/>
+                        <EditText
+                            android:id="@+id/editTextLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/last_name"
+                            style="@style/input_field"/>
+                        <EditText
+                            android:id="@+id/editTextEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Email"
+                            style="@style/input_field"
+                            tools:ignore="LabelFor" />
+                        <EditText
+                            android:id="@+id/editTextUsername"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/username"
+                            style="@style/input_field"/>
+                        <EditText
+                            android:id="@+id/editTextPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            style="@style/input_field"/>
+                </LinearLayout>
+        </ScrollView>
+        <include
+            android:id="@+id/includeErrorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/error_msg_layout"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"/>
         <Button
             android:id="@+id/buttonSignUp"
             android:layout_width="match_parent"

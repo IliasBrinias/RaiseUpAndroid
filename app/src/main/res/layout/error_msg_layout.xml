@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_input_field_back"
+    android:backgroundTint="#FF4F44"
+    android:gravity="center_vertical">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_error"
+        android:paddingStart="2dp"/>
+    <TextView
+        android:id="@+id/textViewErrorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Something goes wrong"
+        android:textColor="#FF4F44"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"/>
+</LinearLayout>

@@ -30,6 +30,7 @@
             android:backgroundTint="?element_back_color"
             android:layout_gravity="center_vertical">
             <ImageView
+                android:id="@+id/imageViewUserImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_profile"/>
@@ -38,6 +39,7 @@
             android:layout_width="15dp"
             android:layout_height="0dp"/>
         <TextView
+            android:id="@+id/textViewUserName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/drawer_button_txt"

@@ -8,20 +8,23 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.unipi.msc.raiseupandroid.Adapter.ColumnAdapter;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Tools.MockData;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardActivity extends AppCompatActivity {
-    RecyclerView recyclerViewColumns;
-    TextView textViewBoardTitle;
-    ImageButton imageButtonExit;
-    Board board;
+    private RecyclerView recyclerViewColumns;
+    private TextView textViewBoardTitle;
+    private ImageButton imageButtonExit;
+    private Board board;
+    private LinearProgressIndicator linearProgressIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,20 +42,27 @@ public class BoardActivity extends AppCompatActivity {
 
     private void initListeners() {
         imageButtonExit.setOnClickListener(v->finish());
-        recyclerViewColumns.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewColumns.setLayoutManager(linearLayoutManager);
         recyclerViewColumns.setHasFixedSize(true);
-        List<Column> columnList = new ArrayList<>();
-        columnList.add(new Column(0L,"Column0"));
-        columnList.add(new Column(1L,"Column1"));
-        columnList.add(new Column(2L,"Column2"));
-        columnList.add(new Column(3L,"Column3"));
+        List<Column> columnList = MockData.getTestColumns();
         ColumnAdapter columnAdapter = new ColumnAdapter(this,columnList);
         recyclerViewColumns.setAdapter(columnAdapter);
+        recyclerViewColumns.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager myLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                float scrollPosition = myLayoutManager.findFirstVisibleItemPosition() + 1;
+                linearProgressIndicator.setProgress((int) ((scrollPosition/columnList.size())*100),true);
+            }
+        });
     }
 
     private void initViews() {
         recyclerViewColumns = findViewById(R.id.recyclerViewColumns);
         textViewBoardTitle = findViewById(R.id.textViewBoardTitle);
         imageButtonExit = findViewById(R.id.imageButtonExit);
+        linearProgressIndicator = findViewById(R.id.linearProgressIndicator);
     }
 }

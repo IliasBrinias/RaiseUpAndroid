@@ -26,7 +26,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="change">Change</string>
     <string name="save">Save</string>
-    <string name="employees">Employees</string>
+    <string name="users">Employees</string>
     <string name="total_tasks">Total Tasks</string>
     <string name="create_board">Create Board</string>
     <string name="board_name">Board Name</string>
@@ -41,4 +41,24 @@
     <string name="create_tag">Create Tag</string>
     <string name="edit_tag">Edit Tag</string>
     <string name="add_tak">Add Tak</string>
+    <string name="to_expire">to expire</string>
+    <string name="description">Description</string>
+    <string name="responsible">Responsible</string>
+    <string name="recommended">Recommended</string>
+    <string name="what_about_this_task">What about this task?</string>
+    <string name="payment_terms_for_raiseup">Payment Terms for RaiseUp</string>
+    <string name="payment_terms_header">Thank you for choosing RaiseUp! We are excited to have you on board as a valued user of our project management application, designed to streamline your workflow and enhance collaboration. To ensure clarity and transparency regarding our payment terms, please review the following information:</string>
+    <string name="data_collection_and_processing">Data Collection and Processing:</string>
+    <string name="data_collection_and_processing_txt">We collect and process user data solely for the purpose of providing and improving our services. The data we collect may include personal information such as names, username addresses, and usage data. We ensure that the data collected is relevant, limited to what is necessary, and processed with the user\'s consent.</string>
+    <string name="lawful_basis_for_processing">Lawful Basis for Processing</string>
+    <string name="lawful_basis_for_processing_txt">Our legal basis for processing personal data is typically based on the user\'s consent or the necessity of processing for the performance of a contract. Users have the right to withdraw their consent at any time.</string>
+    <string name="user_rights">User Rights</string>
+    <string name="user_rights_txt">Under the GDPR, users have various rights, including the right to access, rectify, and erase their personal data.</string>
+    <string name="data_security">Data Security</string>
+    <string name="data_security_txt">We implement robust security measures to protect user data from unauthorized access, disclosure, alteration, and destruction. These measures include encryption, access controls, and regular security assessments.</string>
+    <string name="data_sharing">Data Sharing</string>
+    <string name="data_sharing_txt">We do not sell or rent user data to third parties. However, we may share data with trusted third-party service providers who assist us in delivering our services. Such third parties are also required to comply with data protection regulations.</string>
+    <string name="thank_you_txt">Thank you for trusting us with your data privacy.\n\nSincerely,\nRaiseUp</string>
+    <string name="internet_connection_offline">The Internet connection appears to be offline.</string>
+    <string name="try_again">Try Again</string>
 </resources>

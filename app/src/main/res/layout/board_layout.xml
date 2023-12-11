@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     style="@style/title_reg_log"
                     android:padding="0dp"
-                    android:text="@string/employees"/>
+                    android:text="@string/users"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

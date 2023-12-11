@@ -1,6 +1,7 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,20 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.raiseupandroid.Interface.OnAddEmployeeClickListener;
-import com.unipi.msc.raiseupandroid.Model.Employee;
+import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 
 import java.util.List;
 
 public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.AddEmployeeViewHolder> {
-    Context c;
-    List<Employee> employees;
+    Activity a;
+    List<User> users;
     OnAddEmployeeClickListener onClickListener;
 
-    public AddEmployeeAdapter(Context c, List<Employee> employees, OnAddEmployeeClickListener onClickListener) {
-        this.c = c;
-        this.employees = employees;
+    public AddEmployeeAdapter(Activity a, List<User> users, OnAddEmployeeClickListener onClickListener) {
+        this.a = a;
+        this.users = users;
         this.onClickListener = onClickListener;
     }
 
@@ -38,12 +39,12 @@ public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull AddEmployeeAdapter.AddEmployeeViewHolder holder, int position) {
-        holder.bindData(c, employees.get(position), onClickListener);
+        holder.bindData(a, users.get(position), onClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return employees.size();
+        return users.size();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -68,9 +69,9 @@ public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.
             imageViewProfile = itemView.findViewById(R.id.imageViewProfile);
             textViewName = itemView.findViewById(R.id.textViewName);
         }
-        public void bindData(Context c, Employee employee, OnAddEmployeeClickListener listener){
-            ImageUtils.loadProfileToImageView(c, employee.getProfileURL(), imageViewProfile);
-            textViewName.setText(employee.getFullName());
+        public void bindData(Activity a, User user, OnAddEmployeeClickListener listener){
+            ImageUtils.loadProfileToImageView(a, user.getProfileURL(), imageViewProfile);
+            textViewName.setText(user.getFullName());
             onAddEmployeeClickListener = listener;
         }
     }

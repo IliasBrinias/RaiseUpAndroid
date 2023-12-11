@@ -1,7 +1,11 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.app.Activity;
+import android.content.res.ColorStateList;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.ColorFilter;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +38,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
     public TaskAdapter(Activity a, List<Task> taskList, OnTaskClick onTaskClick) {
-        this.a = this.a;
+        this.a = a;
         this.taskList = taskList;
         this.onTaskClick = onTaskClick;
     }
@@ -62,7 +66,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private ImageButton imageButtonDeleteTask, imageButtonChangeColumn;
         private TextView textViewTitle, textViewDueDate, textViewDescription;
         private OnTaskClick onTaskClick;
-        private RecyclerView recyclerView;
         private LinearLayoutCompat linearLayout;
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,7 +86,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             textViewTitle = view.findViewById(R.id.textViewTaskTitle);
             textViewDescription = view.findViewById(R.id.textViewDescription);
             textViewDueDate = view.findViewById(R.id.textViewDueDate);
-            recyclerView = view.findViewById(R.id.recyclerView);
             imageButtonDeleteTask = view.findViewById(R.id.imageButtonDeleteTask);
             imageButtonChangeColumn = view.findViewById(R.id.imageButtonChangeColumn);
             linearLayout = view.findViewById(R.id.linearLayout);
@@ -93,7 +95,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 imageButtonDeleteTask.setVisibility(View.GONE);
                 imageButtonChangeColumn.setVisibility(View.GONE);
             }else{
-                linearLayout.getBackground().setColorFilter(ActivityUtils.getColor(a,R.attr.back_color), PorterDuff.Mode.SRC_IN);
+                linearLayout.setBackgroundTintList(ColorStateList.valueOf(ActivityUtils.getColor(a,R.attr.back_color)));
             }
             textViewTitle.setText(task.getName());
             textViewDescription.setText(task.getDsc());

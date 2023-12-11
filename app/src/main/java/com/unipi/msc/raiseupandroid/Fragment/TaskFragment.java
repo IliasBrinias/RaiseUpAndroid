@@ -1,5 +1,6 @@
 package com.unipi.msc.raiseupandroid.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.unipi.msc.raiseupandroid.Activity.TaskActivity;
 import com.unipi.msc.raiseupandroid.Adapter.TaskAdapter;
 import com.unipi.msc.raiseupandroid.Model.Task;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Tools.MockData;
+import com.unipi.msc.raiseupandroid.Tools.NameTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +37,11 @@ public class TaskFragment extends Fragment {
 
     private void initListener() {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        List<Task> taskList = new ArrayList<>();
-        taskList.add(new Task(0L,"Test0","bla bla bal bal",12L,new ArrayList<>(), new ArrayList<>()));
-        taskList.add(new Task(1L,"Test1","blaasdasdasasdasdasdasd",12L,new ArrayList<>(), new ArrayList<>()));
-        taskList.add(new Task(2L,"Test2","bla blaasdasdasasdasdasdasdbal bal",12L,new ArrayList<>(), new ArrayList<>()));
-        taskList.add(new Task(3L,"Test3","bla bla bal blaasdasdasasdasdasdasd",12L,new ArrayList<>(), new ArrayList<>()));
+        List<Task> taskList = MockData.getTestTasks();
         taskAdapter = new TaskAdapter(requireActivity(), taskList, (view, position) -> {
-
+            Intent intent = new Intent(requireActivity(), TaskActivity.class);
+            intent.putExtra(NameTag.TASK_ID,2L);
+            startActivity(intent);
         });
         recyclerView.setAdapter(taskAdapter);
     }

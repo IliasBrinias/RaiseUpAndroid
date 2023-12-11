@@ -29,6 +29,19 @@ android {
 }
 
 dependencies {
+    //Shared Pref
+    implementation("androidx.preference:preference:1.2.1")
+    //KeyboardVisibilityEvent
+    implementation("net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:3.0.0-RC3")
+    //okhttp
+    implementation("com.squareup.okhttp3:okhttp:3.10.0")
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.1.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.1.0")
+    //flexbox
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    //Line Chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     //Color Picker
     implementation("com.github.skydoves:colorpickerview:2.3.0")
     implementation("com.github.madrapps:pikolo:2.0.2")
