@@ -2,6 +2,7 @@ package com.unipi.msc.raiseupandroid.Retrofit;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitConfig.NetworkConnectionInterceptor;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 
@@ -21,11 +22,13 @@ public class RetrofitClient {
 
         OkHttpClient.Builder oktHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new NetworkConnectionInterceptor(c));
-
+        Gson gson = new Gson();
+        gson.serializeNulls();
         return new Retrofit.Builder()
                 .baseUrl(RetrofitUtils.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(oktHttpClient.build())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
 }

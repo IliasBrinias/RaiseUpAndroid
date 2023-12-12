@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -18,15 +19,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.JsonObject;
+import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.EditUserRequest;
+import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.CustomBottomSheet;
 import com.unipi.msc.raiseupandroid.Tools.FileUtils;
+import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
+import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
+import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
     ConstraintLayout constraintLayoutProfile;
@@ -34,6 +55,8 @@ public class ProfileFragment extends Fragment {
     TextView textViewEmail, textViewUsername, textViewFirstName,
             textViewLastName, textViewPassword;
     View.OnClickListener textListener;
+    private RaiseUpAPI raiseUpAPI;
+    private Toast t;
     ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
             isGranted -> {
                 if (isGranted) {
@@ -54,7 +77,11 @@ public class ProfileFragment extends Fragment {
                             Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
                             imageView.setImageBitmap(bitmap);
                             File file = FileUtils.saveBitmapToFile(requireActivity(), bitmap);
-                            file.delete();
+                            EditUserRequest request = new EditUserRequest();
+                            request.setMultipartFile(MultipartBody.Part.createFormData("multipartFile",
+                                    file.getName(),
+                                    RequestBody.create(MediaType.parse("image/*"),file)));
+                            updateUserInfo(request);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -84,19 +111,70 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         initViews(view);
+        initObjects();
         initListeners();
+        loadData();
         return view;
+    }
+
+    private void initObjects() {
+        raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
+    }
+
+    private void loadData() {
+        new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getUser().observe(getViewLifecycleOwner(), user -> {
+            ImageUtils.loadProfileToImageView(requireActivity(),user.getProfileURL(),imageView);
+            textViewEmail.setText(user.getEmail());
+            textViewUsername.setText(user.getUsername());
+            textViewFirstName.setText(user.getFirstName());
+            textViewLastName.setText(user.getLastName());
+        });
     }
 
     private void initListeners() {
         textListener = view -> {
             TextView textView = (TextView) view;
-            CustomBottomSheet.showEdit(requireActivity(), getLabel(view.getId()), textView.getText().toString(), textView::setText);
+            CustomBottomSheet.showEdit(requireActivity(), getLabel(view.getId()), textView.getText().toString(), text->{
+                EditUserRequest request = new EditUserRequest();
+                if (textView.getId() == textViewFirstName.getId()){
+                    request.setFirstName(RequestBody.create(MediaType.parse("text/plain"),text));
+                    textView.setText(text);
+                }else if (textView.getId() == textViewLastName.getId()){
+                    request.setLastName(RequestBody.create(MediaType.parse("text/plain"),text));
+                    textView.setText(text);
+                }else if (textView.getId() == textViewPassword.getId()){
+                    request.setPassword(RequestBody.create(MediaType.parse("text/plain"),text));
+                }
+                updateUserInfo(request);
+            });
         };
         textViewFirstName.setOnClickListener(textListener);
         textViewLastName.setOnClickListener(textListener);
         textViewPassword.setOnClickListener(textListener);
         constraintLayoutProfile.setOnClickListener(this::openImage);
+    }
+
+    private void updateUserInfo(EditUserRequest request) {
+        raiseUpAPI.editUser(UserUtils.loadBearerToken(requireActivity()),
+                request.getMultipartFile(),
+                request.getPassword(),
+                request.getFirstName(),
+                request.getLastName()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(),response);
+                    ActivityUtils.showToast(requireActivity(),t,msg);
+                }else {
+                    JsonObject data = response.body().get("data").getAsJsonObject();
+                    UserUtils.saveUser(requireActivity(), User.buildFromJSON(data));
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(),t);
+            }
+        });
     }
 
     private void openImage(View view) {

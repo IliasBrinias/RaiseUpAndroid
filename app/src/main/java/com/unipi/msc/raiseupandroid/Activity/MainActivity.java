@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.view.View;
@@ -24,12 +25,14 @@ import com.unipi.msc.raiseupandroid.Fragment.TaskFragment;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
+import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ItemViewModel itemViewModel;
     ImageButton imageButtonClose;
     TextView textViewUserName;
     ImageView imageViewSearch, imageViewUserImage;
@@ -53,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initObjects() {
+        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
         user = UserUtils.loadUser(this);
+        itemViewModel.setUser(user);
     }
 
     private void loadUserData() {
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         if (imageViewSearch.getVisibility() == View.GONE) imageViewSearch.setVisibility(View.VISIBLE);
         if (view.getId() == linearLayoutProfile.getId()) {
             replaceFragment(new ProfileFragment());
+            imageViewSearch.setVisibility(View.GONE);
         } else if (view.getId() == linearLayoutBoards.getId()) {
             replaceFragment(new BoardFragment());
         } else if (view.getId() == linearLayoutTasks.getId()) {

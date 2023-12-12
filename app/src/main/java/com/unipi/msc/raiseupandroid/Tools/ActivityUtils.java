@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -22,4 +23,11 @@ public class ActivityUtils {
         progressBar.setIndeterminate(false);
         progressBar.setVisibility(View.GONE);
     }
+    public static void showToast(Activity a, Toast t, String msg){
+        if (t==null) t = Toast.makeText(a,msg,Toast.LENGTH_SHORT);
+        t.cancel();
+        t.setText(msg);
+        t.show();
+    }
+
 }

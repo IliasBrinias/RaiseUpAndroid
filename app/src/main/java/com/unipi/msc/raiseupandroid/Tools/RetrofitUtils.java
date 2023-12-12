@@ -8,6 +8,9 @@ import com.unipi.msc.raiseupandroid.Activity.BadConnectionActivity;
 import com.unipi.msc.raiseupandroid.Activity.RegisterActivity;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitConfig.NoConnectivityException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import retrofit2.Response;
@@ -27,7 +30,18 @@ public class RetrofitUtils {
     }
 
     public static String handleErrorResponse(Activity a, Response<JsonObject> response) {
-        if (response.code() == HTTP_ACCESS_DENIED) return "Bad Credentials";
+        JSONObject jsonObj;
+
+        try {
+            jsonObj = new JSONObject(response.errorBody().string());
+        } catch (Exception ignore) { return ""; }
+
+        if (response.code() == HTTP_ACCESS_DENIED) {
+            try {
+                return jsonObj.getJSONObject("body").getString("message");
+            }catch (Exception ignore){ return ""; }
+        }
+
         try {
             JsonObject jsonObject = response.body();
             int code = jsonObject.get("code").getAsInt();
@@ -38,6 +52,7 @@ public class RetrofitUtils {
                 UserUtils.logout(a);
             }
         }catch (Exception ignore){}
+
         return "";
     }
 }
