@@ -39,8 +39,6 @@ import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -51,7 +49,7 @@ import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
     ConstraintLayout constraintLayoutProfile;
-    ImageView imageView;
+    ImageView imageViewProfile;
     TextView textViewEmail, textViewUsername, textViewFirstName,
             textViewLastName, textViewPassword;
     View.OnClickListener textListener;
@@ -75,7 +73,7 @@ public class ProfileFragment extends Fragment {
                         try {
                             imageStream = requireActivity().getContentResolver().openInputStream(selectedImageUri);
                             Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-                            imageView.setImageBitmap(bitmap);
+                            imageViewProfile.setImageBitmap(bitmap);
                             File file = FileUtils.saveBitmapToFile(requireActivity(), bitmap);
                             EditUserRequest request = new EditUserRequest();
                             request.setMultipartFile(MultipartBody.Part.createFormData("multipartFile",
@@ -98,7 +96,7 @@ public class ProfileFragment extends Fragment {
         Glide.with(requireActivity())
                 .load(file)
                 .apply(options)
-                .into(imageView);
+                .into(imageViewProfile);
     }
 
     @Override
@@ -123,7 +121,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadData() {
         new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getUser().observe(getViewLifecycleOwner(), user -> {
-            ImageUtils.loadProfileToImageView(requireActivity(),user.getProfileURL(),imageView);
+            ImageUtils.loadProfileToImageView(requireActivity(),RetrofitUtils.BASE_URL + user.getProfile(), imageViewProfile);
             textViewEmail.setText(user.getEmail());
             textViewUsername.setText(user.getUsername());
             textViewFirstName.setText(user.getFirstName());
@@ -201,7 +199,7 @@ public class ProfileFragment extends Fragment {
 
     private void initViews(View view) {
         constraintLayoutProfile = view.findViewById(R.id.constraintLayoutProfile);
-        imageView = view.findViewById(R.id.imageView);
+        imageViewProfile = view.findViewById(R.id.imageViewProfile);
         textViewEmail = view.findViewById(R.id.textViewEmail);
         textViewUsername = view.findViewById(R.id.textViewUsername);
         textViewFirstName = view.findViewById(R.id.textViewFirstName);

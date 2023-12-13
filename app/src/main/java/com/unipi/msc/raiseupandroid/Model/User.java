@@ -11,21 +11,21 @@ public class User {
     private String firstName;
     private String lastName;
     private Role role;
-    private String profileURL;
+    private String profile;
     private int percentage;
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String profileURL, int percentage) {
+    public User(Long id, String firstName, String lastName, String profile, int percentage) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.profileURL = profileURL;
+        this.profile = profile;
         this.percentage = percentage;
     }
 
-    public User(Long id, String email, String username, String password, String firstName, String lastName, Role role, String profileURL, int percentage) {
+    public User(Long id, String email, String username, String password, String firstName, String lastName, Role role, String profile, int percentage) {
         this.id = id;
         this.email = email;
         this.username = username;
@@ -33,7 +33,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-        this.profileURL = profileURL;
+        this.profile = profile;
         this.percentage = percentage;
     }
 
@@ -101,12 +101,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getProfileURL() {
-        return profileURL;
+    public String getProfile() {
+        return profile;
     }
 
-    public void setProfileURL(String profileURL) {
-        this.profileURL = profileURL;
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
     public String getFullName(){
         return firstName + " " + lastName;
@@ -114,7 +114,7 @@ public class User {
 
     public static User buildFromJSON(JsonObject body) {
         User u = new User();
-        u.setProfileURL("");
+
         try {
             u.setId(body.get("id").getAsLong());
         }catch (Exception ignore){}
@@ -137,6 +137,10 @@ public class User {
 
         try {
             u.setRole(Role.valueOf(body.get("role").getAsString()));
+        }catch (Exception ignore){}
+
+        try {
+            u.setProfile(body.get("profile").getAsString());
         }catch (Exception ignore){}
 
         return u;

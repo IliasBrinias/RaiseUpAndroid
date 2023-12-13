@@ -51,6 +51,16 @@ public class NavTagAdapter extends RecyclerView.Adapter<NavTagAdapter.NatTagView
         return tagList.size();
     }
 
+    public void setData(List<Tag> tagList) {
+        this.tagList = tagList;
+        notifyDataSetChanged();
+    }
+
+    public void removeElement(Tag tag) {
+        tagList.remove(tag);
+        notifyDataSetChanged();
+    }
+
     public static class NatTagViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewTaskColor;
         TextView textViewTagName;

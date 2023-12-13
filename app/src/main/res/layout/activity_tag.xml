@@ -42,6 +42,7 @@
             android:layout_height="250dp"
             app:arc_width="8dp"
             app:indicator_radius="10dp"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -72,23 +73,11 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-        <ImageButton
-            android:id="@+id/imageButtonRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh"
-            android:background="@null"
-            android:visibility="visible"
-            android:layout_marginEnd="@dimen/basic_padding_20dp"/>
-        <Button
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/submit_button"
-            android:text="@string/save"/>
-    </LinearLayout>
+        style="@style/submit_button"
+        android:enabled="false"
+        android:text="@string/save"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

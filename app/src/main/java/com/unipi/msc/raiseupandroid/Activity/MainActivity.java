@@ -26,6 +26,7 @@ import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
+import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadUserData() {
         textViewUserName.setText(user.getFullName());
-        ImageUtils.loadProfileToImageView(this,user.getProfileURL(),imageViewUserImage);
+        ImageUtils.loadProfileToImageView(this, RetrofitUtils.BASE_URL + user.getProfile(), imageViewUserImage);
     }
 
     private void replaceFragment(Fragment fragment) {

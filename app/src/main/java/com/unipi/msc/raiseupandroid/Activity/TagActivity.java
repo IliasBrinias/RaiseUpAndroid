@@ -1,10 +1,7 @@
 package com.unipi.msc.raiseupandroid.Activity;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,48 +11,91 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.google.gson.JsonObject;
 import com.madrapps.pikolo.HSLColorPicker;
 import com.madrapps.pikolo.listeners.OnColorSelectionListener;
 import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.TagRequest;
+import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
+import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TagActivity extends AppCompatActivity {
 
     TextView textViewTitle;
-    ImageButton imageButtonExit, imageButtonRefresh;
+    ImageButton imageButtonExit;
     ImageView imageViewSelectedColor;
     HSLColorPicker colorPicker;
     EditText editTextTagName;
     Button buttonSubmit;
-    Tag tag;
+    Tag tag = new Tag();
+    RaiseUpAPI raiseUpAPI;
+    Toast t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag);
         initViews();
+        initObjects();
         initListeners();
-        tag = getTag(getIntent().getLongExtra(NameTag.TAG_ID,0L));
-        if (tag.getId() != 0L){
-            textViewTitle.setText(getText(R.string.edit_tag));
-        }else{
+        loadTag();
+    }
+
+    private void initObjects() {
+        raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
+    }
+
+    private void loadTag() {
+        tag.setId(getIntent().getLongExtra(NameTag.TAG_ID,0L));
+        if (tag.getId() == 0L){
             textViewTitle.setText(getText(R.string.create_tag));
-            imageButtonRefresh.setVisibility(View.GONE);
+            int color = getColor(R.color.light_primary);
+            colorPicker.setColor(color);
+            imageViewSelectedColor.setColorFilter(color);
+            tag.setColor("#" + Integer.toHexString(ContextCompat.getColor(this, R.color.light_primary) & 0x00ffffff));
+        }else{
+            textViewTitle.setText(getText(R.string.edit_tag));
+            tag.setId(0L);
+            raiseUpAPI.getTag(UserUtils.loadBearerToken(this),tag.getId()).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (!response.isSuccessful()) {
+                        String msg = RetrofitUtils.handleErrorResponse(TagActivity.this, response);
+                        ActivityUtils.showToast(TagActivity.this, t, msg);
+                    }else{
+                        tag = Tag.getTagFromJson(response.body().get("data").getAsJsonObject());
+                        fillData();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    RetrofitUtils.handleException(TagActivity.this,t);
+                }
+            });
         }
     }
 
-    private Tag getTag(long tagId) {
-        Tag tag = new Tag(tagId,"Test","#7E7CCF");
+    private void fillData() {
         colorPicker.setColor(Color.parseColor(tag.getColor()));
+        imageViewSelectedColor.setColorFilter(Color.parseColor(tag.getColor()));
         editTextTagName.setText(tag.getName());
-        return tag;
     }
 
     private void initListeners() {
-        imageButtonRefresh.setOnClickListener(v->editTextTagName.setText(tag.getName()));
         imageButtonExit.setOnClickListener(v->finish());
         colorPicker.setColorSelectionListener(new OnColorSelectionListener() {
             @Override
@@ -75,13 +115,38 @@ public class TagActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
-                buttonSubmit.setEnabled(editable.toString().isEmpty());
+                buttonSubmit.setEnabled(!editTextTagName.getText().toString().isEmpty());
             }
         });
-        buttonSubmit.setOnClickListener(v-> {
-            tag.setName(editTextTagName.getText().toString());
-            finish();
-        });
+        buttonSubmit.setOnClickListener(this::saveTag);
+    }
+
+    private void saveTag(View view) {
+        Callback<JsonObject> callback = new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()) {
+                    String msg = RetrofitUtils.handleErrorResponse(TagActivity.this, response);
+                    ActivityUtils.showToast(TagActivity.this, t, msg);
+                }else{
+                    finish();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(TagActivity.this,t);
+            }
+        };
+        if (tag.getId() != 0L){
+            raiseUpAPI.editTag(UserUtils.loadBearerToken(this),
+                    tag.getId(),
+                    new TagRequest(editTextTagName.getText().toString(),tag.getColor()))
+                .enqueue(callback);
+        }else {
+            raiseUpAPI.createTag(UserUtils.loadBearerToken(this),
+                    new TagRequest(editTextTagName.getText().toString(),tag.getColor()))
+                .enqueue(callback);
+        }
     }
 
     private void initViews() {
@@ -90,7 +155,6 @@ public class TagActivity extends AppCompatActivity {
         imageViewSelectedColor = findViewById(R.id.imageViewSelectedColor);
         colorPicker = findViewById(R.id.colorPickerHSL);
         editTextTagName = findViewById(R.id.editTextTagName);
-        imageButtonRefresh = findViewById(R.id.imageButtonRefresh);
         buttonSubmit = findViewById(R.id.buttonSubmit);
     }
 }

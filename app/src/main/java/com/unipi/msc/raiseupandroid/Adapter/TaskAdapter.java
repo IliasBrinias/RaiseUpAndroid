@@ -2,26 +2,18 @@ package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.app.Activity;
 import android.content.res.ColorStateList;
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.raiseupandroid.Activity.MainActivity;
-import com.unipi.msc.raiseupandroid.Fragment.TaskFragment;
 import com.unipi.msc.raiseupandroid.Interface.OnTaskClick;
 import com.unipi.msc.raiseupandroid.Model.Task;
 import com.unipi.msc.raiseupandroid.R;
@@ -101,9 +93,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             textViewDescription.setText(task.getDsc());
             textViewDueDate.setText(simpleDateFormat.format(task.getDueDate()));
             try{
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(0).getProfileURL(),imageView0);
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(1).getProfileURL(),imageView1);
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(2).getProfileURL(),imageView2);
+                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(0).getProfile(),imageView0);
+                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(1).getProfile(),imageView1);
+                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(2).getProfile(),imageView2);
             }catch (Exception ignore){}
         }
         public void setOnTaskClick(OnTaskClick onTaskClick) {

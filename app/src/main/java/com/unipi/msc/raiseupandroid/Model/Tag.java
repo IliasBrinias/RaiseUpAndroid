@@ -1,16 +1,37 @@
 package com.unipi.msc.raiseupandroid.Model;
 
+import com.google.gson.JsonObject;
+
 public class Tag {
     private Long id;
     private String name;
     private String color;
+
+    public Tag() {
+    }
 
     public Tag(Long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
+    public static Tag getTagFromJson(JsonObject body){
+        Tag tag = new Tag();
 
+        try {
+            tag.setId(body.get("id").getAsLong());
+        }catch (Exception ignore){}
+
+        try {
+            tag.setName(body.get("name").getAsString());
+        }catch (Exception ignore){}
+
+        try {
+            tag.setColor(body.get("color").getAsString());
+        }catch (Exception ignore){}
+
+        return tag;
+    }
     public Long getId() {
         return id;
     }

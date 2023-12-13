@@ -2,7 +2,6 @@ package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,7 @@ public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.
             textViewName = itemView.findViewById(R.id.textViewName);
         }
         public void bindData(Activity a, User user, OnAddEmployeeClickListener listener){
-            ImageUtils.loadProfileToImageView(a, user.getProfileURL(), imageViewProfile);
+            ImageUtils.loadProfileToImageView(a, user.getProfile(), imageViewProfile);
             textViewName.setText(user.getFullName());
             onAddEmployeeClickListener = listener;
         }

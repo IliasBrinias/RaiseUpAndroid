@@ -62,7 +62,7 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
             textViewEmployeeName.setText(user.getFullName());
             textViewPercentage.setText(String.valueOf(Math.abs(user.getPercentage())));
             try {
-                ImageUtils.loadProfileToImageView(a, user.getProfileURL(),imageViewEmployee);
+                ImageUtils.loadProfileToImageView(a, user.getProfile(),imageViewEmployee);
             }catch (Exception ignore){}
             if (user.getPercentage()>=0){
                 imageViewDown.setVisibility(View.GONE);

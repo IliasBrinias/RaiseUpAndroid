@@ -31,10 +31,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageViewProfile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_profile" />
         </androidx.cardview.widget.CardView>
 
