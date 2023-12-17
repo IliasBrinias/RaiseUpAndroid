@@ -1,7 +1,6 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +48,19 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         return boardList.size();
     }
 
+    public void addItem(Board board) {
+        boardList.add(board);
+        notifyItemInserted(boardList.size()-1);
+    }
+
+    public void clearData() {
+        int size = boardList.size();
+        if (size!=0){
+            boardList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView0, imageView1, imageView2;
         private TextView textViewTitle, textViewDueDate, textViewTasks, textViewEmployees;
@@ -74,14 +86,14 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         }
 
         public void bindData(Activity a, Board board){
-            textViewDueDate.setText(simpleDateFormat.format(board.getDueDate()));
-            textViewTasks.setText(String.valueOf(board.getTasks()));
-            textViewEmployees.setText(String.valueOf(board.getEmployees().size()));
+            textViewDueDate.setText(simpleDateFormat.format(board.getDate()));
+            textViewTasks.setText(String.valueOf(board.getTotalTasks()));
+            textViewEmployees.setText(String.valueOf(board.getProfiles().size()));
             textViewTitle.setText(String.valueOf(board.getTitle()));
             try{
-                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(0),imageView0);
-                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(1),imageView1);
-                ImageUtils.loadProfileToImageView(a,board.getEmployees().get(2),imageView2);
+                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(0),imageView0);
+                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(1),imageView1);
+                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(2),imageView2);
             }catch (Exception ignore){}
         }
     }

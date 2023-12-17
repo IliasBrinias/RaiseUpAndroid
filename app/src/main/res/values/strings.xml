@@ -14,7 +14,7 @@
     <string name="get_started">Get Started</string>
     <string name="raise_with_us">Raise With Us</string>
     <string name="boards">Boards</string>
-    <string name="tasks">Tasks</string>
+    <string name="totalTasks">Tasks</string>
     <string name="tags">Tags</string>
     <string name="statistics">Statistics</string>
     <string name="logout">Logout</string>
@@ -61,4 +61,5 @@
     <string name="thank_you_txt">Thank you for trusting us with your data privacy.\n\nSincerely,\nRaiseUp</string>
     <string name="internet_connection_offline">The Internet connection appears to be offline.</string>
     <string name="try_again">Try Again</string>
+    <string name="board_created">Board Created</string>
 </resources>

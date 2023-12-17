@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadData() {
         new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getUser().observe(getViewLifecycleOwner(), user -> {
-            ImageUtils.loadProfileToImageView(requireActivity(),RetrofitUtils.BASE_URL + user.getProfile(), imageViewProfile);
+            ImageUtils.loadProfileToImageView(requireActivity(),user.getProfile(), imageViewProfile);
             textViewEmail.setText(user.getEmail());
             textViewUsername.setText(user.getUsername());
             textViewFirstName.setText(user.getFirstName());

@@ -17,6 +17,7 @@ import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.AddEmployeeViewHolder> {
     Activity a;
@@ -59,7 +60,7 @@ public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.
             super(itemView);
             initView(itemView);
             itemView.setOnClickListener(view -> {
-                view.setSelected(true);
+                view.setSelected(!view.isSelected());
                 onAddEmployeeClickListener.onClick(view, getAdapterPosition());
             });
         }

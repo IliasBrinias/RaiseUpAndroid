@@ -1,21 +1,27 @@
 package com.unipi.msc.raiseupandroid.Model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
     private Long id;
     private String title;
-    private Long dueDate;
-    private List<String> employees;
-    private Long tasks;
+    private Long date;
+    private List<String> profiles = new ArrayList<>();
+    private Long totalTasks;
 
-    public Board(Long id, String title, Long dueDate, List<String> employees, Long tasks) {
+    public Board() {
+    }
+
+    public Board(Long id, String title, Long date, List<String> profiles, Long totalTasks) {
         this.id = id;
         this.title = title;
-        this.dueDate = dueDate;
-        this.employees = employees;
-        this.tasks = tasks;
+        this.date = date;
+        this.profiles = profiles;
+        this.totalTasks = totalTasks;
     }
 
     public Long getId() {
@@ -34,27 +40,57 @@ public class Board {
         this.title = title;
     }
 
-    public List<String> getEmployees() {
-        return employees;
+    public List<String> getProfiles() {
+        return profiles;
     }
 
-    public void setEmployees(List<String> employees) {
-        this.employees = employees;
+    public void setProfiles(List<String> profiles) {
+        this.profiles = profiles;
     }
 
-    public Long getTasks() {
-        return tasks;
+    public Long getTotalTasks() {
+        return totalTasks;
     }
 
-    public void setTasks(Long tasks) {
-        this.tasks = tasks;
+    public void setTotalTasks(Long totalTasks) {
+        this.totalTasks = totalTasks;
     }
 
-    public Long getDueDate() {
-        return dueDate;
+    public Long getDate() {
+        return date;
     }
 
-    public void setDueDate(Long dueDate) {
-        this.dueDate = dueDate;
+    public void setDate(Long date) {
+        this.date = date;
+    }
+
+    public static Board buildBoardFromJson(JsonObject data){
+        Board board = new Board();
+
+        try {
+            board.setId(data.get("id").getAsLong());
+        }catch (Exception ignore){}
+
+        try {
+            board.setTitle(data.get("title").getAsString());
+        }catch (Exception ignore){}
+
+        try {
+            board.setDate(data.get("date").getAsLong());
+        }catch (Exception ignore){}
+
+        try {
+            JsonArray jsonArray = data.get("employees").getAsJsonArray();
+            for (int i=0; i<jsonArray.size();i++) {
+                JsonObject jsonObjectUser = jsonArray.get(i).getAsJsonObject();
+                board.getProfiles().add(jsonObjectUser.get("profile").getAsString());
+            }
+        }catch (Exception ignore){}
+
+        try {
+            board.setTotalTasks(data.get("totalTasks").getAsLong());
+        }catch (Exception ignore){}
+
+        return board;
     }
 }

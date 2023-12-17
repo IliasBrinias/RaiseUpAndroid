@@ -89,7 +89,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tasks"
+                android:text="@string/totalTasks"
                 style="@style/drawer_button_txt"/>
         </LinearLayout>
     </LinearLayout>

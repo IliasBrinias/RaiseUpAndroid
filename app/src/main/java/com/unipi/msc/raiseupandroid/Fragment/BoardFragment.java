@@ -11,21 +11,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Activity.BoardActivity;
 import com.unipi.msc.raiseupandroid.Activity.CreateBoardActivity;
 import com.unipi.msc.raiseupandroid.Adapter.BoardAdapter;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
+import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BoardFragment extends Fragment {
     RecyclerView recyclerView;
     ImageButton imageButtonCreateBoard;
     BoardAdapter boardAdapter;
+    RaiseUpAPI raiseUpAPI;
+    Toast t;
+    List<Board> boardList = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,27 +53,54 @@ public class BoardFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_board, container, false);
         initViews(view);
+        initObjects();
         initListeners();
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        return view;
+    }
 
-        List<Board> boardList = new ArrayList<>();
-        boardList.add(new Board(01L,"Vodafone",232436151235L,new ArrayList<>(),5L));
-        boardList.add(new Board(02L,"HGI",232436151235L,new ArrayList<>(),20L));
-        boardList.add(new Board(03L,"Cosmote",232436151235L,new ArrayList<>(),4L));
-        boardList.add(new Board(04L,"SuperDry",232436151235L,new ArrayList<>(),2L));
-        boardList.add(new Board(05L,"Lenovo",232436151235L,new ArrayList<>(),22L));
-        boardList.add(new Board(06L,"IBM",232436151235L,new ArrayList<>(),15L));
+    @Override
+    public void onResume() {
+        if (boardAdapter!=null){
+            loadData();
+        }
+        super.onResume();
+    }
+
+    private void loadData() {
+        raiseUpAPI.getBoards(UserUtils.loadBearerToken(requireActivity())).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(),response);
+                    ActivityUtils.showToast(requireActivity(),t,msg);
+                }else {
+                    boardAdapter.clearData();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        boardAdapter.addItem(Board.buildBoardFromJson(jsonArray.get(i).getAsJsonObject()));
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(), t);
+            }
+        });
+    }
+
+    private void initObjects() {
+        raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
         boardAdapter = new BoardAdapter(requireActivity(), boardList, (v, position) -> {
             Intent intent = new Intent(requireActivity(), BoardActivity.class);
             intent.putExtra(NameTag.BOARD_ID,boardList.get(position).getId());
             startActivity(intent);
         });
-        recyclerView.setAdapter(boardAdapter);
-        return view;
     }
 
     private void initListeners() {
         imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), CreateBoardActivity.class)));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        recyclerView.setAdapter(boardAdapter);
     }
 
     private void initViews(View view) {

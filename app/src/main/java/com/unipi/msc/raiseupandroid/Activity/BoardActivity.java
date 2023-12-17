@@ -35,7 +35,7 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private Board getBoard(long boardId) {
-        Board board = new Board(boardId, "Test Board", 0L,new ArrayList<>(),10L);
+        Board board = new Board();
         textViewBoardTitle.setText(board.getTitle());
         return board;
     }

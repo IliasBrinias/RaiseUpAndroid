@@ -26,7 +26,7 @@ public class ImageUtils {
             .build();
 
         Glide.with(imageView.getContext())
-            .load(new GlideUrl(url, headers))
+            .load(new GlideUrl(RetrofitUtils.BASE_URL + url, headers))
             .error(R.drawable.ic_profile)
             .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
             .fitCenter()
