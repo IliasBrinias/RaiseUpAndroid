@@ -88,12 +88,12 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         public void bindData(Activity a, Board board){
             textViewDueDate.setText(simpleDateFormat.format(board.getDate()));
             textViewTasks.setText(String.valueOf(board.getTotalTasks()));
-            textViewEmployees.setText(String.valueOf(board.getProfiles().size()));
+            textViewEmployees.setText(String.valueOf(board.getUsers().size()));
             textViewTitle.setText(String.valueOf(board.getTitle()));
             try{
-                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(0),imageView0);
-                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(1),imageView1);
-                ImageUtils.loadProfileToImageView(a,board.getProfiles().get(2),imageView2);
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(0).getProfile(),imageView0);
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(1).getProfile(),imageView1);
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(2).getProfile(),imageView2);
             }catch (Exception ignore){}
         }
     }

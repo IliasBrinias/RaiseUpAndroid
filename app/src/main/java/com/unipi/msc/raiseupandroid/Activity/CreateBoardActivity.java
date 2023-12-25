@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Adapter.BoardCreationColumnAdapter;
-import com.unipi.msc.raiseupandroid.Adapter.BoardCreationEmployeeAdapter;
+import com.unipi.msc.raiseupandroid.Adapter.EmployeeAdapter;
 import com.unipi.msc.raiseupandroid.Interface.OnBoardColumnClick;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.Model.User;
@@ -42,7 +42,7 @@ public class CreateBoardActivity extends AppCompatActivity {
     Board board;
     List<User> users = new ArrayList<>();
     List<String> columns = new ArrayList<>();
-    BoardCreationEmployeeAdapter boardCreationEmployeeAdapter;
+    EmployeeAdapter employeeAdapter;
     BoardCreationColumnAdapter boardCreationColumnAdapter;
     RaiseUpAPI raiseUpAPI;
     Toast t;
@@ -90,13 +90,12 @@ public class CreateBoardActivity extends AppCompatActivity {
     }
 
     private void addEmployees(View view) {
-        CustomBottomSheet.addEmployees(this, users, employees -> boardCreationEmployeeAdapter.setData(employees));
+        CustomBottomSheet.addEmployees(this, users, employees -> employeeAdapter.setData(employees));
     }
 
     private void initObjects() {
-        columns.add("Done");
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
-        boardCreationEmployeeAdapter = new BoardCreationEmployeeAdapter(this,users,(view, position) -> boardCreationEmployeeAdapter.deleteItem(users.get(position)));
+        employeeAdapter = new EmployeeAdapter(this,users,(view, position) -> employeeAdapter.deleteItem(users.get(position)));
         boardCreationColumnAdapter = new BoardCreationColumnAdapter(this, columns, new OnBoardColumnClick() {
             @Override
             public void onClick(View view, int position) {
@@ -117,7 +116,7 @@ public class CreateBoardActivity extends AppCompatActivity {
         buttonCreate.setOnClickListener(this::saveBoard);
         recyclerViewEmployees.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
         recyclerViewColumns.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
-        recyclerViewEmployees.setAdapter(boardCreationEmployeeAdapter);
+        recyclerViewEmployees.setAdapter(employeeAdapter);
         recyclerViewColumns.setAdapter(boardCreationColumnAdapter);
     }
 

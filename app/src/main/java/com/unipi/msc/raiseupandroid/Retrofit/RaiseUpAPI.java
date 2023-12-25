@@ -60,8 +60,14 @@ public interface RaiseUpAPI {
 //    Board
     @GET("board")
     Call<JsonObject> getBoards(@Header("Authorization") String auth);
-
+    @GET("board/{boardId}")
+    Call<JsonObject> getBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @POST("board")
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
+//    Task
+    @GET("task/{taskId}")
+    Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
 
+    @GET("board/{boardId}/employees")
+    Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
 }

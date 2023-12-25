@@ -7,17 +7,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Adapter.ColumnAdapter;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.MockData;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
+import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BoardActivity extends AppCompatActivity {
     private RecyclerView recyclerViewColumns;
@@ -25,19 +36,56 @@ public class BoardActivity extends AppCompatActivity {
     private ImageButton imageButtonExit;
     private Board board;
     private LinearProgressIndicator linearProgressIndicator;
+    private RaiseUpAPI raiseUpAPI;
+    private ColumnAdapter columnAdapter;
+    Toast t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
         initViews();
-        board = getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
+        initObjects();
         initListeners();
     }
 
-    private Board getBoard(long boardId) {
-        Board board = new Board();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (columnAdapter!=null){
+            getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
+        }
+    }
+
+    private void initObjects() {
+        board = new Board();
+        raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
+        columnAdapter = new ColumnAdapter(this,board.getColumns());
+    }
+
+    private void getBoard(long boardId) {
+        if (boardId == 0L) return;
+        raiseUpAPI.getBoard(UserUtils.loadBearerToken(this), boardId).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(BoardActivity.this,response);
+                    ActivityUtils.showToast(BoardActivity.this, t, msg);
+                }else{
+                    board = Board.buildBoardFromJson(response.body().get("data").getAsJsonObject());
+                    loadData(board);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(BoardActivity.this, t);
+            }
+        });
+    }
+
+    private void loadData(Board board) {
         textViewBoardTitle.setText(board.getTitle());
-        return board;
+        columnAdapter.setData(board.getColumns());
     }
 
     private void initListeners() {
@@ -46,7 +94,6 @@ public class BoardActivity extends AppCompatActivity {
         recyclerViewColumns.setLayoutManager(linearLayoutManager);
         recyclerViewColumns.setHasFixedSize(true);
         List<Column> columnList = MockData.getTestColumns();
-        ColumnAdapter columnAdapter = new ColumnAdapter(this,columnList);
         recyclerViewColumns.setAdapter(columnAdapter);
         recyclerViewColumns.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

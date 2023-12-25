@@ -15,7 +15,7 @@ public class Tag {
         this.name = name;
         this.color = color;
     }
-    public static Tag getTagFromJson(JsonObject body){
+    public static Tag buildFromJSON(JsonObject body){
         Tag tag = new Tag();
 
         try {
@@ -32,6 +32,7 @@ public class Tag {
 
         return tag;
     }
+
     public Long getId() {
         return id;
     }

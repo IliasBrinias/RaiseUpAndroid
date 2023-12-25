@@ -45,6 +45,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         return tagList.size();
     }
 
+    public void setData(List<Tag> tags) {
+        tagList = tags;
+        notifyDataSetChanged();
+    }
+
     public static class TagViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewTaskColor;
         TextView textViewTagName;

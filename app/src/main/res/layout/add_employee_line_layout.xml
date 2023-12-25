@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ic_input_field_back"
-    android:backgroundTint="@drawable/button_color_selector"
+    android:backgroundTint="@drawable/add_employee_color_selector"
     android:backgroundTintMode="src_over"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"

@@ -8,35 +8,31 @@
     style="@style/activity"
     android:orientation="vertical"
     tools:context=".Activity.TaskActivity">
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_marginStart="-20dp"
-        android:paddingStart="@dimen/basic_padding_20dp">
-
-        <ImageButton
-            android:id="@+id/imageButtonExit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:padding="@dimen/basic_padding_20dp"
-            android:layout_marginStart="-20dp"
-            android:src="@drawable/ic_arrow_back" />
-
+        android:gravity="center_vertical">
         <TextView
             android:id="@+id/textViewTaskTitle"
-            style="@style/title"
+            style="@style/title_reg_log"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="Task Title" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-    </LinearLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/imageButtonExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:padding="@dimen/basic_padding_20dp"
+                android:layout_marginEnd="-20dp"
+                android:src="@drawable/ic_close"
+                android:layout_gravity="center_vertical|end"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -91,7 +87,7 @@
                         android:id="@+id/textViewColumnName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Column name"
+                        android:text="Column title"
                         android:textSize="18sp"
                         android:textColor="?text_color"
                         android:fontFamily="@font/euclid_circular_a_bold"/>
@@ -113,6 +109,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tags"
                 style="@style/task_activity_label"/>
+
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="10dp"/>
@@ -140,17 +137,28 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/what_about_this_task"
                 style="@style/edit_field_task_dsc"/>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/responsible"
-                style="@style/task_activity_label"/>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/responsible"
+                    style="@style/task_activity_label"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:id="@+id/imageButtonAddEmployees"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add"
+                    android:padding="@dimen/basic_padding_20dp"
+                    android:layout_marginEnd="-20dp"
+                    android:background="@null"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewEmployees"
                 android:layout_width="match_parent"

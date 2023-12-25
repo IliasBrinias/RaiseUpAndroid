@@ -78,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="13 May"
+            android:textSize="12sp"
             android:fontFamily="@font/euclid_circular_a_regular"
             android:textColor="?shadow_color"
             android:layout_gravity="end"
@@ -90,10 +91,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kafkas"
-            android:paddingTop="0dp"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            style="@style/title_reg_log"/>
+            android:textSize="20sp"
+            android:textColor="?text_color"
+            android:fontFamily="@font/euclid_circular_a_bold"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/basic_padding_20dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -106,14 +109,12 @@
                     android:id="@+id/textViewTotalTasks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/title_reg_log"
-                    android:padding="0dp"
+                    style="@style/nav_board_attr"
                     android:text="2"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/title_reg_log"
-                    android:padding="0dp"
+                    style="@style/nav_board_attr_header"
                     android:text="@string/total_tasks"/>
             </LinearLayout>
             <View
@@ -128,14 +129,13 @@
                     android:id="@+id/textViewTotalEmployees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/title_reg_log"
-                    android:padding="0dp"
+                    style="@style/nav_board_attr"
                     android:text="10"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/title_reg_log"
-                    android:padding="0dp"
+                    android:textColor="?text_color"
+                    style="@style/nav_board_attr_header"
                     android:text="@string/users"/>
             </LinearLayout>
         </LinearLayout>

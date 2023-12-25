@@ -51,6 +51,11 @@ public class TagActivity extends AppCompatActivity {
         initViews();
         initObjects();
         initListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadTag();
     }
 
@@ -68,7 +73,6 @@ public class TagActivity extends AppCompatActivity {
             tag.setColor("#" + Integer.toHexString(ContextCompat.getColor(this, R.color.light_primary) & 0x00ffffff));
         }else{
             textViewTitle.setText(getText(R.string.edit_tag));
-            tag.setId(0L);
             raiseUpAPI.getTag(UserUtils.loadBearerToken(this),tag.getId()).enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -76,7 +80,7 @@ public class TagActivity extends AppCompatActivity {
                         String msg = RetrofitUtils.handleErrorResponse(TagActivity.this, response);
                         ActivityUtils.showToast(TagActivity.this, t, msg);
                     }else{
-                        tag = Tag.getTagFromJson(response.body().get("data").getAsJsonObject());
+                        tag = Tag.buildFromJSON(response.body().get("data").getAsJsonObject());
                         fillData();
                     }
                 }

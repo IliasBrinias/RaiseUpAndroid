@@ -51,25 +51,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end">
-        <ImageView
-            android:id="@+id/imageViewProfile0"
+        <androidx.cardview.widget.CardView
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/ic_profile"/>
-        <ImageView
-            android:id="@+id/imageViewProfile1"
+            android:backgroundTint="?element_back_color"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/imageViewProfile0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_profile"/>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:backgroundTint="?element_back_color"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="0dp"
             android:layout_marginStart="-20dp"
             android:translationZ="-3dp"
-            android:background="@drawable/ic_profile"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
         <ImageView
-            android:id="@+id/imageViewProfile2"
+            android:id="@+id/imageViewProfile1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_profile"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:backgroundTint="?element_back_color"
+            app:cardCornerRadius="100dp"
+            app:cardElevation="0dp"
             android:layout_marginStart="-20dp"
             android:translationZ="-6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/imageViewProfile2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_profile"/>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
     <TextView
         android:id="@+id/textViewDueDate"

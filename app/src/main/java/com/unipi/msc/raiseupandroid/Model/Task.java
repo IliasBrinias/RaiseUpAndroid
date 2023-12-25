@@ -1,24 +1,34 @@
 package com.unipi.msc.raiseupandroid.Model;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
     private Long id;
-    private String name;
+    private String title;
     private String dsc;
     private Long dueDate;
+    private Boolean completed;
     private Column column;
-    private List<User> users;
-    private List<Tag> tags;
+    private List<User> users = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
-    public Task(Long id, String name, String dsc, Long dueDate, Column column, List<User> users, List<Tag> tags) {
+    public Task() {}
+
+    public Task(Long id, String title, String dsc, Long dueDate, Boolean completed, Column column, List<User> users, List<Tag> tags, List<Comment> comments) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.dsc = dsc;
         this.dueDate = dueDate;
+        this.completed = completed;
         this.column = column;
         this.users = users;
         this.tags = tags;
+        this.comments = comments;
     }
 
     public Column getColumn() {
@@ -45,12 +55,12 @@ public class Task {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDsc() {
@@ -69,11 +79,74 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public List<User> getEmployees() {
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
+
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setEmployees(List<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public static Task buildTaskFromJSON(JsonObject jsonObject){
+        Task task = new Task();
+
+        try {
+            task.setId(jsonObject.get("id").getAsLong());
+        }catch (Exception ignore){}
+
+        try {
+            task.setTitle(jsonObject.get("title").getAsString());
+        }catch (Exception ignore){}
+
+        try {
+            task.setDueDate(jsonObject.get("dueTo").getAsLong());
+        }catch (Exception ignore){}
+
+        try {
+            task.setCompleted(jsonObject.get("completed").getAsBoolean());
+        }catch (Exception ignore){}
+
+        try {
+            task.setColumn(Column.buildFromJSON(jsonObject.get("step").getAsJsonObject()));
+        }catch (Exception ignore){}
+
+        try {
+            JsonArray jsonArray = jsonObject.get("users").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                task.getUsers().add(User.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+            }
+        }catch (Exception ignore){}
+
+        try {
+            JsonArray jsonArray = jsonObject.get("comments").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                task.getComments().add(Comment.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+            }
+        }catch (Exception ignore){}
+
+        try {
+            JsonArray jsonArray = jsonObject.get("tags").getAsJsonArray();
+            for (int i = 0; i < jsonArray.size(); i++) {
+                task.getTags().add(Tag.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+            }
+        }catch (Exception ignore){}
+
+        return task;
     }
 }

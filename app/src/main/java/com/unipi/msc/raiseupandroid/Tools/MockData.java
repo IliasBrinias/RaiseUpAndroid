@@ -1,6 +1,7 @@
 package com.unipi.msc.raiseupandroid.Tools;
 
 import com.unipi.msc.raiseupandroid.Model.Column;
+import com.unipi.msc.raiseupandroid.Model.Comment;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.Model.Task;
@@ -37,21 +38,28 @@ public class MockData {
         columnList.add(new Column(3L,"Column3"));
         return columnList;
     }
+    public static List<Comment> getTestComments() {
+        List<Comment> comments = new ArrayList<>();
+        comments.add(new Comment(0L,"Comment0",1703524741L));
+        comments.add(new Comment(1L,"Comment1",1703524741L));
+        comments.add(new Comment(2L,"Comment2",1703524741L));
+        comments.add(new Comment(3L,"Comment3",1703524741L));
+        return comments;
+    }
     public static Column getTestColumn() {
         return new Column(1L,"Column1");
     }
     public static Task getTestTask() {
-        return new Task(1L,"Test Task", "Test Description", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag());
+        return new Task(1L,"Test Task","Test Description",0L,false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments());
     }
     public static List<Task> getTestTasks() {
         List<Task> taskList = new ArrayList<>();
-        taskList.add(new Task(1L,"Test Task", "Test Description", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
-        taskList.add(new Task(2L,"Test Tas2", "Test Description2", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
-        taskList.add(new Task(3L,"Test Task3", "Test Description3", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
-        taskList.add(new Task(4L,"Test Task4", "Test Description4", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
-        taskList.add(new Task(5L,"Test Task5", "Test Description5", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
-        taskList.add(new Task(6L,"Test Task6", "Test Description6", 0L, MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag()));
+        taskList.add(new Task(1L,"Test Task", "Test Description", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
+        taskList.add(new Task(2L,"Test Tas2", "Test Description2", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
+        taskList.add(new Task(3L,"Test Task3", "Test Description3", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
+        taskList.add(new Task(4L,"Test Task4", "Test Description4", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
+        taskList.add(new Task(5L,"Test Task5", "Test Description5", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
+        taskList.add(new Task(6L,"Test Task6", "Test Description6", 0L, false,MockData.getTestColumn(),MockData.getTestEmployees(),MockData.getTestTag(),MockData.getTestComments()));
         return taskList;
     }
-
 }

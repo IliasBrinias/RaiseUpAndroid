@@ -16,7 +16,7 @@ import java.io.IOException;
 import retrofit2.Response;
 
 public class RetrofitUtils {
-    public static final String BASE_URL = "http://192.168.1.8:8080/";
+    public static final String BASE_URL = "http://192.168.0.237:8080/";
     private static final int HTTP_OK = 200;
     private static final int HTTP_BAD_REQUEST = 400;
     private static final int HTTP_ACCESS_DENIED = 401;

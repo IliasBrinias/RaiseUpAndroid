@@ -124,4 +124,16 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="nav_board_attr">
+        <item name="android:textColor">?text_color</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_bold</item>
+    </style>
+
+    <style name="nav_board_attr_header">
+        <item name="android:textColor">?text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/euclid_circular_a_semibold</item>
+    </style>
+
 </resources>

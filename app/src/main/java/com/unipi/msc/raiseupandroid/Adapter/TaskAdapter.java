@@ -89,13 +89,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             }else{
                 linearLayout.setBackgroundTintList(ColorStateList.valueOf(ActivityUtils.getColor(a,R.attr.back_color)));
             }
-            textViewTitle.setText(task.getName());
+            textViewTitle.setText(task.getTitle());
             textViewDescription.setText(task.getDsc());
             textViewDueDate.setText(simpleDateFormat.format(task.getDueDate()));
             try{
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(0).getProfile(),imageView0);
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(1).getProfile(),imageView1);
-                ImageUtils.loadProfileToImageView(a,task.getEmployees().get(2).getProfile(),imageView2);
+                ImageUtils.loadProfileToImageView(a,task.getUsers().get(0).getProfile(),imageView0);
+                ImageUtils.loadProfileToImageView(a,task.getUsers().get(1).getProfile(),imageView1);
+                ImageUtils.loadProfileToImageView(a,task.getUsers().get(2).getProfile(),imageView2);
             }catch (Exception ignore){}
         }
         public void setOnTaskClick(OnTaskClick onTaskClick) {

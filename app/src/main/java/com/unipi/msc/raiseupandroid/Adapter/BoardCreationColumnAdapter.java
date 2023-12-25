@@ -38,11 +38,6 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
     public void onBindViewHolder(@NonNull BoardCreationColumnAdapter.ColumnViewHolder holder, int position) {
         holder.onBoardColumnClick = onBoardColumnClick;
         holder.textViewName.setText(columns.get(position));
-        if (position == columns.size() - 1){
-            holder.imageButtonDelete.setVisibility(View.GONE);
-        }else {
-            holder.imageButtonDelete.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override

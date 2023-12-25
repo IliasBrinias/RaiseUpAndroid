@@ -1,9 +1,6 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.raiseupandroid.Interface.OnBoardEmployeeDelete;
-import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 
 import java.util.List;
 
-public class BoardCreationEmployeeAdapter extends RecyclerView.Adapter<BoardCreationEmployeeAdapter.EmployeeViewHolder> {
+public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder> {
     Activity a;
     List<User> users;
     OnBoardEmployeeDelete onBoardEmployeeDelete;
 
-    public BoardCreationEmployeeAdapter(Activity a, List<User> users, OnBoardEmployeeDelete onBoardEmployeeDelete) {
+    public EmployeeAdapter(Activity a, List<User> users, OnBoardEmployeeDelete onBoardEmployeeDelete) {
         this.a = a;
         this.users = users;
         this.onBoardEmployeeDelete = onBoardEmployeeDelete;
