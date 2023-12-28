@@ -16,12 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.unipi.msc.raiseupandroid.Activity.RegisterActivity;
 import com.unipi.msc.raiseupandroid.Adapter.AddEmployeeAdapter;
+import com.unipi.msc.raiseupandroid.Adapter.ChangeColumnAdapter;
+import com.unipi.msc.raiseupandroid.Adapter.TagAdapter;
 import com.unipi.msc.raiseupandroid.Interface.OnAddColumnResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnAddEmployeesResponse;
+import com.unipi.msc.raiseupandroid.Interface.OnColumnChange;
 import com.unipi.msc.raiseupandroid.Interface.OnEditPersonalData;
 import com.unipi.msc.raiseupandroid.Interface.OnSingleValueResponse;
+import com.unipi.msc.raiseupandroid.Interface.OnTagSelected;
+import com.unipi.msc.raiseupandroid.Model.Column;
+import com.unipi.msc.raiseupandroid.Model.Tag;
+import com.unipi.msc.raiseupandroid.Model.Task;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
@@ -31,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -175,6 +180,107 @@ public class CustomBottomSheet {
                 onAddColumnResponse.onResponse(editTextColumn.getText().toString());
             }
             dialog.cancel();
+        });
+        dialog.show();
+    }
+    public static void addTags(Activity activity, OnTagSelected onTagSelected){
+
+        List<Tag> tags = new ArrayList<>();
+        Map<Long,Boolean> selectedTags = new HashMap<>();
+        RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
+
+
+        View view = activity.getLayoutInflater().inflate(R.layout.add_tag_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+
+        view.findViewById(R.id.imageButtonClose).setOnClickListener(v->dialog.cancel());
+        EditText editTextSearch = view.findViewById(R.id.editTextSearch);
+        Button buttonSubmit = view.findViewById(R.id.buttonSubmit);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+
+        TagAdapter tagAdapter = new TagAdapter(activity, new ArrayList<>(), R.layout.add_tag_line_layout, (v, position) -> {
+            selectedTags.put(tags.get(position).getId(), v.isSelected());
+            buttonSubmit.setActivated(selectedTags.containsValue(true));
+        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(tagAdapter);
+        Callback<JsonObject> response = new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(activity,response);
+                    ActivityUtils.showToast(activity, new Toast(activity), msg);
+                }else{
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        tags.add(Tag.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    tagAdapter.setData(tags);
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(activity, t);
+            }
+        };
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                raiseUpAPI.getSearchedTags(UserUtils.loadBearerToken(activity), s.toString()).enqueue(response);
+            }
+        });
+        raiseUpAPI.getTags(UserUtils.loadBearerToken(activity)).enqueue(response);
+        buttonSubmit.setOnClickListener(v->{
+            List<Long> tagIds = new ArrayList<>();
+            selectedTags.entrySet().stream().filter(Map.Entry::getValue).allMatch(entry -> tagIds.add(entry.getKey()));
+            onTagSelected.onSelect(tagIds);
+            dialog.cancel();
+        });
+        dialog.show();
+    }
+    public static void changeColumn(Activity activity, Task task, OnColumnChange onColumnChange){
+
+        List<Column> columns = new ArrayList<>();
+        Map<Long,Boolean> selectedTags = new HashMap<>();
+        RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
+
+        View view = activity.getLayoutInflater().inflate(R.layout.change_column_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+
+        view.findViewById(R.id.imageButtonClose).setOnClickListener(v->dialog.cancel());
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+
+        ChangeColumnAdapter changeColumnAdapter = new ChangeColumnAdapter(activity, task.getColumn(), columns, (v,position) -> {
+            onColumnChange.onChange(columns.get(position).getId());
+            dialog.cancel();
+        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerView.setAdapter(changeColumnAdapter);
+        raiseUpAPI.getColumns(UserUtils.loadBearerToken(activity), task.getColumn().getBoardId()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(activity,response);
+                    ActivityUtils.showToast(activity, new Toast(activity), msg);
+                }else{
+                    columns.clear();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        columns.add(Column.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    changeColumnAdapter.refreshData();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(activity, t);
+            }
         });
         dialog.show();
     }

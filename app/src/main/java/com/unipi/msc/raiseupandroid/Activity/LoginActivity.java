@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -17,6 +18,7 @@ import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.LoginRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.RegisterRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     Button buttonLogin;
     TextView textViewChangePass, textViewErrorMessage;
     RaiseUpAPI raiseUpAPI;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         imageButtonClose.setOnClickListener(view -> finish());
         buttonLogin.setOnClickListener(this::login);
         textViewChangePass.setOnClickListener(this::forgotPassword);
+        ActivityUtils.hideProgressBar(progressBar);
         KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
             if (isOpen){
                 buttonLogin.setVisibility(View.GONE);
@@ -59,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
                 textViewChangePass.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private void forgotPassword(View view) {
@@ -67,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(View view) {
+        ActivityUtils.showProgressBar(progressBar);
         raiseUpAPI.login(new LoginRequest(
                 editTextUsername.getText().toString(),
                 editTextPassword.getText().toString()
@@ -88,10 +92,12 @@ public class LoginActivity extends AppCompatActivity {
                     UserUtils.saveBearerToken(LoginActivity.this, User.getTokenFromJSON(data));
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 }
+                ActivityUtils.hideProgressBar(progressBar);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(LoginActivity.this,t);
+                ActivityUtils.hideProgressBar(progressBar);
             }
         });
     }
@@ -104,5 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         textViewChangePass = findViewById(R.id.textViewChangePass);
         includeErrorMessage = findViewById(R.id.includeErrorMessage);
         textViewErrorMessage = includeErrorMessage.findViewById(R.id.textViewErrorMessage);
+        progressBar = findViewById(R.id.progressBar);
     }
 }

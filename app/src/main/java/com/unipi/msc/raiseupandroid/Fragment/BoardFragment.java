@@ -16,8 +16,9 @@ import android.widget.Toast;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Activity.BoardActivity;
-import com.unipi.msc.raiseupandroid.Activity.CreateBoardActivity;
+import com.unipi.msc.raiseupandroid.Activity.SaveBoardActivity;
 import com.unipi.msc.raiseupandroid.Adapter.BoardAdapter;
+import com.unipi.msc.raiseupandroid.Interface.OnBoardClick;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
@@ -90,7 +91,7 @@ public class BoardFragment extends Fragment {
 
     private void initObjects() {
         raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
-        boardAdapter = new BoardAdapter(requireActivity(), boardList, (v, position) -> {
+        boardAdapter = new BoardAdapter(requireActivity(), boardList, (view, position) -> {
             Intent intent = new Intent(requireActivity(), BoardActivity.class);
             intent.putExtra(NameTag.BOARD_ID,boardList.get(position).getId());
             startActivity(intent);
@@ -98,7 +99,7 @@ public class BoardFragment extends Fragment {
     }
 
     private void initListeners() {
-        imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), CreateBoardActivity.class)));
+        imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), SaveBoardActivity.class)));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recyclerView.setAdapter(boardAdapter);
     }

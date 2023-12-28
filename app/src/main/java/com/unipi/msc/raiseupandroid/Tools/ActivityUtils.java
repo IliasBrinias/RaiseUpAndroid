@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 public class ActivityUtils {
     public static int getColor(Activity activity, int attr){
         TypedValue typedValue = new TypedValue();
@@ -29,5 +33,13 @@ public class ActivityUtils {
         t.setText(msg);
         t.show();
     }
+    public static long getDifferenceDays(Long d1, Long d2) {
+        return TimeUnit.DAYS.convert(d2 - d1, TimeUnit.MILLISECONDS);
+    }
 
+    public static Calendar unixToCalendar(long unixTime){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(unixTime);
+        return calendar;
+    }
 }

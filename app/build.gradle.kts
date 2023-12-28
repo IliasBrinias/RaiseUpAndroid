@@ -29,6 +29,9 @@ android {
 }
 
 dependencies {
+    // lombok
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
     //Shared Pref
     implementation("androidx.preference:preference:1.2.1")
     //KeyboardVisibilityEvent

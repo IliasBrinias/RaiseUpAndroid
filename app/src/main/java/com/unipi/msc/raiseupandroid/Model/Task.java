@@ -9,7 +9,7 @@ import java.util.List;
 public class Task {
     private Long id;
     private String title;
-    private String dsc;
+    private String description;
     private Long dueDate;
     private Boolean completed;
     private Column column;
@@ -19,10 +19,10 @@ public class Task {
 
     public Task() {}
 
-    public Task(Long id, String title, String dsc, Long dueDate, Boolean completed, Column column, List<User> users, List<Tag> tags, List<Comment> comments) {
+    public Task(Long id, String title, String description, Long dueDate, Boolean completed, Column column, List<User> users, List<Tag> tags, List<Comment> comments) {
         this.id = id;
         this.title = title;
-        this.dsc = dsc;
+        this.description = description;
         this.dueDate = dueDate;
         this.completed = completed;
         this.column = column;
@@ -63,12 +63,12 @@ public class Task {
         this.title = title;
     }
 
-    public String getDsc() {
-        return dsc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDsc(String dsc) {
-        this.dsc = dsc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getDueDate() {
@@ -112,6 +112,10 @@ public class Task {
 
         try {
             task.setTitle(jsonObject.get("title").getAsString());
+        }catch (Exception ignore){}
+
+        try {
+            task.setDescription(jsonObject.get("description").getAsString());
         }catch (Exception ignore){}
 
         try {

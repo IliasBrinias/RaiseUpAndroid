@@ -33,170 +33,250 @@
                 android:src="@drawable/ic_close"
                 android:layout_gravity="center_vertical|end"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
+            android:indeterminate="false"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ScrollView
+            android:id="@+id/scrollView4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/textViewDaysToExpire"
+
+                <View
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?text_color"
-                    android:textSize="24sp"
-                    android:fontFamily="@font/euclid_circular_a_bold"
-                    android:text="2 Days"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="?shadow_color"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/euclid_circular_a_bold"
-                    android:text="@string/to_expire"/>
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
-            <LinearLayout
-                android:id="@+id/linearLayoutColumnChange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_input_field_back"
-                android:padding="@dimen/basic_padding_20dp"
-                android:gravity="center_vertical">
+                    android:layout_height="@dimen/basic_padding_20dp" />
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/linearLayoutDueDate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/progress_column"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/textViewDaysToExpire"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/euclid_circular_a_bold"
+                            android:text="@string/enter_a_date"
+                            android:textColor="?text_color"
+                            android:textSize="24sp" />
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="0dp"/>
+                        <include
+                            android:id="@+id/expireLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            layout="@layout/expired_layout"
+                            android:visibility="invisible"
+                            />
+                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/textViewToExpire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/euclid_circular_a_bold"
+                        android:text="@string/to_expire"
                         android:textColor="?shadow_color"
-                        android:fontFamily="@font/euclid_circular_a_regular"/>
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/basic_padding_20dp" />
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
                     <TextView
-                        android:id="@+id/textViewColumnName"
+                        style="@style/task_activity_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Column title"
-                        android:textSize="18sp"
-                        android:textColor="?text_color"
-                        android:fontFamily="@font/euclid_circular_a_bold"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_drop_down"/>
-            </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tags"
-                style="@style/task_activity_label"/>
+                        android:text="@string/tags" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                tools:listitem="@layout/task_tag_layout"/>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/description"
-                style="@style/task_activity_label"/>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="10dp"/>
-            <TextView
-                android:id="@+id/textViewDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/what_about_this_task"
-                style="@style/edit_field_task_dsc"/>
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/responsible"
-                    style="@style/task_activity_label"/>
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-                <ImageButton
-                    android:id="@+id/imageButtonAddEmployees"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add"
-                    android:padding="@dimen/basic_padding_20dp"
-                    android:layout_marginEnd="-20dp"
-                    android:background="@null"/>
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewEmployees"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                tools:listitem="@layout/employee_layout"/>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/basic_padding_20dp"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp"
-                android:background="@drawable/ic_input_field_back"
-                android:backgroundTint="#617E7CCF"
-                android:backgroundTintMode="add">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/recommended"
-                    android:textColor="#7E7CCF"
-                    style="@style/task_activity_label"/>
-                <View
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"/>
+                    <ImageButton
+                        android:id="@+id/imageButtonAddTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="-20dp"
+                        android:background="@null"
+                        android:padding="@dimen/basic_padding_20dp"
+                        android:src="@drawable/ic_add" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewRecommendedEmployees"
+                    android:id="@+id/recyclerViewTags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                    tools:listitem="@layout/recommended_employee_layout"/>
+                    tools:listitem="@layout/task_tag_layout" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/basic_padding_20dp" />
+
+                <TextView
+                    style="@style/task_activity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_column" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textViewColumnName"
+                    style="@style/edit_field_task_dsc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@null"
+                    android:text="Column title" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/basic_padding_20dp" />
+
+                <TextView
+                    style="@style/task_activity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textViewDescription"
+                    style="@style/edit_field_task_dsc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@null"
+                    android:hint="@string/what_about_this_task" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        style="@style/task_activity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/responsible" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <ImageButton
+                        android:id="@+id/imageButtonAddEmployees"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="-20dp"
+                        android:background="@null"
+                        android:padding="@dimen/basic_padding_20dp"
+                        android:src="@drawable/ic_add" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewEmployees"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                    tools:listitem="@layout/employee_layout" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/basic_padding_20dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_input_field_back"
+                    android:backgroundTint="#617E7CCF"
+                    android:backgroundTintMode="add"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <TextView
+                        style="@style/task_activity_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recommended"
+                        android:textColor="#7E7CCF" />
+
+                    <View
+                        android:layout_width="wrap_content"
+                        android:layout_height="10dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewRecommendedEmployees"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                        tools:listitem="@layout/recommended_employee_layout" />
+                </LinearLayout>
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"/>
             </LinearLayout>
+        </ScrollView>
+        <LinearLayout
+            android:id="@+id/linearLayoutCompleted"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_input_field_back"
+            android:backgroundTint="@drawable/add_employee_color_selector"
+            android:backgroundTintMode="src_over"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:id="@+id/buttonCompleted"
+                android:background="@drawable/ic_input_field_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/completed"
+                android:textAlignment="center"
+                android:fontFamily="@font/euclid_circular_a_bold"
+                android:textSize="18sp"
+                android:textColor="?text_color"
+                android:padding="@dimen/basic_padding_20dp"/>
         </LinearLayout>
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

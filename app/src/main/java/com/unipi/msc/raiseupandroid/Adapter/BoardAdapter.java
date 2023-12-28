@@ -69,6 +69,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
             super(itemView);
             initViews(itemView);
             itemView.setOnClickListener(view->onBoardClick.onClick(view,getAdapterPosition()));
+            itemView.setOnLongClickListener(view-> onBoardClick.onLongClick(view,getAdapterPosition()));
         }
 
         public void setOnBoardClick(OnBoardClick onBoardClick) {

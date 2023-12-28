@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end">
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewProfile0"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:backgroundTint="?element_back_color"
@@ -68,6 +69,7 @@
                 android:background="@drawable/ic_profile"/>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewProfile1"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:backgroundTint="?element_back_color"
@@ -87,6 +89,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewProfile2"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:backgroundTint="?element_back_color"
@@ -105,24 +108,57 @@
             android:background="@drawable/ic_profile"/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
-    <TextView
-        android:id="@+id/textViewDueDate"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/task_dsc"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:text="25/11/2023"/>
-    <ImageButton
-        android:id="@+id/imageButtonChangeColumn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_change_column"
-        android:layout_gravity="end"
-        android:background="@null"
-        android:layout_marginTop="-10dp"
-        android:layout_marginEnd="-10dp"
-        android:layout_marginBottom="-10dp"
-        android:padding="10dp"
-        />
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/textViewDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/task_dsc"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:text="25/11/2023"/>
+        <View
+            android:layout_width="20dp"
+            android:layout_height="0dp"/>
+        <include
+            android:id="@+id/expireLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/expired_layout"
+            android:visibility="gone"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/imageButtonPreviousColumn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_previous_column"
+            android:layout_gravity="start"
+            android:background="@null"
+            android:layout_marginTop="-10dp"
+            android:layout_marginStart="-10dp"
+            android:padding="10dp"
+            />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <ImageButton
+            android:id="@+id/imageButtonNextColumn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_next_column"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="-10dp"
+            android:padding="10dp"
+            />
+
+    </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

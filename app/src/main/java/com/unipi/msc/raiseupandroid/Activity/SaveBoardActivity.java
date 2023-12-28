@@ -34,7 +34,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CreateBoardActivity extends AppCompatActivity {
+public class SaveBoardActivity extends AppCompatActivity {
     ImageButton imageButtonClose, imageButtonAddEmployees, imageButtonAddColumn;
     EditText editTextBoardName;
     RecyclerView recyclerViewEmployees, recyclerViewColumns;
@@ -53,36 +53,38 @@ public class CreateBoardActivity extends AppCompatActivity {
         initView();
         initObjects();
         initListeners();
-        loadBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
     }
-
-
-    private void loadBoard(long longExtra) {
-    }
-
 
     private void saveBoard(View view) {
         List<Long> userIds = new ArrayList<>();
         users.forEach(user -> userIds.add(user.getId()));
-        raiseUpAPI.createBoard(UserUtils.loadBearerToken(this), new BoardRequest(
-                editTextBoardName.getText().toString(),
-                userIds,
-                columns)).enqueue(new Callback<JsonObject>() {
+        Callback<JsonObject> callback = new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
-                    String msg = RetrofitUtils.handleErrorResponse(CreateBoardActivity.this,response);
-                    ActivityUtils.showToast(CreateBoardActivity.this,t,msg);
+                    String msg = RetrofitUtils.handleErrorResponse(SaveBoardActivity.this,response);
+                    ActivityUtils.showToast(SaveBoardActivity.this,t,msg);
                 }else{
-                    ActivityUtils.showToast(CreateBoardActivity.this,t,getString(R.string.board_created));
+                    ActivityUtils.showToast(SaveBoardActivity.this,t,getString(R.string.board_created));
                     finish();
                 }
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                RetrofitUtils.handleException(CreateBoardActivity.this,t);
+                RetrofitUtils.handleException(SaveBoardActivity.this,t);
             }
-        });
+        };
+        if (board.getId()==0L){
+            raiseUpAPI.createBoard(UserUtils.loadBearerToken(this), new BoardRequest(
+                    editTextBoardName.getText().toString(),
+                    userIds,
+                    columns)).enqueue(callback);
+        }else{
+            raiseUpAPI.updateBoard(UserUtils.loadBearerToken(this), new BoardRequest(
+                    editTextBoardName.getText().toString(),
+                    userIds,
+                    columns)).enqueue(callback);
+        }
     }
 
     private void addColumn(View view) {
@@ -99,9 +101,8 @@ public class CreateBoardActivity extends AppCompatActivity {
         boardCreationColumnAdapter = new BoardCreationColumnAdapter(this, columns, new OnBoardColumnClick() {
             @Override
             public void onClick(View view, int position) {
-                CustomBottomSheet.showEdit(CreateBoardActivity.this,"'"+columns.get(position)+"'",columns.get(position),value -> boardCreationColumnAdapter.editValue(position, value));
+                CustomBottomSheet.showEdit(SaveBoardActivity.this,"'"+columns.get(position)+"'",columns.get(position), value -> boardCreationColumnAdapter.editValue(position, value));
             }
-
             @Override
             public void onDelete(View view, int position) {
                 boardCreationColumnAdapter.deleteItem(columns.get(position));

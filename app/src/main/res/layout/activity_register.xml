@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +10,12 @@
     android:fitsSystemWindows="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="20dp">
+            app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     style="@style/title_reg_log"
@@ -26,11 +28,11 @@
 
                 <ImageButton
                     android:id="@+id/imageButtonClose"
+                    style="@style/toolbar_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:src="@drawable/ic_close"
-                    style="@style/toolbar_button"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -38,74 +40,103 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
+            android:id="@+id/scrollView3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            app:layout_constraintBottom_toTopOf="@+id/buttonSignUp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                         <TextView
+                            style="@style/title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/create_your_account"
-                            android:textAlignment="center"
-                            style="@style/title"/>
+                            android:textAlignment="center" />
 
                         <EditText
                             android:id="@+id/editTextFirstName"
+                            style="@style/input_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/first_name"
-                            style="@style/input_field"/>
+                            android:hint="@string/first_name" />
+
                         <EditText
                             android:id="@+id/editTextLastName"
+                            style="@style/input_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/last_name"
-                            style="@style/input_field"/>
+                            android:hint="@string/last_name" />
+
                         <EditText
                             android:id="@+id/editTextEmail"
+                            style="@style/input_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Email"
-                            style="@style/input_field"
                             tools:ignore="LabelFor" />
+
                         <EditText
                             android:id="@+id/editTextUsername"
+                            style="@style/input_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/username"
-                            style="@style/input_field"/>
+                            android:hint="@string/username" />
+
                         <EditText
                             android:id="@+id/editTextPassword"
+                            style="@style/input_field"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/password"
-                            android:inputType="textPassword"
-                            style="@style/input_field"/>
+                            android:inputType="textPassword" />
                 </LinearLayout>
         </ScrollView>
+
         <include
             android:id="@+id/includeErrorMessage"
+            layout="@layout/error_msg_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/error_msg_layout"
+            android:layout_gravity="center_horizontal"
             android:visibility="gone"
-            android:layout_gravity="center_horizontal"/>
+            app:layout_constraintEnd_toEndOf="@+id/scrollView3"
+            app:layout_constraintStart_toStartOf="@+id/scrollView3"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+
         <Button
             android:id="@+id/buttonSignUp"
+            style="@style/submit_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="@string/get_started"
-            style="@style/submit_button"/>
+            app:layout_constraintBottom_toTopOf="@+id/textViewPrivacy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textViewPrivacy"
+            style="@style/alternative_option_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/privacy_amp_terms"
-            style="@style/alternative_option_login"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

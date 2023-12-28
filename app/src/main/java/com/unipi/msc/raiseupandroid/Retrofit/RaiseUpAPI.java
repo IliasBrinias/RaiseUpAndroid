@@ -7,7 +7,9 @@ import com.unipi.msc.raiseupandroid.Retrofit.Request.EditUserRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.LoginRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.RegisterRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TagRequest;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.TaskRequest;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -57,17 +59,39 @@ public interface RaiseUpAPI {
     Call<JsonObject> editTag(@Header("Authorization") String auth, @Path("tagId") Long tagId, @Body TagRequest request);
     @DELETE("tag/{tagId}")
     Call<JsonObject> deleteTag(@Header("Authorization") String auth, @Path("tagId") Long tagId);
+    @GET("tag/search")
+    Call<JsonObject> getSearchedTags(@Header("Authorization") String auth, @Query("keyword") String keyword);
 //    Board
     @GET("board")
     Call<JsonObject> getBoards(@Header("Authorization") String auth);
     @GET("board/{boardId}")
     Call<JsonObject> getBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
+    @GET("board/{boardId}/columns")
+    Call<JsonObject> getColumns(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @POST("board")
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
+    @PATCH("board/{boardId}")
+    Call<JsonObject> updateBoard(@Header("Authorization") String auth, @Body BoardRequest boardRequest);
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
 
     @GET("board/{boardId}/employees")
     Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
+
+    @PATCH("task/{taskId}/employees")
+    Call<JsonObject> updateTaskEmployees(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body List<Long> employeeIds);
+
+    @GET("tasks")
+    Call<JsonObject> getTasks(@Header("Authorization") String auth);
+
+    @DELETE("task/{taskId}/delete-employee/{userId}")
+    Call<JsonObject> removeUserFromTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Path("userId") Long userId);
+
+    @PATCH("task/{taskId}/due-date")
+    Call<JsonObject> updateTaskDueDate(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body Long dueDate);
+
+    @PATCH("task/{taskId}")
+    Call<JsonObject> updateTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body TaskRequest request);
+
 }

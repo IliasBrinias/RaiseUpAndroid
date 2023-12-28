@@ -15,8 +15,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Fragment.BoardFragment;
 import com.unipi.msc.raiseupandroid.Fragment.ProfileFragment;
 import com.unipi.msc.raiseupandroid.Fragment.StatisticsFragment;
@@ -24,6 +26,9 @@ import com.unipi.msc.raiseupandroid.Fragment.TagFragment;
 import com.unipi.msc.raiseupandroid.Fragment.TaskFragment;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
+import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
 import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
@@ -31,6 +36,10 @@ import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private ItemViewModel itemViewModel;
@@ -46,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     private final List<LinearLayout> navButtons = new ArrayList<>();
     private User user;
+    private RaiseUpAPI raiseUpAPI;
+    private Toast t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +69,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void initObjects() {
         itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+        raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
         user = UserUtils.loadUser(this);
         itemViewModel.setUser(user);
     }
 
     private void loadUserData() {
-        textViewUserName.setText(user.getFullName());
-        ImageUtils.loadProfileToImageView(this, RetrofitUtils.BASE_URL + user.getProfile(), imageViewUserImage);
+        raiseUpAPI.getUser(UserUtils.loadBearerToken(this)).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(MainActivity.this, response);
+                    ActivityUtils.showToast(MainActivity.this,t,msg);
+                    textViewUserName.setText(user.getFullName());
+                    ImageUtils.loadProfileToImageView(MainActivity.this, RetrofitUtils.BASE_URL + user.getProfile(), imageViewUserImage);
+                }else {
+                    user = User.buildFromJSON(response.body().get("data").getAsJsonObject());
+                    UserUtils.saveUser(MainActivity.this,user);
+                    textViewUserName.setText(user.getFullName());
+                    ImageUtils.loadProfileToImageView(MainActivity.this, user.getProfile(), imageViewUserImage);
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(MainActivity.this,t);
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {

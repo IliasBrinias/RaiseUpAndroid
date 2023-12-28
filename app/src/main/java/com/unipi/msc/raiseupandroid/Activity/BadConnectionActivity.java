@@ -19,9 +19,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BadConnectionActivity extends AppCompatActivity {
-    Button buttonTryAgain;
-    ProgressBar progressBar;
-    RaiseUpAPI call;
+    private Button buttonTryAgain;
+    private ProgressBar progressBar;
+    private RaiseUpAPI raiseUpAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class BadConnectionActivity extends AppCompatActivity {
     }
 
     private void initObjects() {
-        call = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
+        raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
     }
 
     private void initListeners() {
@@ -47,7 +47,7 @@ public class BadConnectionActivity extends AppCompatActivity {
 
     private void tryAgain(View view) {
         ActivityUtils.showProgressBar(progressBar);
-        call.getUser(UserUtils.loadBearerToken(this)).enqueue(new Callback<JsonObject>() {
+        raiseUpAPI.getUser(UserUtils.loadBearerToken(this)).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 ActivityUtils.hideProgressBar(progressBar);

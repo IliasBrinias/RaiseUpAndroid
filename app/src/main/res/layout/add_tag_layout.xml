@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_employees"
+            android:text="@string/add_tags"
             style="@style/title_reg_log"
             />
         <View
@@ -55,29 +55,15 @@
         android:layout_width="wrap_content"
         android:layout_height="20dp"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewAddEmployees"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:listitem="@layout/add_employee_line_layout"/>
-    <LinearLayout
+        tools:listitem="@layout/add_tag_line_layout"/>
+    <Button
+        android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-        <ImageButton
-            android:id="@+id/imageButtonRefresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_refresh"
-            android:background="@null"/>
-        <View
-            android:layout_width="@dimen/basic_padding_20dp"
-            android:layout_height="0dp"/>
-        <Button
-            android:id="@+id/buttonSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/submit_button"
-            android:text="@string/save"/>
-    </LinearLayout>
+        style="@style/submit_button"
+        android:text="@string/save"/>
 </androidx.appcompat.widget.LinearLayoutCompat>

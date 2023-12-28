@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -18,6 +19,7 @@ import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.RegisterRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
+import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
@@ -40,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
     Button buttonSignUp;
     TextView textViewPrivacy, textViewErrorMessage;
     RaiseUpAPI raiseUpAPI;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         editTextPassword.addTextChangedListener(this);
         editTextFirstName.addTextChangedListener(this);
         editTextLastName.addTextChangedListener(this);
+        ActivityUtils.hideProgressBar(progressBar);
         KeyboardVisibilityEvent.setEventListener(this,isOpen -> {
             if (isOpen){
                 buttonSignUp.setVisibility(View.GONE);
@@ -74,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
 
     }
     private void signUp(View view) {
+        ActivityUtils.showProgressBar(progressBar);
         raiseUpAPI.register(new RegisterRequest(
                 editTextUsername.getText().toString(),
                 editTextEmail.getText().toString(),
@@ -96,10 +101,12 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
                     UserUtils.saveBearerToken(RegisterActivity.this, User.getTokenFromJSON(data));
                     startActivity(new Intent(RegisterActivity.this,MainActivity.class));
                 }
+                ActivityUtils.hideProgressBar(progressBar);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(RegisterActivity.this,t);
+                ActivityUtils.hideProgressBar(progressBar);
             }
         });
     }
@@ -115,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity implements TextWatcher {
         textViewPrivacy = findViewById(R.id.textViewPrivacy);
         includeErrorMessage = findViewById(R.id.includeErrorMessage);
         textViewErrorMessage = includeErrorMessage.findViewById(R.id.textViewErrorMessage);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     @Override

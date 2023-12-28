@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@drawable/ic_input_field_back"
+    android:backgroundTint="@drawable/add_employee_color_selector"
+    android:backgroundTintMode="src_over"
+    android:layout_marginBottom="10dp">
+    <TextView
+        android:id="@+id/textViewColumnName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Column"
+        android:textSize="18sp"
+        android:textColor="?text_color"
+        android:fontFamily="@font/euclid_circular_a_bold"/>
+</LinearLayout>

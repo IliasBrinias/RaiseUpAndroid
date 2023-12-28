@@ -14,29 +14,41 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.raiseupandroid.Interface.OnNavTagClickListener;
+import com.unipi.msc.raiseupandroid.Interface.OnTagClick;
 import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.R;
 
 import java.util.List;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
-    Context c;
-    List<Tag> tagList;
+    private final Context c;
+    private List<Tag> tagList;
+    private final int layout;
+    private OnTagClick onTagClick;
 
     public TagAdapter(Context c, List<Tag> tagList) {
         this.c = c;
         this.tagList = tagList;
+        this.layout = R.layout.task_tag_layout;
+    }
+
+    public TagAdapter(Context c, List<Tag> tagList, int layout, OnTagClick onTagClick) {
+        this.c = c;
+        this.tagList = tagList;
+        this.layout = layout;
+        this.onTagClick = onTagClick;
     }
 
     @NonNull
     @Override
     public TagViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.task_tag_layout, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return new TagViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
+        holder.onTagClick = onTagClick;
         holder.bindData(c, tagList.get(position));
     }
 
@@ -51,20 +63,28 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     }
 
     public static class TagViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageViewTaskColor;
-        TextView textViewTagName;
-        ImageButton imageButtonDeleteTask, imageButtonEditTask;
+        private ImageView imageViewTaskColor;
+        private TextView textViewTagName;
+        private OnTagClick onTagClick;
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
             initViews(itemView);
+            initListeners(itemView);
         }
+
+        private void initListeners(View itemView) {
+            itemView.setOnClickListener(v->{
+                if (onTagClick!=null){
+                    itemView.setSelected(!itemView.isSelected());
+                    onTagClick.onClick(v,getAdapterPosition());
+                }
+            });
+        }
+
         private void initViews(View view) {
             imageViewTaskColor = view.findViewById(R.id.imageViewTaskColor);
             textViewTagName = view.findViewById(R.id.textViewTagName);
-            imageButtonEditTask = view.findViewById(R.id.imageButtonEditTask);
-            imageButtonDeleteTask = view.findViewById(R.id.imageButtonDeleteTask);
         }
-
         public void bindData(Context c, Tag task){
             imageViewTaskColor.setColorFilter(Color.parseColor(task.getColor()), PorterDuff.Mode.ADD);
             textViewTagName.setText(task.getName());

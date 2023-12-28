@@ -1,7 +1,6 @@
 package com.unipi.msc.raiseupandroid.Adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.unipi.msc.raiseupandroid.Activity.TaskActivity;
+import com.unipi.msc.raiseupandroid.Interface.OnColumnTaskListener;
+import com.unipi.msc.raiseupandroid.Interface.OnTaskClick;
 import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.Model.Task;
 import com.unipi.msc.raiseupandroid.R;
-import com.unipi.msc.raiseupandroid.Tools.MockData;
-import com.unipi.msc.raiseupandroid.Tools.NameTag;
 
 import java.util.List;
 
@@ -26,10 +24,12 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int COLUMN = 1;
     Activity a;
     List<Column> columnList;
+    OnColumnTaskListener onColumnTaskListener;
 
-    public ColumnAdapter(Activity a, List<Column> columnList) {
+    public ColumnAdapter(Activity a, List<Column> columnList, OnColumnTaskListener onColumnTaskListener) {
         this.a = a;
         this.columnList = columnList;
+        this.onColumnTaskListener = onColumnTaskListener;
     }
 
     @NonNull
@@ -49,8 +49,8 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder view, int position) {
         if (view instanceof ColumnViewHolder) {
             ColumnViewHolder holder = (ColumnViewHolder) view;
-            Column column = columnList.get(position - 1);
-            holder.bindData(a, column);
+            holder.bindData(a, position, columnList);
+            holder.onColumnTaskListener = onColumnTaskListener;
         }
     }
     @Override
@@ -83,28 +83,34 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TaskAdapter taskAdapter;
         LinearLayout linearLayout;
         List<Task> tasks;
+        OnColumnTaskListener onColumnTaskListener;
         public ColumnViewHolder(@NonNull View itemView) {
             super(itemView);
             initViews(itemView);
-            initListeners();
         }
-
-        private void initListeners() {
-        }
-
         private void initViews(View view) {
             textViewColumnTitle = view.findViewById(R.id.textViewColumnTitle);
             recyclerView = view.findViewById(R.id.recyclerViewTask);
             linearLayout = view.findViewById(R.id.linearLayout);
         }
-        public void bindData(Activity a, Column column){
+        public void bindData(Activity a, int position, List<Column> columnList){
+            Column column = columnList.get(position - 1);
             textViewColumnTitle.setText(column.getTitle());
             recyclerView.setLayoutManager(new LinearLayoutManager(a));
             tasks = column.getTasks();
-            taskAdapter = new TaskAdapter(a, tasks, (view, position) -> {
-                Intent intent = new Intent(a, TaskActivity.class);
-                intent.putExtra(NameTag.TASK_ID,tasks.get(position).getId());
-                a.startActivity(intent);
+            taskAdapter = new TaskAdapter(a, tasks, position == 1, position == columnList.size(), new OnTaskClick() {
+                @Override
+                public void onClick(View view, int position) {
+                    onColumnTaskListener.onClick(view, getAdapterPosition()-1, position);
+                }
+                @Override
+                public void onDelete(View view, int position) {
+                    onColumnTaskListener.onDelete(view, getAdapterPosition()-1, position);
+                }
+                @Override
+                public void onNextColumn(View view, int position) {
+                    onColumnTaskListener.onNextColumn(view, getAdapterPosition()-1, position);
+                }
             });
             recyclerView.setAdapter(taskAdapter);
         }

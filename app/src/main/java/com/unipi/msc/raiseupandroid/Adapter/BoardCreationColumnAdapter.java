@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.raiseupandroid.Interface.OnBoardColumnClick;
+import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.R;
 
 import java.util.List;
@@ -59,6 +60,12 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
 
     public void editValue(int position, String value) {
         columns.set(position,value);
+        notifyDataSetChanged();
+    }
+
+    public void setData(List<Column> columns) {
+        this.columns.clear();
+        columns.forEach(column -> this.columns.add(column.getTitle()));
         notifyDataSetChanged();
     }
 

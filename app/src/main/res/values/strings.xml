@@ -62,4 +62,13 @@
     <string name="internet_connection_offline">The Internet connection appears to be offline.</string>
     <string name="try_again">Try Again</string>
     <string name="board_created">Board Created</string>
+    <string name="expired">Expired</string>
+    <string name="create_task">Create Task</string>
+    <string name="task_name">Task Name</string>
+    <string name="add_tags">Add Tags</string>
+    <string name="enter_a_date">Enter a date</string>
+    <string name="day">Day</string>
+    <string name="days">Days</string>
+    <string name="completed">Completed</string>
+    <string name="choose_column">Choose Column</string>
 </resources>
