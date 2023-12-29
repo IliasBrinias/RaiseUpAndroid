@@ -4,7 +4,7 @@ import android.view.View;
 
 public interface OnColumnTaskListener {
     void onClick(View view, int columnPosition, int taskPosition);
+    default void onTaskCreate(View view, int columnPosition){};
     default void onDelete(View view, int columnPosition, int taskPosition){};
-    default void onNextColumn(View view, int columnPosition, int taskPosition){};
-    default void onPreviousColumn(View view, int columnPosition, int taskPosition){};
+    default void onTaskChangeColumn(View view, int columnPosition, int taskPosition, int targetColumnPosition){};
 }

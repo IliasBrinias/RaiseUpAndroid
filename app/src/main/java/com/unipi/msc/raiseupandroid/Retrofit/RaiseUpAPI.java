@@ -85,7 +85,7 @@ public interface RaiseUpAPI {
     @GET("tasks")
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
 
-    @DELETE("task/{taskId}/delete-employee/{userId}")
+    @DELETE("task/{taskId}/deleteTask-employee/{userId}")
     Call<JsonObject> removeUserFromTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Path("userId") Long userId);
 
     @PATCH("task/{taskId}/due-date")
@@ -94,4 +94,9 @@ public interface RaiseUpAPI {
     @PATCH("task/{taskId}")
     Call<JsonObject> updateTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body TaskRequest request);
 
+    @DELETE("task/{taskId}")
+    Call<JsonObject> deleteTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
+
+    @POST("task")
+    Call<JsonObject> createTask(@Header("Authorization") String auth, @Body TaskRequest request);
 }

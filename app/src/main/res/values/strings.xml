@@ -71,4 +71,8 @@
     <string name="days">Days</string>
     <string name="completed">Completed</string>
     <string name="choose_column">Choose Column</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_text">Do you really want to delete? \nThis process cannot be undone</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

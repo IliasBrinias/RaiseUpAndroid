@@ -22,9 +22,11 @@ import com.unipi.msc.raiseupandroid.Adapter.TagAdapter;
 import com.unipi.msc.raiseupandroid.Interface.OnAddColumnResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnAddEmployeesResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnColumnChange;
+import com.unipi.msc.raiseupandroid.Interface.OnDeleteClick;
 import com.unipi.msc.raiseupandroid.Interface.OnEditPersonalData;
 import com.unipi.msc.raiseupandroid.Interface.OnSingleValueResponse;
 import com.unipi.msc.raiseupandroid.Interface.OnTagSelected;
+import com.unipi.msc.raiseupandroid.Interface.OnTaskNameResponse;
 import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.Model.Tag;
 import com.unipi.msc.raiseupandroid.Model.Task;
@@ -169,15 +171,22 @@ public class CustomBottomSheet {
     }
 
     public static void AddBoardColumn(Activity activity, OnAddColumnResponse onAddColumnResponse) {
-        View view = activity.getLayoutInflater().inflate(R.layout.add_progress_column_layout, null);
+        singleInput(activity,activity.getString(R.string.progress_column), onAddColumnResponse::onResponse);
+    }
+    public static void AddTaskName(Activity activity, OnTaskNameResponse onAddColumnResponse) {
+        singleInput(activity,activity.getString(R.string.task_name), onAddColumnResponse::onResponse);
+    }
+    private static void singleInput(Activity activity, String hint, OnSingleValueResponse onSingleValueResponse){
+        View view = activity.getLayoutInflater().inflate(R.layout.single_input_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
 
-        EditText editTextColumn = view.findViewById(R.id.editTextProgressColumn);
-        ImageButton imageButtonAddColumn = view.findViewById(R.id.imageButtonAddColumn);
-        imageButtonAddColumn.setOnClickListener(v->{
-            if (!editTextColumn.getText().toString().isEmpty()){
-                onAddColumnResponse.onResponse(editTextColumn.getText().toString());
+        EditText editTextInput = view.findViewById(R.id.editTextInput);
+        ImageButton imageButtonConfirm = view.findViewById(R.id.imageButtonConfirm);
+        editTextInput.setHint(hint);
+        imageButtonConfirm.setOnClickListener(v->{
+            if (!editTextInput.getText().toString().isEmpty()){
+                onSingleValueResponse.onResponse(editTextInput.getText().toString());
             }
             dialog.cancel();
         });
@@ -246,7 +255,6 @@ public class CustomBottomSheet {
     public static void changeColumn(Activity activity, Task task, OnColumnChange onColumnChange){
 
         List<Column> columns = new ArrayList<>();
-        Map<Long,Boolean> selectedTags = new HashMap<>();
         RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
 
         View view = activity.getLayoutInflater().inflate(R.layout.change_column_layout, null);
@@ -281,6 +289,21 @@ public class CustomBottomSheet {
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(activity, t);
             }
+        });
+        dialog.show();
+    }
+    public static void deleteMessage(Activity activity, OnDeleteClick onDeleteClick) {
+
+        View view = activity.getLayoutInflater().inflate(R.layout.delete_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+
+        Button buttonCancel = view.findViewById(R.id.buttonCancel);
+        Button buttonDelete = view.findViewById(R.id.buttonDelete);
+        buttonCancel.setOnClickListener(v->dialog.cancel());
+        buttonDelete.setOnClickListener(v-> {
+            dialog.cancel();
+            onDeleteClick.onClick();
         });
         dialog.show();
     }

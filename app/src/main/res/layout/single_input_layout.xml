@@ -6,7 +6,7 @@
     android:paddingEnd="0dp"
     android:orientation="horizontal">
     <EditText
-        android:id="@+id/editTextProgressColumn"
+        android:id="@+id/editTextInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -15,7 +15,7 @@
         android:layout_marginTop="0dp"
         android:hint="@string/progress_column"/>
     <ImageButton
-        android:id="@+id/imageButtonAddColumn"
+        android:id="@+id/imageButtonConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/basic_padding_20dp"
