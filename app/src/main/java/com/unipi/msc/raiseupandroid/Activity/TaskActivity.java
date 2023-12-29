@@ -15,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Adapter.EmployeeAdapter;
 import com.unipi.msc.raiseupandroid.Adapter.TagAdapter;
+import com.unipi.msc.raiseupandroid.Interface.OnTagClick;
 import com.unipi.msc.raiseupandroid.Model.Task;
 import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
@@ -32,6 +33,7 @@ import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -84,7 +86,14 @@ public class TaskActivity extends AppCompatActivity {
     }
     private void initObjects() {
         task = new Task();
-        tagAdapter = new TagAdapter(this,task.getTags());
+        tagAdapter = new TagAdapter(this, task.getTags(), new OnTagClick() {
+            @Override
+            public void onClick(View view, int position) {}
+            @Override
+            public void onDelete(View view, int position) {
+                removeTag(position);
+            }
+        });
         employeeAdapter = new EmployeeAdapter(this,task.getUsers(),(view, position) -> removeEmployee(position));
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
     }
@@ -142,25 +151,17 @@ public class TaskActivity extends AppCompatActivity {
         employeeAdapter.setData(this.task.getUsers());
         linearLayoutCompleted.setSelected(task.getCompleted());
     }
+    private void removeTag(int position) {
+        List<Long> tagIds = new ArrayList<>();
+        Long deletedTagId = task.getTags().get(position).getId();
+        task.getTags().stream().filter(tag -> !Objects.equals(tag.getId(), deletedTagId)).allMatch(tag -> tagIds.add(tag.getId()));
+        updateTask(new TaskRequest.Builder().setTagIds(tagIds).build());
+    }
     private void removeEmployee(int position) {
-        ActivityUtils.showProgressBar(progressBar);
-        raiseUpAPI.removeUserFromTask(UserUtils.loadBearerToken(this),  task.getId(), task.getUsers().get(position).getId()).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (!response.isSuccessful()){
-                    String msg = RetrofitUtils.handleErrorResponse(TaskActivity.this,response);
-                    ActivityUtils.showToast(TaskActivity.this,t,msg);
-                }else {
-                    loadData(Task.buildTaskFromJSON(response.body().get("data").getAsJsonObject()));
-                }
-                ActivityUtils.hideProgressBar(progressBar);
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                RetrofitUtils.handleException(TaskActivity.this, t);
-                ActivityUtils.hideProgressBar(progressBar);
-            }
-        });
+        List<Long> userIds = new ArrayList<>();
+        Long deletedUserId = task.getUsers().get(position).getId();
+        task.getUsers().stream().filter(user -> !Objects.equals(user.getId(), deletedUserId)).allMatch(tag -> userIds.add(tag.getId()));
+        updateTask(new TaskRequest.Builder().setEmployeeIds(userIds).build());
     }
     private void addEmployees(View view) {
         ActivityUtils.showProgressBar(progressBar);

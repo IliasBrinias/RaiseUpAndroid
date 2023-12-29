@@ -27,4 +27,15 @@
         android:paddingStart="10dp"
         android:textColor="?text_color"
         android:fontFamily="@font/euclid_circular_a_regular"/>
+    <ImageButton
+        android:id="@+id/imageButtonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_no_back"
+        android:background="@null"
+        android:padding="10dp"
+        android:layout_marginEnd="-10dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="-5dp"
+        />
 </LinearLayout>

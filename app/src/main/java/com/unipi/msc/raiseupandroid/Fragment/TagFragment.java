@@ -53,7 +53,7 @@ public class TagFragment extends Fragment {
 
     @Override
     public void onResume() {
-        if (adapter!=null) loadTags();
+        loadTags();
         super.onResume();
     }
 

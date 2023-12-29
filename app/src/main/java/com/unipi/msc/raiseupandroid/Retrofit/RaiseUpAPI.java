@@ -47,7 +47,6 @@ public interface RaiseUpAPI {
                               @Part("lastName") RequestBody lastName);
     @GET("user/search")
     Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("keyword") String keyword);
-
 //    Tag
     @GET("tag")
     Call<JsonObject> getTags(@Header("Authorization") String auth);
@@ -75,28 +74,14 @@ public interface RaiseUpAPI {
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
-
     @GET("board/{boardId}/employees")
     Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
-
-    @PATCH("task/{taskId}/employees")
-    Call<JsonObject> updateTaskEmployees(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body List<Long> employeeIds);
-
     @GET("tasks")
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
-
-    @DELETE("task/{taskId}/deleteTask-employee/{userId}")
-    Call<JsonObject> removeUserFromTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Path("userId") Long userId);
-
-    @PATCH("task/{taskId}/due-date")
-    Call<JsonObject> updateTaskDueDate(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body Long dueDate);
-
     @PATCH("task/{taskId}")
     Call<JsonObject> updateTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body TaskRequest request);
-
     @DELETE("task/{taskId}")
     Call<JsonObject> deleteTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
-
     @POST("task")
     Call<JsonObject> createTask(@Header("Authorization") String auth, @Body TaskRequest request);
 }

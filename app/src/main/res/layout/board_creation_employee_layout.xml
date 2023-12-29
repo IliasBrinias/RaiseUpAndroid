@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/ic_input_field_back"
     android:gravity="center_vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="10dp">
     <androidx.cardview.widget.CardView
         android:layout_width="30dp"
         android:layout_height="30dp"
