@@ -1,20 +1,14 @@
 package com.unipi.msc.raiseupandroid.Retrofit;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.BoardRequest;
-import com.unipi.msc.raiseupandroid.Retrofit.Request.EditUserRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.LoginRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.RegisterRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TagRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TaskRequest;
 
-import java.util.List;
-import java.util.Map;
-
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -24,10 +18,8 @@ import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.QueryMap;
 
 public interface RaiseUpAPI {
 //    Auth
@@ -59,7 +51,8 @@ public interface RaiseUpAPI {
     @DELETE("tag/{tagId}")
     Call<JsonObject> deleteTag(@Header("Authorization") String auth, @Path("tagId") Long tagId);
     @GET("tag/search")
-    Call<JsonObject> getSearchedTags(@Header("Authorization") String auth, @Query("keyword") String keyword);
+    Call<JsonObject> searchTags(@Header("Authorization") String auth, @Query("keyword") String keyword);
+
 //    Board
     @GET("board")
     Call<JsonObject> getBoards(@Header("Authorization") String auth);
@@ -67,6 +60,8 @@ public interface RaiseUpAPI {
     Call<JsonObject> getBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @GET("board/{boardId}/columns")
     Call<JsonObject> getColumns(@Header("Authorization") String auth, @Path("boardId") Long boardId);
+    @GET("board/search")
+    Call<JsonObject> searchBoard(@Header("Authorization") String auth, @Query("keyword") String keyword);
     @POST("board")
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
     @PATCH("board/{boardId}")
@@ -76,8 +71,10 @@ public interface RaiseUpAPI {
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
     @GET("board/{boardId}/employees")
     Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
-    @GET("tasks")
+    @GET("task")
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
+    @GET("task/search")
+    Call<JsonObject> searchTasks(@Header("Authorization") String auth, @Query("keyword") String keyword);
     @PATCH("task/{taskId}")
     Call<JsonObject> updateTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body TaskRequest request);
     @DELETE("task/{taskId}")

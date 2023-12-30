@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -24,6 +26,7 @@ import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
+import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
@@ -36,12 +39,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BoardFragment extends Fragment {
-    RecyclerView recyclerView;
-    ImageButton imageButtonCreateBoard;
-    BoardAdapter boardAdapter;
-    RaiseUpAPI raiseUpAPI;
-    Toast t;
-    List<Board> boardList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private ImageButton imageButtonCreateBoard;
+    private BoardAdapter boardAdapter;
+    private ProgressBar progressBar;
+    private RaiseUpAPI raiseUpAPI;
+    private Toast t;
+    private List<Board> boardList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,14 +65,12 @@ public class BoardFragment extends Fragment {
 
     @Override
     public void onResume() {
-        if (boardAdapter!=null){
-            loadData();
-        }
         super.onResume();
+        loadData();
     }
 
     private void loadData() {
-        raiseUpAPI.getBoards(UserUtils.loadBearerToken(requireActivity())).enqueue(new Callback<JsonObject>() {
+        Callback<JsonObject> callback = new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
@@ -81,12 +83,20 @@ public class BoardFragment extends Fragment {
                         boardAdapter.addItem(Board.buildBoardFromJson(jsonArray.get(i).getAsJsonObject()));
                     }
                 }
+                ActivityUtils.hideProgressBar(progressBar);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(requireActivity(), t);
+                ActivityUtils.hideProgressBar(progressBar);
             }
+        };
+        new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getKeyword().observe(getViewLifecycleOwner(), keyword -> {
+            ActivityUtils.showProgressBar(progressBar);
+            raiseUpAPI.searchBoard(UserUtils.loadBearerToken(requireActivity()), keyword).enqueue(callback);
         });
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.getBoards(UserUtils.loadBearerToken(requireActivity())).enqueue(callback);
     }
 
     private void initObjects() {
@@ -107,5 +117,6 @@ public class BoardFragment extends Fragment {
     private void initViews(View view) {
         recyclerView = view.findViewById(R.id.recyclerView);
         imageButtonCreateBoard = view.findViewById(R.id.imageButtonCreateBoard);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 }

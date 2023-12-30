@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
@@ -23,6 +25,7 @@ import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
+import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.raiseupandroid.Tools.MockData;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
@@ -36,9 +39,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TaskFragment extends Fragment {
-
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
+    private ProgressBar progressBar;
     private RaiseUpAPI raiseUpAPI;
     private Toast t;
     private List<Task> taskList = new ArrayList<>();
@@ -52,7 +55,15 @@ public class TaskFragment extends Fragment {
         initListener();
         return v;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+    private void initViews(View v) {
+        recyclerView = v.findViewById(R.id.recyclerView);
+        progressBar = v.findViewById(R.id.progressBar);
+    }
     private void initObjects() {
         raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
         taskAdapter = new TaskAdapter(requireActivity(), taskList, (view, position) -> {
@@ -61,15 +72,12 @@ public class TaskFragment extends Fragment {
             requireActivity().startActivity(intent);
         });
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        loadData();
+    private void initListener() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        recyclerView.setAdapter(taskAdapter);
     }
-
     private void loadData() {
-        raiseUpAPI.getTasks(UserUtils.loadBearerToken(requireActivity())).enqueue(new Callback<JsonObject>() {
+        Callback<JsonObject> callback = new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
@@ -83,20 +91,19 @@ public class TaskFragment extends Fragment {
                     }
                     taskAdapter.refreshData();
                 }
+                ActivityUtils.hideProgressBar(progressBar);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(requireActivity(),t);
+                ActivityUtils.hideProgressBar(progressBar);
             }
+        };
+        new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getKeyword().observe(getViewLifecycleOwner(), keyword -> {
+            ActivityUtils.showProgressBar(progressBar);
+            raiseUpAPI.searchTasks(UserUtils.loadBearerToken(requireActivity()), keyword).enqueue(callback);
         });
-    }
-
-    private void initListener() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        recyclerView.setAdapter(taskAdapter);
-    }
-
-    private void initViews(View v) {
-        recyclerView = v.findViewById(R.id.recyclerView);
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.getTasks(UserUtils.loadBearerToken(requireActivity())).enqueue(callback);
     }
 }

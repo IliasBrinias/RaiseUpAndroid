@@ -240,7 +240,7 @@ public class CustomBottomSheet {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                raiseUpAPI.getSearchedTags(UserUtils.loadBearerToken(activity), s.toString()).enqueue(response);
+                raiseUpAPI.searchTags(UserUtils.loadBearerToken(activity), s.toString()).enqueue(response);
             }
         });
         raiseUpAPI.getTags(UserUtils.loadBearerToken(activity)).enqueue(response);
