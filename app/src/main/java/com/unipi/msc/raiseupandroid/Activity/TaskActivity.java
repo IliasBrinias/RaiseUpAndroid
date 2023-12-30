@@ -62,9 +62,7 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (tagAdapter!=null){
-            getTask(getIntent().getLongExtra(NameTag.TASK_ID,0L));
-        }
+        getTask(getIntent().getLongExtra(NameTag.TASK_ID,0L));
     }
     private void initViews() {
         imageButtonExit = findViewById(R.id.imageButtonExit);
@@ -141,7 +139,7 @@ public class TaskActivity extends AppCompatActivity {
         expireLayout.setVisibility(View.INVISIBLE);
         if (task.getDueDate() != null){
             long days = ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate());
-            expireLayout.setVisibility(days<=0 ? View.VISIBLE : View.INVISIBLE);
+            expireLayout.setVisibility(days<=0 && !task.getCompleted() ? View.VISIBLE : View.INVISIBLE);
             textViewDaysToExpire.setText(Math.abs(days) + " " +(days==1?getString(R.string.day):getString(R.string.days)));
         }
         textViewToExpire.setVisibility(expireLayout.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.GONE);
@@ -177,7 +175,7 @@ public class TaskActivity extends AppCompatActivity {
                     for (int i = 0; i < jsonArray.size(); i++) {
                         users.add(User.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
                     }
-                    CustomBottomSheet.addEmployees(TaskActivity.this, users, TaskActivity.this::updateEmployees);
+                    CustomBottomSheet.addEmployees(TaskActivity.this, users,task.getColumn().getBoardId(), TaskActivity.this::updateEmployees);
                 }
                 ActivityUtils.hideProgressBar(progressBar);
             }

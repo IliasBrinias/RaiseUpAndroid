@@ -1,9 +1,11 @@
 package com.unipi.msc.raiseupandroid.Tools;
 
 import android.app.Activity;
+import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.unipi.msc.raiseupandroid.Activity.SaveBoardActivity;
+import com.unipi.msc.raiseupandroid.Activity.TaskActivity;
 import com.unipi.msc.raiseupandroid.Adapter.AddEmployeeAdapter;
 import com.unipi.msc.raiseupandroid.Adapter.ChangeColumnAdapter;
 import com.unipi.msc.raiseupandroid.Adapter.TagAdapter;
@@ -89,10 +93,10 @@ public class CustomBottomSheet {
         });
         imageButtonRefresh.setOnClickListener(v->editText.setText(initValue));
         imageButtonClose.setOnClickListener(v->dialog.cancel());
-
         dialog.show();
+        showKeyboard(activity, editText);
     }
-    public static void addEmployees(Activity activity, List<User> alreadySelected, OnAddEmployeesResponse onAddEmployeesResponse){
+    public static void addEmployees(Activity activity, List<User> alreadySelected, Long boardId, OnAddEmployeesResponse onAddEmployeesResponse){
         List<User> users = new ArrayList<>();
         Map<Long,Boolean> selectedEmployees = new HashMap<>();
         RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
@@ -108,12 +112,11 @@ public class CustomBottomSheet {
         ImageButton imageButtonClose = view.findViewById(R.id.imageButtonClose);
         RecyclerView recyclerViewAddEmployees = view.findViewById(R.id.recyclerViewAddEmployees);
 
-        AddEmployeeAdapter addEmployeeAdapter = new AddEmployeeAdapter(activity, users,(v, position) -> {
+        AddEmployeeAdapter addEmployeeAdapter = new AddEmployeeAdapter(activity, alreadySelected, users,(v, position) -> {
             selectedEmployees.put(users.get(position).getId(), v.isSelected());
             buttonSubmit.setActivated(selectedEmployees.containsValue(true));
         });
-
-        Runnable runnable = () -> raiseUpAPI.searchUser(UserUtils.loadBearerToken(activity), editTextSearch.getText().toString())
+        Runnable runnable = () -> raiseUpAPI.searchUser(UserUtils.loadBearerToken(activity), boardId, editTextSearch.getText().toString())
             .enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -135,7 +138,7 @@ public class CustomBottomSheet {
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     RetrofitUtils.handleException(activity, t);
                 }
-        });
+            });
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -191,6 +194,7 @@ public class CustomBottomSheet {
             dialog.cancel();
         });
         dialog.show();
+        showKeyboard(activity, editTextInput);
     }
     public static void addTags(Activity activity, OnTagSelected onTagSelected){
 
@@ -307,4 +311,11 @@ public class CustomBottomSheet {
         });
         dialog.show();
     }
+
+    private static void showKeyboard(Activity activity, EditText editText) {
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
 }

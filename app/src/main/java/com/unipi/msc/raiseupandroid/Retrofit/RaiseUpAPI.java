@@ -38,7 +38,7 @@ public interface RaiseUpAPI {
                               @Part("firstName") RequestBody firstName,
                               @Part("lastName") RequestBody lastName);
     @GET("user/search")
-    Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("keyword") String keyword);
+    Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("boardId") Long board, @Query("keyword") String keyword);
 //    Tag
     @GET("tag")
     Call<JsonObject> getTags(@Header("Authorization") String auth);
@@ -60,6 +60,8 @@ public interface RaiseUpAPI {
     Call<JsonObject> getBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @GET("board/{boardId}/columns")
     Call<JsonObject> getColumns(@Header("Authorization") String auth, @Path("boardId") Long boardId);
+    @GET("board/{boardId}/employees")
+    Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @GET("board/search")
     Call<JsonObject> searchBoard(@Header("Authorization") String auth, @Query("keyword") String keyword);
     @POST("board")
@@ -69,8 +71,6 @@ public interface RaiseUpAPI {
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
-    @GET("board/{boardId}/employees")
-    Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @GET("task")
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
     @GET("task/search")

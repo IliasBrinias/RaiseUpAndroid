@@ -39,7 +39,6 @@ public class SaveBoardActivity extends AppCompatActivity {
     EditText editTextBoardName;
     RecyclerView recyclerViewEmployees, recyclerViewColumns;
     Button buttonCreate;
-    Board board;
     List<User> users = new ArrayList<>();
     List<String> columns = new ArrayList<>();
     EmployeeAdapter employeeAdapter;
@@ -58,7 +57,7 @@ public class SaveBoardActivity extends AppCompatActivity {
     private void saveBoard(View view) {
         List<Long> userIds = new ArrayList<>();
         users.forEach(user -> userIds.add(user.getId()));
-        Callback<JsonObject> callback = new Callback<JsonObject>() {
+        raiseUpAPI.createBoard(UserUtils.loadBearerToken(this), new BoardRequest(editTextBoardName.getText().toString(), userIds, columns)).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (!response.isSuccessful()){
@@ -73,18 +72,7 @@ public class SaveBoardActivity extends AppCompatActivity {
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(SaveBoardActivity.this,t);
             }
-        };
-        if (board.getId()==0L){
-            raiseUpAPI.createBoard(UserUtils.loadBearerToken(this), new BoardRequest(
-                    editTextBoardName.getText().toString(),
-                    userIds,
-                    columns)).enqueue(callback);
-        }else{
-            raiseUpAPI.updateBoard(UserUtils.loadBearerToken(this), new BoardRequest(
-                    editTextBoardName.getText().toString(),
-                    userIds,
-                    columns)).enqueue(callback);
-        }
+        });
     }
 
     private void addColumn(View view) {
@@ -92,7 +80,7 @@ public class SaveBoardActivity extends AppCompatActivity {
     }
 
     private void addEmployees(View view) {
-        CustomBottomSheet.addEmployees(this, users, employees -> employeeAdapter.setData(employees));
+        CustomBottomSheet.addEmployees(this, users, 0L,employees -> employeeAdapter.setData(employees));
     }
 
     private void initObjects() {

@@ -71,26 +71,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView0, imageView1, imageView2;
         private ImageButton imageButtonDeleteTask, imageButtonNextColumn, imageButtonPreviousColumn;
+        private ImageView imageViewStatus;
         private TextView textViewTitle, textViewDueDate, textViewDescription;
-        private OnTaskClick onTaskClick;
-        private LinearLayoutCompat linearLayout;
+        private CardView cardViewProfile0,cardViewProfile1,cardViewProfile2;
         private RecyclerView recyclerView;
-        View expireLayout;
-        CardView cardViewProfile0,cardViewProfile1,cardViewProfile2;
+        private LinearLayoutCompat linearLayout;
+        private View expireLayout;
+        private OnTaskClick onTaskClick;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             initViews(itemView);
             initListeners(itemView);
         }
-
-        private void initListeners(View itemView) {
-            itemView.setOnClickListener(view-> onTaskClick.onClick(view,getAdapterPosition()));
-            imageButtonDeleteTask.setOnClickListener(v->onTaskClick.onDelete(v,getAdapterPosition()));
-            imageButtonNextColumn.setOnClickListener(v->onTaskClick.onNextColumn(v,getAdapterPosition()));
-            imageButtonPreviousColumn.setOnClickListener(v->onTaskClick.onPreviousColumn(v,getAdapterPosition()));
-        }
-
         private void initViews(View view) {
             imageView0 = view.findViewById(R.id.imageViewProfile0);
             imageView1 = view.findViewById(R.id.imageViewProfile1);
@@ -101,6 +94,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             imageButtonDeleteTask = view.findViewById(R.id.imageButtonDeleteTask);
             imageButtonNextColumn = view.findViewById(R.id.imageButtonNextColumn);
             imageButtonPreviousColumn = view.findViewById(R.id.imageButtonPreviousColumn);
+            imageViewStatus = view.findViewById(R.id.imageViewStatus);
             linearLayout = view.findViewById(R.id.linearLayout);
             expireLayout = view.findViewById(R.id.expireLayout);
             cardViewProfile0 = view.findViewById(R.id.cardViewProfile0);
@@ -108,7 +102,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             cardViewProfile2 = view.findViewById(R.id.cardViewProfile2);
             recyclerView = view.findViewById(R.id.recyclerView);
         }
+        private void initListeners(View itemView) {
+            itemView.setOnClickListener(view-> onTaskClick.onClick(view,getAdapterPosition()));
+            imageButtonDeleteTask.setOnClickListener(v->onTaskClick.onDelete(v,getAdapterPosition()));
+            imageButtonNextColumn.setOnClickListener(v->onTaskClick.onNextColumn(v,getAdapterPosition()));
+            imageButtonPreviousColumn.setOnClickListener(v->onTaskClick.onPreviousColumn(v,getAdapterPosition()));
+        }
         public void bindData(Activity a, boolean fistColumn, boolean lastColumn, Task task){
+            imageViewStatus.setVisibility(View.GONE);
             if (a instanceof MainActivity){
                 imageButtonDeleteTask.setVisibility(View.GONE);
                 imageButtonNextColumn.setVisibility(View.GONE);
@@ -124,6 +125,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                     imageButtonNextColumn.setVisibility(View.GONE);
                 }else{
                     imageButtonNextColumn.setVisibility(View.VISIBLE);
+                }
+                if (task.getCompleted()){
+                    imageViewStatus.setVisibility(View.VISIBLE);
+                    imageViewStatus.setImageResource(R.drawable.ic_bookmark_complete);
                 }
             }
             if (task.getTags() == null){
@@ -145,8 +150,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 expireLayout.setVisibility(View.GONE);
             }else {
                 textViewDueDate.setText(simpleDateFormat.format(task.getDueDate()));
-                textViewDueDate.setVisibility(View.VISIBLE);
-                expireLayout.setVisibility(ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate())<=0?View.VISIBLE:View.GONE);
+//                textViewDueDate.setVisibility(View.VISIBLE);
+                long days = ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate());
+                if (days<=0){
+                    imageViewStatus.setVisibility(View.VISIBLE);
+                    imageViewStatus.setImageResource(R.drawable.ic_bookmark_expired);
+                }
+//                expireLayout.setVisibility(ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate())<=0?View.VISIBLE:View.GONE);
             }
             try{
                 ImageUtils.loadProfileToImageView(a,task.getUsers().get(0).getProfile(),imageView0);
