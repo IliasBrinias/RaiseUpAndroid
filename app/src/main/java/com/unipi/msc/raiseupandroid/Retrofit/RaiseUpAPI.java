@@ -1,9 +1,11 @@
 package com.unipi.msc.raiseupandroid.Retrofit;
 
 import com.google.gson.JsonObject;
+import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.BoardRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.LoginRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.RegisterRequest;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.StepRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TagRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TaskRequest;
 
@@ -81,4 +83,7 @@ public interface RaiseUpAPI {
     Call<JsonObject> deleteTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
     @POST("task")
     Call<JsonObject> createTask(@Header("Authorization") String auth, @Body TaskRequest request);
+//  Step
+    @PATCH("step/{stepId}")
+    Call<JsonObject> editColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId, @Body StepRequest request);
 }

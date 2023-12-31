@@ -54,13 +54,13 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
     }
 
     public void addData(String column) {
-        columns.add(columns.size() - 1, column);
+        columns.add(column);
         notifyDataSetChanged();
     }
 
     public void editValue(int position, String value) {
         columns.set(position,value);
-        notifyDataSetChanged();
+        notifyItemChanged(position);
     }
 
     public void setData(List<Column> columns) {

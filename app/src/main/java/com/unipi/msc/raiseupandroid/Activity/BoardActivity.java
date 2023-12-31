@@ -19,8 +19,11 @@ import com.unipi.msc.raiseupandroid.Interface.OnColumnTaskListener;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.Model.Column;
 import com.unipi.msc.raiseupandroid.Model.Task;
+import com.unipi.msc.raiseupandroid.Model.User;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.BoardRequest;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.StepRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.Request.TaskRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
@@ -31,6 +34,7 @@ import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +50,7 @@ public class BoardActivity extends AppCompatActivity{
     private ColumnAdapter columnAdapter;
     private ProgressBar progressBar;
     private Toast t;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,10 +61,8 @@ public class BoardActivity extends AppCompatActivity{
     }
     @Override
     protected void onResume() {
+        getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
         super.onResume();
-        if (columnAdapter!=null){
-            getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
-        }
     }
     private void initViews() {
         recyclerViewColumns = findViewById(R.id.recyclerViewColumns);
@@ -70,6 +73,7 @@ public class BoardActivity extends AppCompatActivity{
     }
     private void initObjects() {
         board = new Board();
+        user = UserUtils.loadUser(this);
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
         columnAdapter = new ColumnAdapter(this, board.getColumns(), new OnColumnTaskListener() {
             @Override
@@ -102,6 +106,12 @@ public class BoardActivity extends AppCompatActivity{
                         }
                     });
                 });
+            }
+
+            @Override
+            public void onColumnTitleClick(View view, int position) {
+                if (!Objects.equals(board.getOwnerId(), user.getId())) return;
+                CustomBottomSheet.showEdit(BoardActivity.this,getString(R.string.progress_column), board.getColumns().get(position).getTitle(),value -> updateStep(position, new StepRequest.Builder().setTitle(value).build()));
             }
 
             @Override
@@ -155,8 +165,36 @@ public class BoardActivity extends AppCompatActivity{
             }
         });
     }
+
+    private void updateStep(int position, StepRequest request) {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.editColumn(UserUtils.loadBearerToken(this), board.getColumns().get(position).getId(),request).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(BoardActivity.this,response);
+                    ActivityUtils.showToast(BoardActivity.this, t, msg);
+                }else{
+                    board = Board.buildBoardFromJson(response.body().get("data").getAsJsonObject());
+                    loadData(board);
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(BoardActivity.this, t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+        });
+    }
+
     private void initListeners() {
         imageButtonExit.setOnClickListener(v->finish());
+            textViewBoardTitle.setOnClickListener(view-> {
+                if (!Objects.equals(user.getId(), board.getOwnerId())) return;
+                CustomBottomSheet.showEdit(BoardActivity.this,getString(R.string.board_name),textViewBoardTitle.getText().toString(), value -> updateBoard(new BoardRequest.Builder().setTitle(value).build()));
+            });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewColumns.setLayoutManager(linearLayoutManager);
         recyclerViewColumns.setHasFixedSize(true);
@@ -198,5 +236,25 @@ public class BoardActivity extends AppCompatActivity{
     private void loadData(Board board) {
         textViewBoardTitle.setText(board.getTitle());
         columnAdapter.setData(board.getColumns());
+    }
+    private void updateBoard(BoardRequest request) {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.updateBoard(UserUtils.loadBearerToken(BoardActivity.this), board.getId(), request).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(BoardActivity.this,response);
+                    ActivityUtils.showToast(BoardActivity.this,t,msg);
+                }else {
+                    loadData(Board.buildBoardFromJson(response.body().get("data").getAsJsonObject()));
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(BoardActivity.this, t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+        });
     }
 }

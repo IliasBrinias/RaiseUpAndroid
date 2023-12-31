@@ -102,6 +102,7 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         private void initListeners() {
             linearLayoutCreateTask.setOnClickListener(view -> onColumnTaskListener.onTaskCreate(view,getAdapterPosition()-1));
+            textViewColumnTitle.setOnClickListener(view -> onColumnTaskListener.onColumnTitleClick(view,getAdapterPosition()-1));
         }
 
         private void initViews(View view) {
