@@ -67,7 +67,7 @@ public interface RaiseUpAPI {
     @POST("board")
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
     @PATCH("board/{boardId}")
-    Call<JsonObject> updateBoard(@Header("Authorization") String auth, @Body BoardRequest boardRequest);
+    Call<JsonObject> updateBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body BoardRequest boardRequest);
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);

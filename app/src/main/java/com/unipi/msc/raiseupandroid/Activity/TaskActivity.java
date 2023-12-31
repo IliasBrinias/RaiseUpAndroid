@@ -162,29 +162,7 @@ public class TaskActivity extends AppCompatActivity {
         updateTask(new TaskRequest.Builder().setEmployeeIds(userIds).build());
     }
     private void addEmployees(View view) {
-        ActivityUtils.showProgressBar(progressBar);
-        raiseUpAPI.getBoardUsers(UserUtils.loadBearerToken(this),task.getColumn().getBoardId()).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (!response.isSuccessful()){
-                    String msg = RetrofitUtils.handleErrorResponse(TaskActivity.this,response);
-                    ActivityUtils.showToast(TaskActivity.this,t,msg);
-                }else {
-                    List<User> users = new ArrayList<>();
-                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
-                    for (int i = 0; i < jsonArray.size(); i++) {
-                        users.add(User.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
-                    }
-                    CustomBottomSheet.addEmployees(TaskActivity.this, users,task.getColumn().getBoardId(), TaskActivity.this::updateEmployees);
-                }
-                ActivityUtils.hideProgressBar(progressBar);
-            }
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-                RetrofitUtils.handleException(TaskActivity.this, t);
-                ActivityUtils.hideProgressBar(progressBar);
-            }
-        });
+        CustomBottomSheet.addEmployees(TaskActivity.this, task.getUsers(),task.getColumn().getBoardId(), TaskActivity.this::updateEmployees);
     }
     private void updateEmployees(List<User> users) {
         List<Long> employeesIds = new ArrayList<>();

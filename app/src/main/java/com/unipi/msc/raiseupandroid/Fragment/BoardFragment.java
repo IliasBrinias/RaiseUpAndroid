@@ -24,8 +24,10 @@ import com.unipi.msc.raiseupandroid.Interface.OnBoardClick;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.raiseupandroid.Retrofit.Request.BoardRequest;
 import com.unipi.msc.raiseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.raiseupandroid.Tools.ActivityUtils;
+import com.unipi.msc.raiseupandroid.Tools.CustomBottomSheet;
 import com.unipi.msc.raiseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.raiseupandroid.Tools.NameTag;
 import com.unipi.msc.raiseupandroid.Tools.RetrofitUtils;
@@ -46,7 +48,6 @@ public class BoardFragment extends Fragment {
     private RaiseUpAPI raiseUpAPI;
     private Toast t;
     private List<Board> boardList = new ArrayList<>();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +63,41 @@ public class BoardFragment extends Fragment {
         initListeners();
         return view;
     }
-
     @Override
     public void onResume() {
         super.onResume();
         loadData();
     }
+    private void initViews(View view) {
+        recyclerView = view.findViewById(R.id.recyclerView);
+        imageButtonCreateBoard = view.findViewById(R.id.imageButtonCreateBoard);
+        progressBar = view.findViewById(R.id.progressBar);
+    }
+    private void initObjects() {
+        raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
+        boardAdapter = new BoardAdapter(requireActivity(), boardList, new OnBoardClick() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(requireActivity(), BoardActivity.class);
+                intent.putExtra(NameTag.BOARD_ID, boardList.get(position).getId());
+                startActivity(intent);
+            }
 
+            @Override
+            public void addEmployees(View view, int position) {
+                CustomBottomSheet.addEmployees(requireActivity(),boardList.get(position).getUsers(),0L,employees -> {
+                    List<Long> employeeIds = new ArrayList<>();
+                    employees.forEach(user -> employeeIds.add(user.getId()));
+                    updateBoard(position, new BoardRequest.Builder().setEmployeesId(employeeIds).build());
+                });
+            }
+        });
+    }
+    private void initListeners() {
+        imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), SaveBoardActivity.class)));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        recyclerView.setAdapter(boardAdapter);
+    }
     private void loadData() {
         Callback<JsonObject> callback = new Callback<JsonObject>() {
             @Override
@@ -98,25 +127,24 @@ public class BoardFragment extends Fragment {
         ActivityUtils.showProgressBar(progressBar);
         raiseUpAPI.getBoards(UserUtils.loadBearerToken(requireActivity())).enqueue(callback);
     }
-
-    private void initObjects() {
-        raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
-        boardAdapter = new BoardAdapter(requireActivity(), boardList, (view, position) -> {
-            Intent intent = new Intent(requireActivity(), BoardActivity.class);
-            intent.putExtra(NameTag.BOARD_ID,boardList.get(position).getId());
-            startActivity(intent);
+    private void updateBoard(int position,BoardRequest request) {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.updateBoard(UserUtils.loadBearerToken(requireActivity()), boardList.get(position).getId(), request).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(),response);
+                    ActivityUtils.showToast(requireActivity(),t,msg);
+                }else {
+                    boardAdapter.updateItem(position, Board.buildBoardFromJson(response.body().get("data").getAsJsonObject()));
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(), t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
         });
-    }
-
-    private void initListeners() {
-        imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), SaveBoardActivity.class)));
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        recyclerView.setAdapter(boardAdapter);
-    }
-
-    private void initViews(View view) {
-        recyclerView = view.findViewById(R.id.recyclerView);
-        imageButtonCreateBoard = view.findViewById(R.id.imageButtonCreateBoard);
-        progressBar = view.findViewById(R.id.progressBar);
     }
 }

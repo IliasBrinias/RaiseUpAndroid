@@ -13,6 +13,7 @@ public class Board {
     private List<User> users = new ArrayList<>();
     private List<Column> columns = new ArrayList<>();
     private Long totalTasks;
+    private Long ownerId;
 
     public Board() {
     }
@@ -73,6 +74,14 @@ public class Board {
         this.columns = columns;
     }
 
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
     public static Board buildBoardFromJson(JsonObject data){
         Board board = new Board();
 
@@ -89,7 +98,14 @@ public class Board {
         }catch (Exception ignore){}
 
         try {
-            JsonArray jsonArray = data.get("employees").getAsJsonArray();
+            JsonArray jsonArray = data.get("steps").getAsJsonArray();
+            for (int i=0; i<jsonArray.size();i++) {
+                board.getColumns().add(Column.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+            }
+        }catch (Exception ignore){}
+
+        try {
+            JsonArray jsonArray = data.get("users").getAsJsonArray();
             for (int i=0; i<jsonArray.size();i++) {
                 board.getUsers().add(User.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
             }
@@ -100,10 +116,7 @@ public class Board {
         }catch (Exception ignore){}
 
         try {
-            JsonArray jsonArray = data.get("steps").getAsJsonArray();
-            for (int i=0; i<jsonArray.size();i++) {
-                board.getColumns().add(Column.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
-            }
+            board.setOwnerId(data.get("ownerId").getAsLong());
         }catch (Exception ignore){}
 
         return board;

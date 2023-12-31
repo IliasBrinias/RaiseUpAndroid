@@ -6,5 +6,5 @@ import com.unipi.msc.raiseupandroid.Model.Board;
 
 public interface OnBoardClick {
     void onClick(View view, int position);
-    default boolean onLongClick(View view, int position){return false;};
+    default void addEmployees(View view, int position){}
 }

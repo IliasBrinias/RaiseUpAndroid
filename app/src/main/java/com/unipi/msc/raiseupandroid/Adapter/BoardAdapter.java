@@ -14,20 +14,23 @@ import com.unipi.msc.raiseupandroid.Interface.OnBoardClick;
 import com.unipi.msc.raiseupandroid.Model.Board;
 import com.unipi.msc.raiseupandroid.R;
 import com.unipi.msc.raiseupandroid.Tools.ImageUtils;
+import com.unipi.msc.raiseupandroid.Tools.UserUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Objects;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHolder> {
     Activity a;
     List<Board> boardList;
     OnBoardClick onBoardClick;
-
+    Long userId;
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM");
     public BoardAdapter(Activity a, List<Board> boardList, OnBoardClick onBoardClick) {
         this.a = a;
         this.boardList = boardList;
         this.onBoardClick = onBoardClick;
+        this.userId = UserUtils.loadUser(a).getId();
     }
 
     @NonNull
@@ -40,7 +43,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
     @Override
     public void onBindViewHolder(@NonNull BoardAdapter.BoardViewHolder holder, int position) {
         holder.setOnBoardClick(onBoardClick);
-        holder.bindData(a, boardList.get(position));
+        holder.bindData(a, Objects.equals(userId, boardList.get(position).getOwnerId()), boardList.get(position));
     }
 
     @Override
@@ -61,32 +64,43 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         }
     }
 
+    public void updateItem(int position, Board board) {
+        boardList.set(position, board);
+        notifyItemChanged(position);
+    }
+
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView0, imageView1, imageView2;
+        private ImageView imageViewAddEmployees, imageView0, imageView1, imageView2;
         private TextView textViewTitle, textViewDueDate, textViewTasks, textViewEmployees;
         private OnBoardClick onBoardClick;
+        private final View itemView;
         public BoardViewHolder(@NonNull View itemView) {
             super(itemView);
-            initViews(itemView);
+            this.itemView = itemView;
+            initViews();
+            initListener();
+        }
+        private void initViews() {
+            imageViewAddEmployees = itemView.findViewById(R.id.imageViewAddEmployees);
+            imageView0 = itemView.findViewById(R.id.imageViewProfile0);
+            imageView1 = itemView.findViewById(R.id.imageViewProfile1);
+            imageView2 = itemView.findViewById(R.id.imageViewProfile2);
+            textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            textViewDueDate = itemView.findViewById(R.id.textViewDueDate);
+            textViewTasks = itemView.findViewById(R.id.textViewTotalTasks);
+            textViewEmployees = itemView.findViewById(R.id.textViewTotalEmployees);
+        }
+        private void initListener() {
             itemView.setOnClickListener(view->onBoardClick.onClick(view,getAdapterPosition()));
-            itemView.setOnLongClickListener(view-> onBoardClick.onLongClick(view,getAdapterPosition()));
+            imageViewAddEmployees.setOnClickListener(view-> onBoardClick.addEmployees(view, getAdapterPosition()));
         }
 
         public void setOnBoardClick(OnBoardClick onBoardClick) {
             this.onBoardClick = onBoardClick;
         }
 
-        private void initViews(View view) {
-            imageView0 = view.findViewById(R.id.imageViewProfile0);
-            imageView1 = view.findViewById(R.id.imageViewProfile1);
-            imageView2 = view.findViewById(R.id.imageViewProfile2);
-            textViewTitle = view.findViewById(R.id.textViewTitle);
-            textViewDueDate = view.findViewById(R.id.textViewDueDate);
-            textViewTasks = view.findViewById(R.id.textViewTotalTasks);
-            textViewEmployees = view.findViewById(R.id.textViewTotalEmployees);
-        }
-
-        public void bindData(Activity a, Board board){
+        public void bindData(Activity a, boolean isOwner, Board board){
+            imageViewAddEmployees.setVisibility(isOwner?View.VISIBLE:View.GONE);
             textViewDueDate.setText(simpleDateFormat.format(board.getDate()));
             textViewTasks.setText(String.valueOf(board.getTotalTasks()));
             textViewEmployees.setText(String.valueOf(board.getUsers().size()));
