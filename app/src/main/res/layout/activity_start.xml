@@ -27,7 +27,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/raise_with_us"
+        android:text="@string/rise_with_us"
         android:textAlignment="center"
         style="@style/title"/>
     <Button

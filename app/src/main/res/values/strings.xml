@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RaiseUpAndroid</string>
+    <string name="app_name">RiseUpAndroid</string>
     <string name="login">Login</string>
     <string name="sign_in_to_your_account">Sign in \n to your account</string>
     <string name="username">Username</string>
@@ -12,7 +12,7 @@
     <string name="privacy_amp_terms"><![CDATA[Privacy & terms]]></string>
     <string name="sign_up">Sign Up</string>
     <string name="get_started">Get Started</string>
-    <string name="raise_with_us">Raise With Us</string>
+    <string name="rise_with_us">Rise With Us</string>
     <string name="boards">Boards</string>
     <string name="totalTasks">Tasks</string>
     <string name="tags">Tags</string>

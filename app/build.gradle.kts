@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.unipi.msc.raiseupandroid"
+    namespace = "com.unipi.msc.riseupandroid"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.unipi.msc.raiseupandroid"
+        applicationId = "com.unipi.msc.riseupandroid"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -29,9 +29,6 @@ android {
 }
 
 dependencies {
-    // lombok
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
     //Shared Pref
     implementation("androidx.preference:preference:1.2.1")
     //KeyboardVisibilityEvent
