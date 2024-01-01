@@ -28,9 +28,12 @@ public interface RaiseUpAPI {
     Call<JsonObject> register(@Body RegisterRequest request);
     @POST("auth/login")
     Call<JsonObject> login(@Body LoginRequest request);
+
 //    User
     @GET("user")
     Call<JsonObject> getUser(@Header("Authorization") String auth);
+    @GET("user/search")
+    Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("boardId") Long board, @Query("keyword") String keyword);
     @PATCH("user")
     @Multipart
     Call<JsonObject> editUser(@Header("Authorization") String auth,
@@ -38,28 +41,27 @@ public interface RaiseUpAPI {
                               @Part("password") RequestBody password,
                               @Part("firstName") RequestBody firstName,
                               @Part("lastName") RequestBody lastName);
-    @GET("user/search")
-    Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("boardId") Long board, @Query("keyword") String keyword);
+
 //    Tag
     @GET("tag")
     Call<JsonObject> getTags(@Header("Authorization") String auth);
     @GET("tag/{tagId}")
     Call<JsonObject> getTag(@Header("Authorization") String auth, @Path("tagId") Long tagId);
+    @GET("tag/search")
+    Call<JsonObject> searchTags(@Header("Authorization") String auth, @Query("keyword") String keyword);
     @POST("tag")
     Call<JsonObject> createTag(@Header("Authorization") String auth, @Body TagRequest tagRequest);
     @PATCH("tag/{tagId}")
     Call<JsonObject> editTag(@Header("Authorization") String auth, @Path("tagId") Long tagId, @Body TagRequest request);
     @DELETE("tag/{tagId}")
     Call<JsonObject> deleteTag(@Header("Authorization") String auth, @Path("tagId") Long tagId);
-    @GET("tag/search")
-    Call<JsonObject> searchTags(@Header("Authorization") String auth, @Query("keyword") String keyword);
 
 //    Board
     @GET("board")
     Call<JsonObject> getBoards(@Header("Authorization") String auth);
     @GET("board/{boardId}")
     Call<JsonObject> getBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
-    @GET("board/{boardId}/columns")
+    @GET("board/{boardId}/steps")
     Call<JsonObject> getColumns(@Header("Authorization") String auth, @Path("boardId") Long boardId);
     @GET("board/{boardId}/employees")
     Call<JsonObject> getBoardUsers(@Header("Authorization") String auth, @Path("boardId") Long boardId);
@@ -69,6 +71,8 @@ public interface RaiseUpAPI {
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
     @PATCH("board/{boardId}")
     Call<JsonObject> updateBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body BoardRequest boardRequest);
+    @POST("board/{boardId}/steps")
+    Call<JsonObject> addColumn(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body StepRequest name);
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
@@ -76,13 +80,15 @@ public interface RaiseUpAPI {
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
     @GET("task/search")
     Call<JsonObject> searchTasks(@Header("Authorization") String auth, @Query("keyword") String keyword);
+    @POST("task")
+    Call<JsonObject> createTask(@Header("Authorization") String auth, @Body TaskRequest request);
     @PATCH("task/{taskId}")
     Call<JsonObject> updateTask(@Header("Authorization") String auth, @Path("taskId") Long taskId, @Body TaskRequest request);
     @DELETE("task/{taskId}")
     Call<JsonObject> deleteTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
-    @POST("task")
-    Call<JsonObject> createTask(@Header("Authorization") String auth, @Body TaskRequest request);
 //  Step
     @PATCH("step/{stepId}")
     Call<JsonObject> editColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId, @Body StepRequest request);
+    @DELETE("step/{stepId}")
+    Call<JsonObject> deleteColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId);
 }
