@@ -1,7 +1,6 @@
 package com.unipi.msc.riseupandroid.Adapter;
 
 import android.app.Activity;
-import android.media.tv.TvView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +24,15 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int PADDING = 0;
     private static final int COLUMN = 1;
     private static final int ADD_COLUMN = 2;
-    private Activity a;
+    private final Activity a;
     private List<Column> columnList;
-    private OnColumnTaskListener onColumnTaskListener;
+    private final OnColumnTaskListener onColumnTaskListener;
     private boolean isOwner;
-
     public ColumnAdapter(Activity a, List<Column> columnList, OnColumnTaskListener onColumnTaskListener) {
         this.a = a;
         this.columnList = columnList;
         this.onColumnTaskListener = onColumnTaskListener;
     }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,7 +50,6 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         return null;
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder view, int position) {
         if (view instanceof ColumnViewHolder) {
@@ -79,29 +75,24 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public int getItemCount() {
         return isOwner ? columnList.size() + 2 : columnList.size() + 1;
     }
-
     public void setData(boolean isOwner, List<Column> columns) {
         this.isOwner = isOwner;
         this.columnList.clear();
         columnList = columns;
         notifyDataSetChanged();
     }
-
     public void deleteTask(int columnPosition, int taskPosition) {
         Task task = columnList.get(columnPosition).getTasks().get(taskPosition);
         if (columnList.get(columnPosition).getTasks().remove(task)) notifyItemChanged(columnPosition + 1);
     }
-
     public void addTask(int columnPosition, Task task) {
         columnList.get(columnPosition).getTasks().add(task);
         notifyItemChanged(columnPosition + 1);
     }
-
     public void deleteColumn(int columnPosition) {
         columnList.remove(columnPosition);
         notifyItemRemoved(columnPosition);
     }
-
     public static class PaddingViewHolder extends RecyclerView.ViewHolder {
         public PaddingViewHolder(@NonNull View itemView) {
             super(itemView);

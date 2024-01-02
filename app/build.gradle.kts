@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +49,7 @@ dependencies {
     // Glide
     implementation("androidx.core:core-ktx:1.3.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.google.firebase:firebase-messaging:23.4.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.4.0")
 
     implementation("androidx.appcompat:appcompat:1.6.1")

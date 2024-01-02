@@ -101,7 +101,7 @@ public class SaveBoardActivity extends AppCompatActivity {
                     String msg = RetrofitUtils.handleErrorResponse(SaveBoardActivity.this,response);
                     ActivityUtils.showToast(SaveBoardActivity.this,t,msg);
                 }else{
-                    ActivityUtils.showToast(SaveBoardActivity.this,t,getString(R.string.board_created));
+                    setResult(RESULT_OK);
                     finish();
                 }
             }

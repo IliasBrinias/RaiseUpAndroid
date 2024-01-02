@@ -14,6 +14,7 @@
     <string name="get_started">Get Started</string>
     <string name="rise_with_us">Rise With Us</string>
     <string name="boards">Boards</string>
+    <string name="board">Board</string>
     <string name="totalTasks">Tasks</string>
     <string name="tags">Tags</string>
     <string name="statistics">Statistics</string>
@@ -75,4 +76,7 @@
     <string name="are_you_sure_text">Do you really want to delete? \nThis process cannot be undone</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="was_created_successfully">was created successfully</string>
+    <string name="you_have_an_expired_card">You have an expired card</string>
+    <string name="task">Task</string>
 </resources>

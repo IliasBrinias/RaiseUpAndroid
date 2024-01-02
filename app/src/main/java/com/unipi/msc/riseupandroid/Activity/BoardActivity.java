@@ -110,7 +110,7 @@ public class BoardActivity extends AppCompatActivity{
             }
             @Override
             public void onColumnTitleClick(View view, int position) {
-                if (!Objects.equals(board.getOwnerId(), user.getId())) return;
+                if (!Objects.equals(board.getOwner().getId(), user.getId())) return;
                 CustomBottomSheet.showEdit(BoardActivity.this,getString(R.string.progress_column), board.getColumns().get(position).getTitle(),value -> updateStep(position, new StepRequest.Builder().setTitle(value).build()));
             }
             @Override
@@ -213,7 +213,7 @@ public class BoardActivity extends AppCompatActivity{
     private void initListeners() {
         imageButtonExit.setOnClickListener(v->finish());
         textViewBoardTitle.setOnClickListener(view-> {
-            if (!Objects.equals(user.getId(), board.getOwnerId())) return;
+            if (!Objects.equals(user.getId(), board.getOwner().getId())) return;
             CustomBottomSheet.showEdit(BoardActivity.this,getString(R.string.board_name),textViewBoardTitle.getText().toString(), value -> updateBoard(new BoardRequest.Builder().setTitle(value).build()));
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -254,6 +254,6 @@ public class BoardActivity extends AppCompatActivity{
     private void loadData(Board board) {
         this.board = board;
         textViewBoardTitle.setText(board.getTitle());
-        columnAdapter.setData(user.getId() == board.getOwnerId(),board.getColumns());
+        columnAdapter.setData(user.getId() == board.getOwner().getId(),board.getColumns());
     }
 }

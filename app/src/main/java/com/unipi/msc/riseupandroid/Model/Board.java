@@ -13,7 +13,7 @@ public class Board {
     private List<User> users = new ArrayList<>();
     private List<Column> columns = new ArrayList<>();
     private Long totalTasks;
-    private Long ownerId;
+    private User owner;
 
     public Board() {
     }
@@ -73,15 +73,12 @@ public class Board {
     public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
-
-    public Long getOwnerId() {
-        return ownerId;
+    public User getOwner() {
+        return owner;
     }
-
-    public void setOwnerId(Long ownerId) {
-        this.ownerId = ownerId;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
-
     public static Board buildBoardFromJson(JsonObject data){
         Board board = new Board();
 
@@ -116,7 +113,7 @@ public class Board {
         }catch (Exception ignore){}
 
         try {
-            board.setOwnerId(data.get("ownerId").getAsLong());
+            board.setOwner(User.buildFromJSON(data.get("owner").getAsJsonObject()));
         }catch (Exception ignore){}
 
         return board;

@@ -1,8 +1,13 @@
 package com.unipi.msc.riseupandroid.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -48,6 +53,11 @@ public class BoardFragment extends Fragment {
     private RaiseUpAPI raiseUpAPI;
     private Toast t;
     private List<Board> boardList = new ArrayList<>();
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result -> {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            CustomBottomSheet.successMessage(requireActivity(),getString(R.string.board));
+        }
+    });
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +104,7 @@ public class BoardFragment extends Fragment {
         });
     }
     private void initListeners() {
-        imageButtonCreateBoard.setOnClickListener(view -> startActivity(new Intent(requireActivity(), SaveBoardActivity.class)));
+        imageButtonCreateBoard.setOnClickListener(view -> mStartForResult.launch(new Intent(requireActivity(), SaveBoardActivity.class)));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recyclerView.setAdapter(boardAdapter);
     }

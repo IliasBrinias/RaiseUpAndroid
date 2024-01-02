@@ -22,7 +22,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Fragment.BoardFragment;
 import com.unipi.msc.riseupandroid.Fragment.ProfileFragment;
@@ -32,6 +34,7 @@ import com.unipi.msc.riseupandroid.Fragment.TaskFragment;
 import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.riseupandroid.Retrofit.Request.FCMRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.riseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.riseupandroid.Tools.ImageUtils;
@@ -67,12 +70,23 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initObjects();
         initListeners();
+        updateFCMToken();
     }
     @Override
     protected void onResume() {
         super.onResume();
         resetSearch();
         loadUserData();
+    }
+    private void updateFCMToken() {
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> {
+            raiseUpAPI.updateFCM(UserUtils.loadBearerToken(MainActivity.this),new FCMRequest(s)).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {}
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {}
+            });
+        });
     }
     private void initViews() {
         View drawer_layout = findViewById(R.id.includeDrawerLayout);

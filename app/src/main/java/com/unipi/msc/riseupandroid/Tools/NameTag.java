@@ -8,4 +8,6 @@ public class NameTag {
     public static final String USER_TOKEN = "USER_TOKEN";
     public static final String PREF_NAME = "PREF_NAME";
 
+    public static final String CHANNEL_ID = "123";
+    public static final String ALERT_ID = "ALERT_ID";
 }

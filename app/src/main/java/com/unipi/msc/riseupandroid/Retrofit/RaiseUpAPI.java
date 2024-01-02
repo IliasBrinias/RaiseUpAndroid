@@ -2,6 +2,7 @@ package com.unipi.msc.riseupandroid.Retrofit;
 
 import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Retrofit.Request.BoardRequest;
+import com.unipi.msc.riseupandroid.Retrofit.Request.FCMRequest;
 import com.unipi.msc.riseupandroid.Retrofit.Request.LoginRequest;
 import com.unipi.msc.riseupandroid.Retrofit.Request.RegisterRequest;
 import com.unipi.msc.riseupandroid.Retrofit.Request.StepRequest;
@@ -34,6 +35,8 @@ public interface RaiseUpAPI {
     Call<JsonObject> getUser(@Header("Authorization") String auth);
     @GET("user/search")
     Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("boardId") Long board, @Query("keyword") String keyword);
+    @PATCH("user/fcm")
+    Call<JsonObject> updateFCM(@Header("Authorization") String auth, @Body FCMRequest request);
     @PATCH("user")
     @Multipart
     Call<JsonObject> editUser(@Header("Authorization") String auth,
@@ -91,4 +94,5 @@ public interface RaiseUpAPI {
     Call<JsonObject> editColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId, @Body StepRequest request);
     @DELETE("step/{stepId}")
     Call<JsonObject> deleteColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId);
+
 }

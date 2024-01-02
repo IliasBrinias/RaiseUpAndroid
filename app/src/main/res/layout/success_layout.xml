@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    style="@style/bottomSheet">
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_success"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+    <TextView
+        android:id="@+id/textViewSuccessMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/was_created_successfully"
+        android:textSize="20sp"
+        android:textColor="?text_color"
+        android:fontFamily="@font/euclid_circular_a_bold"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

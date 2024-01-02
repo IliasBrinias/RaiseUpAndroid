@@ -309,11 +309,17 @@ public class CustomBottomSheet {
         });
         dialog.show();
     }
-
     private static void showKeyboard(Activity activity, EditText editText) {
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
-
+    public static void successMessage(Activity activity, String message) {
+        View view = activity.getLayoutInflater().inflate(R.layout.success_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+        TextView textViewSuccessMessage = view.findViewById(R.id.textViewSuccessMessage);
+        textViewSuccessMessage.setText(message + " " + activity.getString(R.string.was_created_successfully));
+        dialog.show();
+    }
 }
