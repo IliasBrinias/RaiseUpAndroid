@@ -25,6 +25,7 @@ import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.riseupandroid.Tools.ActivityUtils;
+import com.unipi.msc.riseupandroid.Tools.CustomBottomSheet;
 import com.unipi.msc.riseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.riseupandroid.Tools.NameTag;
 import com.unipi.msc.riseupandroid.Tools.RetrofitUtils;
@@ -76,7 +77,7 @@ public class TagFragment extends Fragment {
             }
             @Override
             public void onDelete(View view, int position) {
-                deleteTag(tags.get(position));
+                CustomBottomSheet.deleteMessage(requireActivity(),()->deleteTag(tags.get(position)));
             }
         });
     }

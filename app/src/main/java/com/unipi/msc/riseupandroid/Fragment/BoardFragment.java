@@ -27,7 +27,9 @@ import com.unipi.msc.riseupandroid.Activity.SaveBoardActivity;
 import com.unipi.msc.riseupandroid.Adapter.BoardAdapter;
 import com.unipi.msc.riseupandroid.Interface.OnBoardClick;
 import com.unipi.msc.riseupandroid.Model.Board;
+import com.unipi.msc.riseupandroid.Model.Column;
 import com.unipi.msc.riseupandroid.R;
+import com.unipi.msc.riseupandroid.Retrofit.ColumnRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.riseupandroid.Retrofit.Request.BoardRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
@@ -95,14 +97,53 @@ public class BoardFragment extends Fragment {
 
             @Override
             public void addEmployees(View view, int position) {
-                CustomBottomSheet.addEmployees(requireActivity(),boardList.get(position).getUsers(),0L,employees -> {
-                    List<Long> employeeIds = new ArrayList<>();
-                    employees.forEach(user -> employeeIds.add(user.getId()));
-                    updateBoard(position, new BoardRequest.Builder().setEmployeesId(employeeIds).build());
+                BoardFragment.this.addEmployees(position);
+            }
+
+            @Override
+            public boolean onLongClick(View view, int position) {
+                CustomBottomSheet.getBoardProperties(requireActivity(), choice -> {
+                    if (choice == CustomBottomSheet.ADD_EMPLOYEES) {
+                        BoardFragment.this.addEmployees(position);
+                    } else if (choice == CustomBottomSheet.CHANGE_ORDER) {
+                        CustomBottomSheet.changeColumnOrder(requireActivity(),boardList.get(position).getId(), columns ->  updateColumnOrder(boardList.get(position).getId(), columns));
+                    } else if (choice == CustomBottomSheet.DELETE_BOARD) {
+                        deleteBoard(position);
+                    }
                 });
+                return false;
             }
         });
     }
+
+    private void updateColumnOrder(Long boardId, List<Column> columns) {
+        List<ColumnRequest> columnRequests = new ArrayList<>();
+        for (int i = 0; i < columns.size(); i++) {
+            columnRequests.add(new ColumnRequest(columns.get(i).getId(), (long) i));
+        }
+        raiseUpAPI.updateColumnOrder(UserUtils.loadBearerToken(requireActivity()), boardId, columnRequests).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(),response);
+                    ActivityUtils.showToast(requireActivity(), t, msg);
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(), t);
+            }
+        });
+    }
+
+    private void addEmployees(int position) {
+        CustomBottomSheet.addEmployees(requireActivity(),boardList.get(position).getUsers(),boardList.get(position).getId(), employees -> {
+            List<Long> employeeIds = new ArrayList<>();
+            employees.forEach(user -> employeeIds.add(user.getId()));
+            updateBoard(position, new BoardRequest.Builder().setEmployeesId(employeeIds).build());
+        });
+    }
+
     private void initListeners() {
         imageButtonCreateBoard.setOnClickListener(view -> mStartForResult.launch(new Intent(requireActivity(), SaveBoardActivity.class)));
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -150,6 +191,27 @@ public class BoardFragment extends Fragment {
                 }
                 ActivityUtils.hideProgressBar(progressBar);
             }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(), t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+        });
+    }
+    private void deleteBoard(int position) {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.deleteBoard(UserUtils.loadBearerToken(requireActivity()),boardList.get(position).getId()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(),response);
+                    ActivityUtils.showToast(requireActivity(),t,msg);
+                }else {
+                    boardAdapter.removeItem(position);
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(requireActivity(), t);

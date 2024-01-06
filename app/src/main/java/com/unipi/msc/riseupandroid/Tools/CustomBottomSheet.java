@@ -12,18 +12,25 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.unipi.msc.riseupandroid.Activity.SaveBoardActivity;
 import com.unipi.msc.riseupandroid.Adapter.AddEmployeeAdapter;
+import com.unipi.msc.riseupandroid.Adapter.BoardCreationColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.ChangeColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.TagAdapter;
 import com.unipi.msc.riseupandroid.Interface.OnAddColumnResponse;
 import com.unipi.msc.riseupandroid.Interface.OnAddEmployeesResponse;
+import com.unipi.msc.riseupandroid.Interface.OnBoardColumnClick;
+import com.unipi.msc.riseupandroid.Interface.OnBoardPropertiesResponse;
 import com.unipi.msc.riseupandroid.Interface.OnColumnChange;
+import com.unipi.msc.riseupandroid.Interface.OnColumnOrderChange;
 import com.unipi.msc.riseupandroid.Interface.OnDeleteClick;
 import com.unipi.msc.riseupandroid.Interface.OnEditPersonalData;
 import com.unipi.msc.riseupandroid.Interface.OnSingleValueResponse;
@@ -34,10 +41,13 @@ import com.unipi.msc.riseupandroid.Model.Tag;
 import com.unipi.msc.riseupandroid.Model.Task;
 import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.R;
+import com.unipi.msc.riseupandroid.Retrofit.ColumnRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.riseupandroid.Retrofit.Request.BoardRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +58,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CustomBottomSheet {
+    public static final int ADD_EMPLOYEES = 0;
+    public static final int CHANGE_ORDER = 1;
+    public static final int DELETE_BOARD = 2;
+
     public static void showEdit(Activity activity, String name, String initValue, OnEditPersonalData onEditPersonalData){
         showSingleValue(activity,activity.getString(R.string.change)+" "+name,initValue,onEditPersonalData::onChange);
     }
@@ -320,6 +334,84 @@ public class CustomBottomSheet {
         dialog.setContentView(view);
         TextView textViewSuccessMessage = view.findViewById(R.id.textViewSuccessMessage);
         textViewSuccessMessage.setText(message + " " + activity.getString(R.string.was_created_successfully));
+        dialog.show();
+    }
+    public static void getBoardProperties(Activity activity, OnBoardPropertiesResponse onBoardPropertiesResponse){
+        View view = activity.getLayoutInflater().inflate(R.layout.board_properties_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+        TextView textViewAddEmployees = view.findViewById(R.id.textViewAddEmployees);
+        TextView textViewChangeColumnOrder = view.findViewById(R.id.textViewChangeColumnOrder);
+        TextView textViewDeleteBoard = view.findViewById(R.id.textViewDeleteBoard);
+        textViewAddEmployees.setOnClickListener(v->{
+            onBoardPropertiesResponse.onClick(ADD_EMPLOYEES);
+            dialog.cancel();
+        });
+        textViewChangeColumnOrder.setOnClickListener(v->{
+            onBoardPropertiesResponse.onClick(CHANGE_ORDER);
+            dialog.cancel();
+        });
+        textViewDeleteBoard.setOnClickListener(v->{
+            onBoardPropertiesResponse.onClick(DELETE_BOARD);
+            dialog.cancel();
+        });
+        dialog.show();
+    }
+    public static void changeColumnOrder(Activity activity, Long boardId, OnColumnOrderChange onColumnOrderChange){
+
+        List<Column> columns = new ArrayList<>();
+
+        View view = activity.getLayoutInflater().inflate(R.layout.change_column_order, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+        ImageButton imageButtonClose = view.findViewById(R.id.imageButtonClose);
+        RecyclerView recyclerViewColumns = view.findViewById(R.id.recyclerViewColumns);
+        Button buttonSave = view.findViewById(R.id.buttonSave);
+
+        RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
+        BoardCreationColumnAdapter columnAdapter = new BoardCreationColumnAdapter(activity, columns, null);
+
+        recyclerViewColumns.setLayoutManager(new LinearLayoutManager(activity));
+        recyclerViewColumns.setAdapter(columnAdapter);
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN|ItemTouchHelper.UP,0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                Collections.swap(columns,viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                columnAdapter.notifyItemMoved(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {}
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerViewColumns);
+
+        raiseUpAPI.getColumns(UserUtils.loadBearerToken(activity),boardId).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(activity,response);
+                    ActivityUtils.showToast(activity, new Toast(activity), msg);
+                }else{
+                    columns.clear();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        columns.add(Column.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    columnAdapter.refreshData();
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(activity, t);
+            }
+        });
+
+        imageButtonClose.setOnClickListener(v->dialog.cancel());
+        buttonSave.setOnClickListener(v->{
+            onColumnOrderChange.onResponse(columns);
+            dialog.cancel();
+        });
         dialog.show();
     }
 }

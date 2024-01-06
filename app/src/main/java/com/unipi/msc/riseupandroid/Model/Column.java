@@ -19,7 +19,11 @@ public class Column {
         this.id = id;
         this.title = title;
     }
-
+    public static Column getInstance(String s){
+        Column column = new Column();
+        column.setTitle(s);
+        return column;
+    }
     public Long getId() {
         return id;
     }

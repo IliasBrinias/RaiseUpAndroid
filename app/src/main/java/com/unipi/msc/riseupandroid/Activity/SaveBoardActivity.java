@@ -1,6 +1,8 @@
 package com.unipi.msc.riseupandroid.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Adapter.BoardCreationColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.EmployeeAdapter;
 import com.unipi.msc.riseupandroid.Interface.OnBoardColumnClick;
+import com.unipi.msc.riseupandroid.Model.Column;
 import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
@@ -26,6 +29,7 @@ import com.unipi.msc.riseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.riseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -38,10 +42,11 @@ public class SaveBoardActivity extends AppCompatActivity {
     private RecyclerView recyclerViewEmployees, recyclerViewColumns;
     private Button buttonCreate;
     private List<User> users = new ArrayList<>();
-    private List<String> columns = new ArrayList<>();
+    private List<Column> columns = new ArrayList<>();
     private EmployeeAdapter employeeAdapter;
-    private BoardCreationColumnAdapter boardCreationColumnAdapter;
+    private BoardCreationColumnAdapter columnAdapter;
     private RaiseUpAPI raiseUpAPI;
+    private ItemTouchHelper itemTouchHelper;
     private Toast t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +68,25 @@ public class SaveBoardActivity extends AppCompatActivity {
     private void initObjects() {
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
         employeeAdapter = new EmployeeAdapter(this,users,(view, position) -> employeeAdapter.deleteItem(users.get(position)));
-        boardCreationColumnAdapter = new BoardCreationColumnAdapter(this, columns, new OnBoardColumnClick() {
+        columnAdapter = new BoardCreationColumnAdapter(this, columns, new OnBoardColumnClick() {
             @Override
             public void onClick(View view, int position) {
-                CustomBottomSheet.showEdit(SaveBoardActivity.this,"'"+columns.get(position)+"'",columns.get(position), value -> boardCreationColumnAdapter.editValue(position, value));
+                CustomBottomSheet.showEdit(SaveBoardActivity.this,"'"+columns.get(position)+"'",columns.get(position).getTitle(), value -> columnAdapter.editValue(position, value));
             }
             @Override
             public void onDelete(View view, int position) {
-                boardCreationColumnAdapter.deleteItem(columns.get(position));
+                columnAdapter.deleteItem(position);
+            }
+        });
+        itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.DOWN|ItemTouchHelper.UP,0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                Collections.swap(columns,viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                columnAdapter.notifyItemMoved(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             }
         });
     }
@@ -82,18 +98,22 @@ public class SaveBoardActivity extends AppCompatActivity {
         recyclerViewEmployees.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
         recyclerViewColumns.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
         recyclerViewEmployees.setAdapter(employeeAdapter);
-        recyclerViewColumns.setAdapter(boardCreationColumnAdapter);
+        recyclerViewColumns.setAdapter(columnAdapter);
+        itemTouchHelper.attachToRecyclerView(recyclerViewColumns);
     }
     private void addColumn(View view) {
-        CustomBottomSheet.AddBoardColumn(this,column -> boardCreationColumnAdapter.addData(column));
+        CustomBottomSheet.AddBoardColumn(this, columnName -> columnAdapter.addData(Column.getInstance(columnName)));
     }
     private void addEmployees(View view) {
         CustomBottomSheet.addEmployees(this, users, 0L,employees -> employeeAdapter.setData(employees));
     }
     private void saveBoard(View view) {
         List<Long> userIds = new ArrayList<>();
+        List<String> columnNames = new ArrayList<>();
+
         users.forEach(user -> userIds.add(user.getId()));
-        BoardRequest request = new BoardRequest.Builder().setTitle(editTextBoardName.getText().toString()).setEmployeesId(userIds).setColumns(columns).build();
+        columns.forEach(column->columnNames.add(column.getTitle()));
+        BoardRequest request = new BoardRequest.Builder().setTitle(editTextBoardName.getText().toString()).setEmployeesId(userIds).setColumns(columnNames).build();
         raiseUpAPI.createBoard(UserUtils.loadBearerToken(this),request).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {

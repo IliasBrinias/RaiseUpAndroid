@@ -19,10 +19,10 @@ import java.util.List;
 
 public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreationColumnAdapter.ColumnViewHolder> {
     Activity a;
-    List<String> columns;
+    List<Column> columns;
     OnBoardColumnClick onBoardColumnClick;
 
-    public BoardCreationColumnAdapter(Activity a, List<String> columns, OnBoardColumnClick onBoardColumnClick) {
+    public BoardCreationColumnAdapter(Activity a, List<Column> columns, OnBoardColumnClick onBoardColumnClick) {
         this.a = a;
         this.columns = columns;
         this.onBoardColumnClick = onBoardColumnClick;
@@ -37,8 +37,13 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
 
     @Override
     public void onBindViewHolder(@NonNull BoardCreationColumnAdapter.ColumnViewHolder holder, int position) {
-        holder.onBoardColumnClick = onBoardColumnClick;
-        holder.textViewName.setText(columns.get(position));
+        if (onBoardColumnClick == null){
+            holder.imageButtonDelete.setVisibility(View.GONE);
+        }else {
+            holder.onBoardColumnClick = onBoardColumnClick;
+        }
+
+        holder.textViewName.setText(columns.get(position).getTitle());
     }
 
     @Override
@@ -47,25 +52,22 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void deleteItem(String s) {
-        columns.remove(s);
-        notifyDataSetChanged();
+    public void deleteItem(int position) {
+        columns.remove(position);
+        notifyItemRemoved(position);
     }
 
-    public void addData(String column) {
+    public void addData(Column column) {
         columns.add(column);
         notifyDataSetChanged();
     }
 
     public void editValue(int position, String value) {
-        columns.set(position,value);
+        columns.get(position).setTitle(value);
         notifyItemChanged(position);
     }
 
-    public void setData(List<Column> columns) {
-        this.columns.clear();
-        columns.forEach(column -> this.columns.add(column.getTitle()));
+    public void refreshData() {
         notifyDataSetChanged();
     }
 
@@ -76,7 +78,11 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
         public ColumnViewHolder(@NonNull View itemView) {
             super(itemView);
             initView(itemView);
-            itemView.setOnClickListener(view -> onBoardColumnClick.onClick(view,getAdapterPosition()));
+            itemView.setOnClickListener(view -> {
+                if (onBoardColumnClick != null){
+                    onBoardColumnClick.onClick(view, getAdapterPosition());
+                }
+            });
         }
         private void initView(View itemView) {
             textViewName = itemView.findViewById(R.id.textViewName);

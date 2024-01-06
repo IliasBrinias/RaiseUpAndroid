@@ -20,4 +20,6 @@
     <color name="light_text">#2F3047</color>
     <color name="light_submit_button">@color/white</color>
     <color name="light_task_add">#7E7CCF</color>
+    <!--    General Colors  -->
+    <color name="error_color">#FF4F44</color>
 </resources>

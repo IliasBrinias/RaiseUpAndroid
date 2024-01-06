@@ -9,6 +9,8 @@ import com.unipi.msc.riseupandroid.Retrofit.Request.StepRequest;
 import com.unipi.msc.riseupandroid.Retrofit.Request.TagRequest;
 import com.unipi.msc.riseupandroid.Retrofit.Request.TaskRequest;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -74,8 +76,12 @@ public interface RaiseUpAPI {
     Call<JsonObject> createBoard(@Header("Authorization") String auth, @Body BoardRequest request);
     @PATCH("board/{boardId}")
     Call<JsonObject> updateBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body BoardRequest boardRequest);
+    @PATCH("board/{boardId}/column-order")
+    Call<JsonObject> updateColumnOrder(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body List<ColumnRequest> boardRequest);
     @POST("board/{boardId}/steps")
     Call<JsonObject> addColumn(@Header("Authorization") String auth, @Path("boardId") Long boardId, @Body StepRequest name);
+    @DELETE("board/{boardId}")
+    Call<JsonObject> deleteBoard(@Header("Authorization") String auth, @Path("boardId") Long boardId);
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);

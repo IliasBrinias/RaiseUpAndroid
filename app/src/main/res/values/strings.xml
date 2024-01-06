@@ -79,4 +79,20 @@
     <string name="was_created_successfully">was created successfully</string>
     <string name="you_have_an_expired_card">You have an expired card</string>
     <string name="task">Task</string>
+    <string name="user_not_found">User not found</string>
+    <string name="username_exists">Username already exists</string>
+    <string name="email_exists">Email already exists</string>
+    <string name="access_denied">Access denied</string>
+    <string name="something_happened">Something happened</string>
+    <string name="tag_not_found">Tag not found</string>
+    <string name="no_columns_found">No columns found</string>
+    <string name="board_not_found">Board not found</string>
+    <string name="task_not_found">Task not found</string>
+    <string name="step_not_found">Step not found</string>
+    <string name="title_is_mandatory">Title is mandatory</string>
+    <string name="complete_the_mandatory_fields">Complete the mandatory fields</string>
+    <string name="please_try_again_later">Please try again later</string>
+    <string name="bad_credentials">Bad credentials</string>
+    <string name="delete_board">Delete Board</string>
+    <string name="change_column_order">Change Column Order</string>
 </resources>

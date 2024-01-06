@@ -61,6 +61,12 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         boardList.set(position, board);
         notifyItemChanged(position);
     }
+
+    public void removeItem(int position) {
+        boardList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageViewAddEmployees, imageView0, imageView1, imageView2, imageViewProfileAdmin;
         private TextView textViewTitle, textViewTasks, textViewEmployees;
@@ -85,6 +91,7 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         }
         private void initListener() {
             itemView.setOnClickListener(view->onBoardClick.onClick(view,getAdapterPosition()));
+            itemView.setOnLongClickListener(view->onBoardClick.onLongClick(view,getAdapterPosition()));
             imageViewAddEmployees.setOnClickListener(view-> onBoardClick.addEmployees(view, getAdapterPosition()));
         }
         public void setOnBoardClick(OnBoardClick onBoardClick) {
