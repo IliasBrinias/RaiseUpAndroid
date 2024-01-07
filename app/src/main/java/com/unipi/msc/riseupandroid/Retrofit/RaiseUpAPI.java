@@ -100,5 +100,9 @@ public interface RaiseUpAPI {
     Call<JsonObject> editColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId, @Body StepRequest request);
     @DELETE("step/{stepId}")
     Call<JsonObject> deleteColumn(@Header("Authorization") String auth, @Path("stepId") Long stepId);
-
+//  Statistics
+    @GET("statistics")
+    Call<JsonObject> getProgress(@Header("Authorization") String auth, @Query("dateFrom") Long dateFrom,@Query("dateTo") Long dateTo);
+    @GET("statistics/user")
+    Call<JsonObject> getUserStatistics(@Header("Authorization") String auth, @Query("dateFrom") Long dateFrom,@Query("dateTo") Long dateTo);
 }

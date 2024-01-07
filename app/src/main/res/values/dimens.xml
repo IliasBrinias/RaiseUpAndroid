@@ -2,4 +2,5 @@
 <resources>
     <dimen name="basic_padding_20dp">20dp</dimen>
     <dimen name="basic_column_width">300dp</dimen>
+    <dimen name="bottom_sheet_recycler_height">350dp</dimen>
 </resources>

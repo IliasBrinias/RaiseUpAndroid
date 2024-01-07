@@ -85,7 +85,8 @@
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/basic_padding_20dp</item>
         <item name="android:background">@drawable/ic_alert_dialog_back</item>
-        <item name="layout_behavior">android.support.design.widget.BottomSheetBehavior</item>
+        <item name="android:maxHeight">300dp</item>
+        <item name="layout_behavior">com.google.android.material.bottomsheet.BottomSheetBehavior</item>
     </style>
 
     <style name="task_dsc">

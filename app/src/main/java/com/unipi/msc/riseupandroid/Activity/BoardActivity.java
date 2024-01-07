@@ -62,7 +62,11 @@ public class BoardActivity extends AppCompatActivity{
     }
     @Override
     protected void onResume() {
-        getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
+        if (board.getId() != null) {
+            getBoard(board.getId());
+        }else {
+            getBoard(getIntent().getLongExtra(NameTag.BOARD_ID,0L));
+        }
         super.onResume();
     }
     private void initViews() {
@@ -254,6 +258,6 @@ public class BoardActivity extends AppCompatActivity{
     private void loadData(Board board) {
         this.board = board;
         textViewBoardTitle.setText(board.getTitle());
-        columnAdapter.setData(user.getId() == board.getOwner().getId(),board.getColumns());
+        columnAdapter.setData(Objects.equals(user.getId(), board.getOwner().getId()),board.getColumns());
     }
 }

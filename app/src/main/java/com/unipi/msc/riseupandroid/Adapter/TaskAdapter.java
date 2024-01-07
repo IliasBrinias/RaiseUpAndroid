@@ -31,8 +31,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     List<Task> taskList;
     OnTaskClick onTaskClick;
     boolean fistColumn, lastColumn;
-
-    public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy");
     public TaskAdapter(Activity a, List<Task> taskList, OnTaskClick onTaskClick) {
         this.a = a;
         this.taskList = taskList;
@@ -149,14 +147,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 textViewDueDate.setVisibility(View.GONE);
                 expireLayout.setVisibility(View.GONE);
             }else {
-                textViewDueDate.setText(simpleDateFormat.format(task.getDueDate()));
-//                textViewDueDate.setVisibility(View.VISIBLE);
+                textViewDueDate.setText(ActivityUtils.normalizeDate(task.getDueDate()));
                 long days = ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate());
-                if (days<=0){
+                if (days<=0 && !task.getCompleted()){
                     imageViewStatus.setVisibility(View.VISIBLE);
                     imageViewStatus.setImageResource(R.drawable.ic_bookmark_expired);
                 }
-//                expireLayout.setVisibility(ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate())<=0?View.VISIBLE:View.GONE);
             }
             try{
                 ImageUtils.loadProfileToImageView(a,task.getUsers().get(0).getProfile(),imageView0);

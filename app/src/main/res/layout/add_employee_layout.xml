@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/linearLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     style="@style/bottomSheet">
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -57,8 +59,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAddEmployees"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/bottom_sheet_recycler_height"
         tools:listitem="@layout/add_employee_line_layout"/>
     <LinearLayout
         android:layout_width="match_parent"

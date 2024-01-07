@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/basic_padding_20dp"
     android:background="@drawable/ic_input_field_back"
     android:orientation="vertical"
     android:layout_marginBottom="10dp"
-    android:layout_marginRight="10dp"
-    >
+    android:layout_marginRight="10dp">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
-        <ImageView
-            android:id="@+id/imageViewEmployeeImage"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_profile"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+            <androidx.cardview.widget.CardView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:backgroundTint="?element_back_color"
+                app:cardCornerRadius="100dp"
+                app:cardElevation="0dp">
+                <ImageView
+                    android:id="@+id/imageViewEmployeeImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"/>
+            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/imageViewWinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_winner"
+                android:gravity="end"
+                android:layout_marginTop="-15dp"/>
+        </LinearLayout>
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-        <ImageView
-            android:id="@+id/imageViewUp"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_up"/>
-        <ImageView
-            android:id="@+id/imageViewDown"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_down"/>
         <TextView
-            android:id="@+id/textViewPercentage"
+            android:id="@+id/textViewCompletedTasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="50"
-            android:paddingStart="5dp"
-            android:textSize="20sp"
-            android:textColor="?text_color"
-            android:fontFamily="@font/euclid_circular_a_bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="%"
             android:textSize="20sp"
             android:textColor="?text_color"
             android:fontFamily="@font/euclid_circular_a_bold"/>
     </LinearLayout>
-
     <TextView
         android:id="@+id/textViewEmployeeName"
         android:layout_width="wrap_content"
@@ -60,5 +60,5 @@
         android:textSize="14sp"
         android:textColor="?text_color"
         android:text="Employee 1"/>
-    
+
 </androidx.appcompat.widget.LinearLayoutCompat>

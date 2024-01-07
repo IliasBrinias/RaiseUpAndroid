@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unipi.msc.riseupandroid.Model.User;
+import com.unipi.msc.riseupandroid.Model.UserStatistic;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Tools.ImageUtils;
 
@@ -18,9 +19,9 @@ import java.util.List;
 
 public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStatisticsAdapter.EmployeeStatisticsHolder> {
     Activity a;
-    List<User> userList;
+    List<UserStatistic> userList;
 
-    public EmployeeStatisticsAdapter(Activity a, List<User> userList) {
+    public EmployeeStatisticsAdapter(Activity a, List<UserStatistic> userList) {
         this.a = a;
         this.userList = userList;
     }
@@ -43,8 +44,8 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
     }
 
     public static class EmployeeStatisticsHolder extends RecyclerView.ViewHolder {
-        private ImageView imageViewEmployee, imageViewUp, imageViewDown;
-        private TextView textViewEmployeeName, textViewPercentage;
+        private ImageView imageViewEmployee, imageViewWinner;
+        private TextView textViewEmployeeName, textViewCompletedTasks;
         public EmployeeStatisticsHolder(@NonNull View itemView) {
             super(itemView);
             initViews(itemView);
@@ -52,23 +53,18 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
 
         private void initViews(View view) {
             imageViewEmployee = view.findViewById(R.id.imageViewEmployeeImage);
+            imageViewWinner = view.findViewById(R.id.imageViewWinner);
             textViewEmployeeName = view.findViewById(R.id.textViewEmployeeName);
-            textViewPercentage = view.findViewById(R.id.textViewPercentage);
-            imageViewUp = view.findViewById(R.id.imageViewUp);
-            imageViewDown = view.findViewById(R.id.imageViewDown);
+            textViewCompletedTasks = view.findViewById(R.id.textViewCompletedTasks);
         }
 
-        public void bindData(Activity a, User user) {
-            textViewEmployeeName.setText(user.getFullName());
-            textViewPercentage.setText(String.valueOf(Math.abs(user.getPercentage())));
+        public void bindData(Activity a, UserStatistic userStatistic) {
+            textViewEmployeeName.setText(userStatistic.getUser().getFullName());
+            textViewCompletedTasks.setText(String.valueOf(userStatistic.getCompletedTask()));
+            imageViewWinner.setVisibility(getAdapterPosition() == 0?View.VISIBLE:View.GONE);
             try {
-                ImageUtils.loadProfileToImageView(a, user.getProfile(),imageViewEmployee);
+                ImageUtils.loadProfileToImageView(a, userStatistic.getUser().getProfile(),imageViewEmployee);
             }catch (Exception ignore){}
-            if (user.getPercentage()>=0){
-                imageViewDown.setVisibility(View.GONE);
-            }else{
-                imageViewUp.setVisibility(View.GONE);
-            }
         }
     }
 }

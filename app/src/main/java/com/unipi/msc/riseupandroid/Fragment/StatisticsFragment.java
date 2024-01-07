@@ -9,123 +9,151 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Adapter.EmployeeStatisticsAdapter;
-import com.unipi.msc.riseupandroid.Model.User;
+import com.unipi.msc.riseupandroid.Model.Progress;
+import com.unipi.msc.riseupandroid.Model.UserStatistic;
 import com.unipi.msc.riseupandroid.R;
-import com.github.mikephil.charting.data.Entry;
+import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
+import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.riseupandroid.Tools.ActivityUtils;
-import com.unipi.msc.riseupandroid.Tools.MockData;
+import com.unipi.msc.riseupandroid.Tools.ChartUtils;
+import com.unipi.msc.riseupandroid.Tools.CustomDatePicker;
+import com.unipi.msc.riseupandroid.Tools.RetrofitUtils;
+import com.unipi.msc.riseupandroid.Tools.UserUtils;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class StatisticsFragment extends Fragment {
 
-    private LineChart chart;
+    private TextView textViewStartDate, textViewEndDate;
     private RecyclerView recyclerView;
-    EmployeeStatisticsAdapter adapter;
+    private ProgressBar progressBar;
+    private LineChart chart;
+    private EmployeeStatisticsAdapter employeeStatisticsAdapter;
+    private RaiseUpAPI raiseUpAPI;
+    private Long startUnixDate, endUnixDate;
+    private List<UserStatistic> userStatistics = new ArrayList<>();
+    private Toast t;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_statistics, container, false);
         initViews(v);
-        showChart();
-        showEmployee();
+        initObjects();
+        initListeners();
+        loadData();
         return v;
     }
-
-    private void showEmployee() {
-        recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
-        List<User> userList = MockData.getTestEmployees();
-        adapter = new EmployeeStatisticsAdapter(requireActivity(), userList);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void showChart() {
-
-        ArrayList<Entry> values = new ArrayList<>();
-
-        for (int i = 0; i < 7; i++) {
-
-            float val = (float) (Math.random() * 10) - 30;
-            values.add(new Entry(i, val));
-        }
-
-        LineDataSet set1;
-        // create a dataset and give it a type
-        set1 = new LineDataSet(values,"");
-        set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set1.setDrawVerticalHighlightIndicator(false);
-        set1.setDrawHorizontalHighlightIndicator(false);
-        // black lines and points
-
-        set1.setColor(ActivityUtils.getColor(requireActivity(), R.attr.text_color));
-        set1.setCircleColor(ActivityUtils.getColor(requireActivity(), R.attr.text_color));
-
-        // line thickness and point size
-        set1.setLineWidth(2f);
-        set1.setCircleRadius(3f);
-
-        // draw points as solid circles
-        set1.setDrawCircleHole(false);
-        set1.setDrawValues(false);
-        // text size of values
-//        set1.setValueTextSize(13f);
-//        set1.setValueTypeface(ResourcesCompat.getFont(requireActivity(),R.font.euclid_circular_a_regular));
-
-        set1.setFillColor(ActivityUtils.getColor(requireActivity(), R.attr.text_color));
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1); // add the data sets
-
-        // create a data object with the data sets
-        LineData data = new LineData(dataSets);
-
-        // set data
-        chart.getLegend().setEnabled(false);
-        chart.setData(data);
-    }
-
     private void initViews(View v) {
+        textViewStartDate = v.findViewById(R.id.textViewStartDate);
+        textViewEndDate = v.findViewById(R.id.textViewEndDate);
+        progressBar = v.findViewById(R.id.progressBar);
         chart = v.findViewById(R.id.lineChart);
-        // disable description text
-        chart.getDescription().setEnabled(false);
-        // enable touch gestures
-        chart.setTouchEnabled(true);
-        chart.setDrawGridBackground(false);
-        chart.setDragEnabled(true);
-        chart.setScaleEnabled(true);
-        // no description text
-        chart.getDescription().setEnabled(false);
-        // enable touch gestures
-        chart.setTouchEnabled(true);
-        chart.setDragDecelerationFrictionCoef(0.9f);
-
-        // enable scaling and dragging
-        chart.setDragEnabled(false);
-        chart.setScaleEnabled(false);
-        chart.setDrawGridBackground(false);
-        chart.setHighlightPerDragEnabled(false);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        chart.setPinchZoom(false);
-        chart.setScaleEnabled(false);
-        chart.setTouchEnabled(false);
-        chart.setViewPortOffsets(0f, 0f, 0f, 0f);
-        chart.getAxisLeft().setEnabled(false);
-        chart.getAxisRight().setEnabled(false);
-        chart.getXAxis().setEnabled(false);
-
         recyclerView = v.findViewById(R.id.recyclerView);
+        ChartUtils.customizeChart(chart);
+    }
+    private void initObjects() {
+        raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault()).with(LocalTime.of(2, 0));
+        endUnixDate = now.toInstant().toEpochMilli();
+        now = now.plusDays(-7);
+        startUnixDate = now.toInstant().toEpochMilli();
+        textViewStartDate.setText(ActivityUtils.normalizeDate(startUnixDate));
+        textViewEndDate.setText(ActivityUtils.normalizeDate(endUnixDate));
+        employeeStatisticsAdapter = new EmployeeStatisticsAdapter(requireActivity(), userStatistics);
+    }
+    private void initListeners() {
+        recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 2));
+        recyclerView.setAdapter(employeeStatisticsAdapter);
+        textViewStartDate.setOnClickListener(view-> CustomDatePicker.showPicker(requireActivity(),startUnixDate, date -> {
+            startUnixDate = date;
+            textViewStartDate.setText(ActivityUtils.normalizeDate(date));
+            loadChartData();
+        }));
+        textViewEndDate.setOnClickListener(view-> CustomDatePicker.showPicker(requireActivity(),endUnixDate, date -> {
+            endUnixDate = date;
+            textViewEndDate.setText(ActivityUtils.normalizeDate(date));
+            loadChartData();
+        }));
+    }
+    private void loadData(){
+        loadChartData();
+        loadUserStatistics();
+    }
+    private void loadChartData() {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.getProgress(UserUtils.loadBearerToken(requireActivity()), startUnixDate, endUnixDate).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(), response);
+                    ActivityUtils.showToast(requireActivity(), t, msg);
+                }else{
+                    List<Progress> progressList = new ArrayList<>();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        progressList.add(Progress.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    showChart(progressList);
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(),t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+        });
+    }
+    private void loadUserStatistics() {
+        ActivityUtils.showProgressBar(progressBar);
+        raiseUpAPI.getUserStatistics(UserUtils.loadBearerToken(requireActivity()), startUnixDate, endUnixDate).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(requireActivity(), response);
+                    ActivityUtils.showToast(requireActivity(), t, msg);
+                }else{
+                    userStatistics.clear();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        userStatistics.add(UserStatistic.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    employeeStatisticsAdapter.notifyDataSetChanged();
+                }
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(requireActivity(),t);
+                ActivityUtils.hideProgressBar(progressBar);
+            }
+        });
+    }
+    private void showChart(List<Progress> progressList) {
+        chart.setData(ChartUtils.getDataConfig(requireActivity(),progressList));
+        chart.notifyDataSetChanged();
+        chart.invalidate();
     }
 }

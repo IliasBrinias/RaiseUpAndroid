@@ -9,7 +9,9 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.SimpleTimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class ActivityUtils {
@@ -33,12 +35,17 @@ public class ActivityUtils {
         t.show();
     }
     public static long getDifferenceDays(Long d1, Long d2) {
-        return TimeUnit.DAYS.convert(d2 - d1, TimeUnit.MILLISECONDS);
+        return TimeUnit.DAYS.convert(d2 - d1, TimeUnit.MILLISECONDS) + 1;
     }
 
     public static Calendar unixToCalendar(long unixTime){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime);
         return calendar;
+    }
+
+    public static String normalizeDate(Long unixDate){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return simpleDateFormat.format(unixDate);
     }
 }

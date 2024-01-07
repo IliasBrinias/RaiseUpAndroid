@@ -139,9 +139,8 @@ public class TaskActivity extends AppCompatActivity {
         if (task.getDueDate() != null){
             long days = ActivityUtils.getDifferenceDays(new Date().getTime(),task.getDueDate());
             expireLayout.setVisibility(days<=0 && !task.getCompleted() ? View.VISIBLE : View.INVISIBLE);
-            textViewDaysToExpire.setText(Math.abs(days) + " " +(days==1?getString(R.string.day):getString(R.string.days)));
+            textViewDaysToExpire.setText(ActivityUtils.normalizeDate(task.getDueDate()));
         }
-        textViewToExpire.setVisibility(expireLayout.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.GONE);
         textViewColumnName.setText(task.getColumn().getTitle());
         textViewDescription.setText(task.getDescription());
         tagAdapter.setData(this.task.getTags());

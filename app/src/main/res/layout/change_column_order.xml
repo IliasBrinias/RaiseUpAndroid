@@ -3,8 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/bottomSheet"
-    android:layout_marginTop="50dp">
+    style="@style/bottomSheet">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,8 +31,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewColumns"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_height="@dimen/bottom_sheet_recycler_height"/>
     <Button
         android:layout_width="0dp"
         android:layout_height="20dp"/>

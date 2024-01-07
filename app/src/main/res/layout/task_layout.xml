@@ -71,6 +71,7 @@
                 android:id="@+id/imageViewProfile0"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:background="@drawable/ic_profile"/>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
@@ -90,6 +91,7 @@
             android:id="@+id/imageViewProfile1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:background="@drawable/ic_profile"/>
         </androidx.cardview.widget.CardView>
 
@@ -110,6 +112,7 @@
             android:id="@+id/imageViewProfile2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scaleType="centerCrop"
             android:background="@drawable/ic_profile"/>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

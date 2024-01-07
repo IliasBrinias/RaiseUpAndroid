@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,17 +19,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.unipi.msc.riseupandroid.Activity.SaveBoardActivity;
 import com.unipi.msc.riseupandroid.Adapter.AddEmployeeAdapter;
 import com.unipi.msc.riseupandroid.Adapter.BoardCreationColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.ChangeColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.TagAdapter;
 import com.unipi.msc.riseupandroid.Interface.OnAddColumnResponse;
 import com.unipi.msc.riseupandroid.Interface.OnAddEmployeesResponse;
-import com.unipi.msc.riseupandroid.Interface.OnBoardColumnClick;
 import com.unipi.msc.riseupandroid.Interface.OnBoardPropertiesResponse;
 import com.unipi.msc.riseupandroid.Interface.OnColumnChange;
 import com.unipi.msc.riseupandroid.Interface.OnColumnOrderChange;
@@ -41,9 +42,7 @@ import com.unipi.msc.riseupandroid.Model.Tag;
 import com.unipi.msc.riseupandroid.Model.Task;
 import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.R;
-import com.unipi.msc.riseupandroid.Retrofit.ColumnRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
-import com.unipi.msc.riseupandroid.Retrofit.Request.BoardRequest;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 
 import java.util.ArrayList;
@@ -61,15 +60,11 @@ public class CustomBottomSheet {
     public static final int ADD_EMPLOYEES = 0;
     public static final int CHANGE_ORDER = 1;
     public static final int DELETE_BOARD = 2;
-
-    public static void showEdit(Activity activity, String name, String initValue, OnEditPersonalData onEditPersonalData){
-        showSingleValue(activity,activity.getString(R.string.change)+" "+name,initValue,onEditPersonalData::onChange);
-    }
     private static void showSingleValue(Activity activity, String name, String initValue, OnSingleValueResponse onSingleValueResponse){
-
         View view = activity.getLayoutInflater().inflate(R.layout.personal_data_edit_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
 
         TextView textViewTitle = view.findViewById(R.id.textViewTitle);
         EditText editText = view.findViewById(R.id.editText);
@@ -108,6 +103,9 @@ public class CustomBottomSheet {
         dialog.show();
         showKeyboard(activity, editText);
     }
+    public static void showEdit(Activity activity, String name, String initValue, OnEditPersonalData onEditPersonalData){
+        showSingleValue(activity,activity.getString(R.string.change)+" "+name,initValue,onEditPersonalData::onChange);
+    }
     public static void addEmployees(Activity activity, List<User> alreadySelected, Long boardId, OnAddEmployeesResponse onAddEmployeesResponse){
         List<User> users = new ArrayList<>();
         Map<Long,Boolean> selectedEmployees = new HashMap<>();
@@ -117,6 +115,7 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.add_employee_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity, dialog);
 
         EditText editTextSearch = view.findViewById(R.id.editTextSearch);
         Button buttonSubmit = view.findViewById(R.id.buttonSubmit);
@@ -184,17 +183,11 @@ public class CustomBottomSheet {
 
         dialog.show();
     }
-
-    public static void AddBoardColumn(Activity activity, OnAddColumnResponse onAddColumnResponse) {
-        singleInput(activity,activity.getString(R.string.progress_column), onAddColumnResponse::onResponse);
-    }
-    public static void AddTaskName(Activity activity, OnTaskNameResponse onAddColumnResponse) {
-        singleInput(activity,activity.getString(R.string.task_name), onAddColumnResponse::onResponse);
-    }
     private static void singleInput(Activity activity, String hint, OnSingleValueResponse onSingleValueResponse){
         View view = activity.getLayoutInflater().inflate(R.layout.single_input_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
 
         EditText editTextInput = view.findViewById(R.id.editTextInput);
         ImageButton imageButtonConfirm = view.findViewById(R.id.imageButtonConfirm);
@@ -208,16 +201,22 @@ public class CustomBottomSheet {
         dialog.show();
         showKeyboard(activity, editTextInput);
     }
+    public static void AddBoardColumn(Activity activity, OnAddColumnResponse onAddColumnResponse) {
+        singleInput(activity,activity.getString(R.string.progress_column), onAddColumnResponse::onResponse);
+    }
+    public static void AddTaskName(Activity activity, OnTaskNameResponse onAddColumnResponse) {
+        singleInput(activity,activity.getString(R.string.task_name), onAddColumnResponse::onResponse);
+    }
     public static void addTags(Activity activity, OnTagSelected onTagSelected){
 
         List<Tag> tags = new ArrayList<>();
         Map<Long,Boolean> selectedTags = new HashMap<>();
         RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
 
-
         View view = activity.getLayoutInflater().inflate(R.layout.add_tag_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
 
         view.findViewById(R.id.imageButtonClose).setOnClickListener(v->dialog.cancel());
         EditText editTextSearch = view.findViewById(R.id.editTextSearch);
@@ -276,6 +275,7 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.change_column_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
 
         view.findViewById(R.id.imageButtonClose).setOnClickListener(v->dialog.cancel());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
@@ -313,6 +313,7 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.delete_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
 
         Button buttonCancel = view.findViewById(R.id.buttonCancel);
         Button buttonDelete = view.findViewById(R.id.buttonDelete);
@@ -332,6 +333,7 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.success_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
         TextView textViewSuccessMessage = view.findViewById(R.id.textViewSuccessMessage);
         textViewSuccessMessage.setText(message + " " + activity.getString(R.string.was_created_successfully));
         dialog.show();
@@ -340,6 +342,7 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.board_properties_layout, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
         TextView textViewAddEmployees = view.findViewById(R.id.textViewAddEmployees);
         TextView textViewChangeColumnOrder = view.findViewById(R.id.textViewChangeColumnOrder);
         TextView textViewDeleteBoard = view.findViewById(R.id.textViewDeleteBoard);
@@ -364,6 +367,8 @@ public class CustomBottomSheet {
         View view = activity.getLayoutInflater().inflate(R.layout.change_column_order, null);
         BottomSheetDialog dialog = new BottomSheetDialog(activity);
         dialog.setContentView(view);
+        customizeDialog(activity,dialog);
+
         ImageButton imageButtonClose = view.findViewById(R.id.imageButtonClose);
         RecyclerView recyclerViewColumns = view.findViewById(R.id.recyclerViewColumns);
         Button buttonSave = view.findViewById(R.id.buttonSave);
@@ -413,5 +418,18 @@ public class CustomBottomSheet {
             dialog.cancel();
         });
         dialog.show();
+    }
+    private static void customizeDialog(Activity activity, BottomSheetDialog dialog) {
+//        FrameLayout bottomSheet = (FrameLayout) dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+//        BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
+        dialog.setOnShowListener(d -> {
+            BottomSheetDialog bottom_dialog = (BottomSheetDialog) d;
+            FrameLayout bottomSheet = (FrameLayout) bottom_dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            assert bottomSheet != null;
+            DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+            int height = displayMetrics.heightPixels;
+            int maxHeight = (int) (height*0.80);
+            BottomSheetBehavior.from(bottomSheet).setPeekHeight(maxHeight);
+        });
     }
 }

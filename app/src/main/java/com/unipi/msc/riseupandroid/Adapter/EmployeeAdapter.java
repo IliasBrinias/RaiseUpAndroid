@@ -22,42 +22,35 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     Activity a;
     List<User> users;
     OnBoardEmployeeDelete onBoardEmployeeDelete;
-
     public EmployeeAdapter(Activity a, List<User> users, OnBoardEmployeeDelete onBoardEmployeeDelete) {
         this.a = a;
         this.users = users;
         this.onBoardEmployeeDelete = onBoardEmployeeDelete;
     }
-
     @NonNull
     @Override
     public EmployeeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.board_creation_employee_layout, parent, false);
         return new EmployeeViewHolder(v);
     }
-
     @Override
     public void onBindViewHolder(@NonNull EmployeeViewHolder holder, int position) {
         holder.onBoardEmployeeDelete = onBoardEmployeeDelete;
         holder.bindData(a, users.get(position));
     }
-
     @Override
     public int getItemCount() {
         return users.size();
     }
-
     public void setData(List<User> employees) {
         users.clear();
         users.addAll(employees);
         notifyDataSetChanged();
     }
-
     public void deleteItem(User user) {
         users.remove(user);
         notifyDataSetChanged();
     }
-
     public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProfile;
         TextView textViewName;
@@ -73,7 +66,6 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
             imageButtonDelete = view.findViewById(R.id.imageButtonDelete);
             imageButtonDelete.setOnClickListener(v->onBoardEmployeeDelete.onDelete(v,getAdapterPosition()));
         }
-
         public void bindData(Activity a, User user){
             ImageUtils.loadProfileToImageView(a,user.getProfile(),imageViewProfile);
             textViewName.setText(user.getFullName());
