@@ -1,15 +1,18 @@
 package com.unipi.msc.riseupandroid.Activity;
-
+import android.Manifest;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,6 +53,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int REQ_NOTIFICATION = 123;
     private ItemViewModel itemViewModel;
     private ImageButton imageButtonClose;
     private TextView textViewUserName;
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         initObjects();
         initListeners();
         updateFCMToken();
+        permissions();
     }
     @Override
     protected void onResume() {
@@ -204,4 +209,14 @@ public class MainActivity extends AppCompatActivity {
     private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
+    private void permissions() {
+        List<String> permissions = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+                ActivityCompat.requestPermissions(this, permissions.toArray(new String[0]), REQ_NOTIFICATION);
+            }
+        }
+    }
+
 }

@@ -2,10 +2,14 @@ package com.unipi.msc.riseupandroid.Tools;
 
 import android.app.Activity;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.unipi.msc.riseupandroid.Model.Progress;
 import com.unipi.msc.riseupandroid.R;
@@ -17,19 +21,17 @@ public class ChartUtils {
     public static LineData getDataConfig(Activity activity, List<Progress> progressList){
         ArrayList<Entry> values = new ArrayList<>();
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        LineDataSet lineDataSet;
-
         for (int i = 0; i < progressList.size(); i++) {
             values.add(new Entry(i, progressList.get(i).getCompletedTasks()));
         }
 
         // create a dataset and give it a type
-        lineDataSet = new LineDataSet(values,"");
+        LineDataSet lineDataSet = new LineDataSet(values,"");
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setDrawVerticalHighlightIndicator(false);
         lineDataSet.setDrawHorizontalHighlightIndicator(false);
-        // black lines and points
 
+        // black lines and points
         lineDataSet.setColor(ActivityUtils.getColor(activity, R.attr.text_color));
         lineDataSet.setCircleColor(ActivityUtils.getColor(activity, R.attr.text_color));
 
@@ -40,10 +42,10 @@ public class ChartUtils {
         // draw points as solid circles
         lineDataSet.setDrawCircleHole(false);
         lineDataSet.setDrawValues(false);
-        // text size of values
-//        lineDataSet.setValueTextSize(13f);
-//        lineDataSet.setValueTypeface(ResourcesCompat.getFont(requireActivity(),R.font.euclid_circular_a_regular));
 
+        // text size of values
+        lineDataSet.setValueTextSize(13f);
+        lineDataSet.setValueTypeface(ResourcesCompat.getFont(activity,R.font.euclid_circular_a_regular));
         lineDataSet.setFillColor(ActivityUtils.getColor(activity, R.attr.text_color));
         dataSets.add(lineDataSet); // add the data sets
 
@@ -52,15 +54,16 @@ public class ChartUtils {
     }
 
     public static void customizeChart(LineChart chart) {
+
         // disable description text
         chart.getDescription().setEnabled(false);
+
         // enable touch gestures
         chart.setTouchEnabled(true);
         chart.setDrawGridBackground(false);
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
-        // no description text
-        chart.getDescription().setEnabled(false);
+
         // enable touch gestures
         chart.setTouchEnabled(true);
         chart.setDragDecelerationFrictionCoef(0.9f);
@@ -79,7 +82,7 @@ public class ChartUtils {
         chart.getAxisLeft().setEnabled(false);
         chart.getAxisRight().setEnabled(false);
         chart.getXAxis().setEnabled(false);
-
+        chart.animateXY(200, 100);
         chart.getLegend().setEnabled(false);
     }
 }

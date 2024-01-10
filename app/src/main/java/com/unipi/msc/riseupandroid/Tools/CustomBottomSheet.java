@@ -41,6 +41,7 @@ import com.unipi.msc.riseupandroid.Model.Column;
 import com.unipi.msc.riseupandroid.Model.Tag;
 import com.unipi.msc.riseupandroid.Model.Task;
 import com.unipi.msc.riseupandroid.Model.User;
+import com.unipi.msc.riseupandroid.Model.UserStatistic;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
 import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;

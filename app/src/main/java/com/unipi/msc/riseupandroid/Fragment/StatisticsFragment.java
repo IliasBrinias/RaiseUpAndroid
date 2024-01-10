@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Adapter.EmployeeStatisticsAdapter;

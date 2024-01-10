@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RiseUpAndroid</string>
+    <string name="app_name">Rise Up</string>
     <string name="login">Login</string>
     <string name="sign_in_to_your_account">Sign in \n to your account</string>
     <string name="username">Username</string>
@@ -95,4 +95,8 @@
     <string name="bad_credentials">Bad credentials</string>
     <string name="delete_board">Delete Board</string>
     <string name="change_column_order">Change Column Order</string>
+    <string name="employee_progress">Employee Progress</string>
+    <string name="open_tasks">Open Tasks</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="added_you_to">" added you to "</string>
 </resources>
