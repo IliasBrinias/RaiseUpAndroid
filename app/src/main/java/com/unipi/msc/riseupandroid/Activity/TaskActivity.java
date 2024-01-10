@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TaskActivity extends AppCompatActivity {
-    private TextView textViewDaysToExpire, textViewColumnName, textViewTaskTitle, textViewDescription, textViewToExpire;
+    private TextView textViewDaysToExpire, textViewColumnName, textViewTaskTitle, textViewDescription, textViewDifficulty;
     private RecyclerView recyclerViewTags, recyclerViewEmployees, recyclerViewRecommendedEmployees;
     private ImageButton imageButtonExit, imageButtonAddEmployees, imageButtonAddTag;
     private ProgressBar progressBar;
@@ -77,7 +77,7 @@ public class TaskActivity extends AppCompatActivity {
         expireLayout = findViewById(R.id.expireLayout);
         linearLayoutDueDate = findViewById(R.id.linearLayoutDueDate);
         imageButtonAddTag = findViewById(R.id.imageButtonAddTag);
-        textViewToExpire = findViewById(R.id.textViewToExpire);
+        textViewDifficulty = findViewById(R.id.textViewDifficulty);
         linearLayoutCompleted = findViewById(R.id.linearLayoutCompleted);
         ActivityUtils.hideProgressBar(progressBar);
     }
@@ -107,6 +107,7 @@ public class TaskActivity extends AppCompatActivity {
         imageButtonAddTag.setOnClickListener(view->CustomBottomSheet.addTags(TaskActivity.this,tagIds -> updateTask(new TaskRequest.Builder().setTagIds(tagIds).build())));
         linearLayoutCompleted.setOnClickListener(view -> updateTask(new TaskRequest.Builder().setCompleted(!linearLayoutCompleted.isSelected()).build()));
         textViewColumnName.setOnClickListener((view -> CustomBottomSheet.changeColumn(TaskActivity.this,task,columnId -> updateTask(new TaskRequest.Builder().setColumnId(columnId).build()) )));
+        textViewDifficulty.setOnClickListener(v -> CustomBottomSheet.changeDifficulty(TaskActivity.this, difficulty ->updateTask(new TaskRequest.Builder().setDifficulty(difficulty).build())));
     }
     private void getTask(Long taskId) {
         if (taskId == 0L) {
@@ -143,6 +144,7 @@ public class TaskActivity extends AppCompatActivity {
         }
         textViewColumnName.setText(task.getColumn().getTitle());
         textViewDescription.setText(task.getDescription());
+        textViewDifficulty.setText(ActivityUtils.getDifficultyDsc(TaskActivity.this, task.getDifficulty()));
         tagAdapter.setData(this.task.getTags());
         employeeAdapter.setData(this.task.getUsers());
         linearLayoutCompleted.setSelected(task.getCompleted());
@@ -160,7 +162,7 @@ public class TaskActivity extends AppCompatActivity {
         updateTask(new TaskRequest.Builder().setEmployeeIds(userIds).build());
     }
     private void addEmployees(View view) {
-        CustomBottomSheet.addEmployees(TaskActivity.this, task.getUsers(),task.getColumn().getBoardId(), TaskActivity.this::updateEmployees);
+        CustomBottomSheet.addEmployees(TaskActivity.this, task.getUsers(),task.getColumn().getBoardId(), false, TaskActivity.this::updateEmployees);
     }
     private void updateEmployees(List<User> users) {
         List<Long> employeesIds = new ArrayList<>();

@@ -13,6 +13,7 @@ public class Task {
     private Long dueDate;
     private Boolean completed;
     private Column column;
+    private Difficulty difficulty;
     private List<User> users = new ArrayList<>();
     private List<Tag> tags = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
@@ -103,6 +104,14 @@ public class Task {
         this.comments = comments;
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
     public static Task buildTaskFromJSON(JsonObject jsonObject){
         Task task = new Task();
 
@@ -124,6 +133,10 @@ public class Task {
 
         try {
             task.setCompleted(jsonObject.get("completed").getAsBoolean());
+        }catch (Exception ignore){}
+
+        try {
+            task.setDifficulty(Difficulty.valueOf(jsonObject.get("difficulty").getAsString()));
         }catch (Exception ignore){}
 
         try {

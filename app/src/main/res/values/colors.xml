@@ -22,4 +22,8 @@
     <color name="light_task_add">#7E7CCF</color>
     <!--    General Colors  -->
     <color name="error_color">#FF4F44</color>
+    <color name="green">#90C690</color>
+    <color name="yellow">#FF9B2D</color>
+    <color name="orange">#FF7880</color>
+    <color name="red">#FF4F44</color>
 </resources>

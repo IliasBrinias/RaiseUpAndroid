@@ -149,6 +149,28 @@
                     style="@style/task_activity_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/difficulty" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textViewDifficulty"
+                    style="@style/edit_field_task_dsc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@null"
+                    android:text="Column title" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/basic_padding_20dp" />
+
+                <TextView
+                    style="@style/task_activity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/progress_column" />
 
                 <View

@@ -10,12 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.Model.UserStatistic;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Tools.ImageUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStatisticsAdapter.EmployeeStatisticsHolder> {
     Activity a;
@@ -35,7 +35,9 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
 
     @Override
     public void onBindViewHolder(@NonNull EmployeeStatisticsHolder holder, int position) {
-        holder.bindData(a, userList.get(position));
+        boolean isWinner = Objects.equals(userList.get(0).getCompletedTask(), userList.get(position).getCompletedTask());
+        if (userList.get(0).getCompletedTask() == 0) isWinner = false;
+        holder.bindData(a, isWinner, userList.get(position));
     }
 
     @Override
@@ -58,10 +60,10 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
             textViewCompletedTasks = view.findViewById(R.id.textViewCompletedTasks);
         }
 
-        public void bindData(Activity a, UserStatistic userStatistic) {
+        public void bindData(Activity a, boolean isWinner, UserStatistic userStatistic) {
             textViewEmployeeName.setText(userStatistic.getUser().getFullName());
             textViewCompletedTasks.setText(String.valueOf(userStatistic.getCompletedTask()));
-            imageViewWinner.setVisibility(getAdapterPosition() == 0?View.VISIBLE:View.GONE);
+            imageViewWinner.setVisibility(isWinner?View.VISIBLE:View.GONE);
             try {
                 ImageUtils.loadProfileToImageView(a, userStatistic.getUser().getProfile(),imageViewEmployee);
             }catch (Exception ignore){}

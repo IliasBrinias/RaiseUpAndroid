@@ -99,4 +99,11 @@
     <string name="open_tasks">Open Tasks</string>
     <string name="completed_tasks">Completed Tasks</string>
     <string name="added_you_to">" added you to "</string>
+    <string name="difficulty">Difficulty</string>
+    <string name="change_difficulty">Change Difficulty</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="senior">Senior</string>
+    <string name="mid_level">Mid Level</string>
+    <string name="junior">Junior</string>
+    <string name="enter_a_difficulty_level">Enter a Difficulty Level</string>
 </resources>

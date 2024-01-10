@@ -137,7 +137,7 @@ public class BoardFragment extends Fragment {
     }
 
     private void addEmployees(int position) {
-        CustomBottomSheet.addEmployees(requireActivity(),boardList.get(position).getUsers(),boardList.get(position).getId(), employees -> {
+        CustomBottomSheet.addEmployees(requireActivity(),boardList.get(position).getUsers(),boardList.get(position).getId(), true, employees -> {
             List<Long> employeeIds = new ArrayList<>();
             employees.forEach(user -> employeeIds.add(user.getId()));
             updateBoard(position, new BoardRequest.Builder().setEmployeesId(employeeIds).build());

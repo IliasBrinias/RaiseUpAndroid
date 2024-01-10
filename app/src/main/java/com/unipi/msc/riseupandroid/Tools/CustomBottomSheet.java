@@ -23,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.unipi.msc.riseupandroid.Activity.TaskActivity;
 import com.unipi.msc.riseupandroid.Adapter.AddEmployeeAdapter;
 import com.unipi.msc.riseupandroid.Adapter.BoardCreationColumnAdapter;
 import com.unipi.msc.riseupandroid.Adapter.ChangeColumnAdapter;
@@ -33,11 +34,13 @@ import com.unipi.msc.riseupandroid.Interface.OnBoardPropertiesResponse;
 import com.unipi.msc.riseupandroid.Interface.OnColumnChange;
 import com.unipi.msc.riseupandroid.Interface.OnColumnOrderChange;
 import com.unipi.msc.riseupandroid.Interface.OnDeleteClick;
+import com.unipi.msc.riseupandroid.Interface.OnDifficultyChange;
 import com.unipi.msc.riseupandroid.Interface.OnEditPersonalData;
 import com.unipi.msc.riseupandroid.Interface.OnSingleValueResponse;
 import com.unipi.msc.riseupandroid.Interface.OnTagSelected;
 import com.unipi.msc.riseupandroid.Interface.OnTaskNameResponse;
 import com.unipi.msc.riseupandroid.Model.Column;
+import com.unipi.msc.riseupandroid.Model.Difficulty;
 import com.unipi.msc.riseupandroid.Model.Tag;
 import com.unipi.msc.riseupandroid.Model.Task;
 import com.unipi.msc.riseupandroid.Model.User;
@@ -107,7 +110,7 @@ public class CustomBottomSheet {
     public static void showEdit(Activity activity, String name, String initValue, OnEditPersonalData onEditPersonalData){
         showSingleValue(activity,activity.getString(R.string.change)+" "+name,initValue,onEditPersonalData::onChange);
     }
-    public static void addEmployees(Activity activity, List<User> alreadySelected, Long boardId, OnAddEmployeesResponse onAddEmployeesResponse){
+    public static void addEmployees(Activity activity, List<User> alreadySelected, Long boardId, boolean allUsers, OnAddEmployeesResponse onAddEmployeesResponse){
         List<User> users = new ArrayList<>();
         Map<Long,Boolean> selectedEmployees = new HashMap<>();
         RaiseUpAPI raiseUpAPI = RetrofitClient.getInstance(activity).create(RaiseUpAPI.class);
@@ -128,7 +131,7 @@ public class CustomBottomSheet {
             selectedEmployees.put(users.get(position).getId(), v.isSelected());
             buttonSubmit.setActivated(selectedEmployees.containsValue(true));
         });
-        Runnable runnable = () -> raiseUpAPI.searchUser(UserUtils.loadBearerToken(activity), boardId, editTextSearch.getText().toString())
+        Runnable runnable = () -> raiseUpAPI.searchUser(UserUtils.loadBearerToken(activity), boardId, allUsers,editTextSearch.getText().toString())
             .enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -421,8 +424,6 @@ public class CustomBottomSheet {
         dialog.show();
     }
     private static void customizeDialog(Activity activity, BottomSheetDialog dialog) {
-//        FrameLayout bottomSheet = (FrameLayout) dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-//        BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
         dialog.setOnShowListener(d -> {
             BottomSheetDialog bottom_dialog = (BottomSheetDialog) d;
             FrameLayout bottomSheet = (FrameLayout) bottom_dialog.findViewById(com.google.android.material.R.id.design_bottom_sheet);
@@ -432,5 +433,35 @@ public class CustomBottomSheet {
             int maxHeight = (int) (height*0.80);
             BottomSheetBehavior.from(bottomSheet).setPeekHeight(maxHeight);
         });
+    }
+
+    public static void changeDifficulty(Activity activity, OnDifficultyChange onDifficultyChange) {
+        View view = activity.getLayoutInflater().inflate(R.layout.change_difficulty_layout, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(activity);
+        dialog.setContentView(view);
+        customizeDialog(activity,dialog);
+
+        TextView textViewJunior = view.findViewById(R.id.textViewJunior);
+        TextView textViewMidLevel = view.findViewById(R.id.textViewMidLevel);
+        TextView textViewIntermediate = view.findViewById(R.id.textViewIntermediate);
+        TextView textViewSenior = view.findViewById(R.id.textViewSenior);
+        textViewJunior.setOnClickListener(v->{
+            onDifficultyChange.onChange(Difficulty.LOW);
+            dialog.cancel();
+        });
+        textViewMidLevel.setOnClickListener(v-> {
+            onDifficultyChange.onChange(Difficulty.MEDIUM);
+            dialog.cancel();
+        });
+        textViewIntermediate.setOnClickListener(v-> {
+            onDifficultyChange.onChange(Difficulty.INTERMEDIATE);
+            dialog.cancel();
+        });
+        textViewSenior.setOnClickListener(v-> {
+            onDifficultyChange.onChange(Difficulty.HIGH);
+            dialog.cancel();
+        });
+
+        dialog.show();
     }
 }

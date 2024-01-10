@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.unipi.msc.riseupandroid.Model.Difficulty;
+import com.unipi.msc.riseupandroid.R;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
@@ -37,15 +40,23 @@ public class ActivityUtils {
     public static long getDifferenceDays(Long d1, Long d2) {
         return TimeUnit.DAYS.convert(d2 - d1, TimeUnit.MILLISECONDS) + 1;
     }
-
     public static Calendar unixToCalendar(long unixTime){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(unixTime);
         return calendar;
     }
-
     public static String normalizeDate(Long unixDate){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return simpleDateFormat.format(unixDate);
+    }
+    public static String getDifficultyDsc(Activity a, Difficulty difficulty) {
+        if (difficulty == null) return a.getString(R.string.enter_a_difficulty_level);
+        switch (difficulty){
+            case LOW: return a.getString(R.string.junior);
+            case MEDIUM: return a.getString(R.string.mid_level);
+            case INTERMEDIATE: return a.getString(R.string.intermediate);
+            case HIGH: return a.getString(R.string.senior);
+            default: return a.getString(R.string.enter_a_difficulty_level);
+        }
     }
 }

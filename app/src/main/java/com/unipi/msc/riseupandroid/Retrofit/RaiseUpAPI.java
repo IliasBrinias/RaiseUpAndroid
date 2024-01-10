@@ -36,7 +36,10 @@ public interface RaiseUpAPI {
     @GET("user")
     Call<JsonObject> getUser(@Header("Authorization") String auth);
     @GET("user/search")
-    Call<JsonObject> searchUser(@Header("Authorization") String auth, @Query("boardId") Long board, @Query("keyword") String keyword);
+    Call<JsonObject> searchUser(@Header("Authorization") String auth,
+                                @Query("boardId") Long board,
+                                @Query("allUsers") boolean allUsers,
+                                @Query("keyword") String keyword);
     @PATCH("user/fcm")
     Call<JsonObject> updateFCM(@Header("Authorization") String auth, @Body FCMRequest request);
     @PATCH("user")
@@ -60,7 +63,6 @@ public interface RaiseUpAPI {
     Call<JsonObject> editTag(@Header("Authorization") String auth, @Path("tagId") Long tagId, @Body TagRequest request);
     @DELETE("tag/{tagId}")
     Call<JsonObject> deleteTag(@Header("Authorization") String auth, @Path("tagId") Long tagId);
-
 //    Board
     @GET("board")
     Call<JsonObject> getBoards(@Header("Authorization") String auth);
