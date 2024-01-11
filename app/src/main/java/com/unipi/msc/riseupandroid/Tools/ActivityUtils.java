@@ -34,6 +34,7 @@ public class ActivityUtils {
     public static void showToast(Activity a, Toast t, String msg){
         if (t==null) t = Toast.makeText(a,msg,Toast.LENGTH_SHORT);
         t.cancel();
+        if (msg == null || msg.isEmpty()) return;
         t.setText(msg);
         t.show();
     }

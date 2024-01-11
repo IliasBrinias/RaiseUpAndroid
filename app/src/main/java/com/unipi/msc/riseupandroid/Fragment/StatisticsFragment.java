@@ -3,12 +3,14 @@ package com.unipi.msc.riseupandroid.Fragment;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +21,9 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Adapter.EmployeeStatisticsAdapter;
+import com.unipi.msc.riseupandroid.Enum.Role;
 import com.unipi.msc.riseupandroid.Model.Progress;
+import com.unipi.msc.riseupandroid.Model.User;
 import com.unipi.msc.riseupandroid.Model.UserStatistic;
 import com.unipi.msc.riseupandroid.R;
 import com.unipi.msc.riseupandroid.Retrofit.RaiseUpAPI;
@@ -27,6 +31,8 @@ import com.unipi.msc.riseupandroid.Retrofit.RetrofitClient;
 import com.unipi.msc.riseupandroid.Tools.ActivityUtils;
 import com.unipi.msc.riseupandroid.Tools.ChartUtils;
 import com.unipi.msc.riseupandroid.Tools.CustomDatePicker;
+import com.unipi.msc.riseupandroid.Tools.ImageUtils;
+import com.unipi.msc.riseupandroid.Tools.ItemViewModel;
 import com.unipi.msc.riseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.riseupandroid.Tools.UserUtils;
 
@@ -51,6 +57,9 @@ public class StatisticsFragment extends Fragment {
     private Long startUnixDate, endUnixDate;
     private List<UserStatistic> userStatistics = new ArrayList<>();
     private Toast t;
+    private View includeUserStatistic;
+    private ImageView imageViewProfile;
+    private TextView textViewEmployeeName, textViewBoards, textViewCompletedTasks;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,9 +79,14 @@ public class StatisticsFragment extends Fragment {
         textViewStartDate = v.findViewById(R.id.textViewStartDate);
         textViewEndDate = v.findViewById(R.id.textViewEndDate);
         progressBar = v.findViewById(R.id.progressBar);
-        chart = v.findViewById(R.id.lineChart);
         recyclerView = v.findViewById(R.id.recyclerView);
+        chart = v.findViewById(R.id.lineChart);
         ChartUtils.customizeChart(chart);
+        includeUserStatistic = v.findViewById(R.id.includeUserStatistic);
+        imageViewProfile = includeUserStatistic.findViewById(R.id.imageViewProfile);
+        textViewEmployeeName = includeUserStatistic.findViewById(R.id.textViewEmployeeName);
+        textViewBoards = includeUserStatistic.findViewById(R.id.textViewBoards);
+        textViewCompletedTasks = includeUserStatistic.findViewById(R.id.textViewCompletedTasks);
     }
     private void initObjects() {
         raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
@@ -98,9 +112,20 @@ public class StatisticsFragment extends Fragment {
             loadChartData();
         }));
     }
+    private User user;
     private void loadData(){
         loadChartData();
-        loadUserStatistics();
+        new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getUser().observe(getViewLifecycleOwner(), user -> {
+            StatisticsFragment.this.user = user;
+            if (user.getRole() == Role.ADMIN){
+                recyclerView.setVisibility(View.VISIBLE);
+                includeUserStatistic.setVisibility(View.GONE);
+            }else {
+                recyclerView.setVisibility(View.GONE);
+                includeUserStatistic.setVisibility(View.VISIBLE);
+            }
+            loadUserStatistics();
+        });
     }
     private void loadChartData() {
         ActivityUtils.showProgressBar(progressBar);
@@ -136,12 +161,16 @@ public class StatisticsFragment extends Fragment {
                     String msg = RetrofitUtils.handleErrorResponse(requireActivity(), response);
                     ActivityUtils.showToast(requireActivity(), t, msg);
                 }else{
-                    userStatistics.clear();
                     JsonArray jsonArray = response.body().get("data").getAsJsonArray();
-                    for (int i = 0; i < jsonArray.size(); i++) {
-                        userStatistics.add(UserStatistic.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    if (user.getRole() == Role.ADMIN){
+                        userStatistics.clear();
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            userStatistics.add(UserStatistic.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                        }
+                        employeeStatisticsAdapter.notifyDataSetChanged();
+                    }else {
+                        loadUsersData(UserStatistic.buildFromJSON(jsonArray.get(0).getAsJsonObject()));
                     }
-                    employeeStatisticsAdapter.notifyDataSetChanged();
                 }
                 ActivityUtils.hideProgressBar(progressBar);
             }
@@ -152,6 +181,12 @@ public class StatisticsFragment extends Fragment {
                 ActivityUtils.hideProgressBar(progressBar);
             }
         });
+    }
+    private void loadUsersData(UserStatistic userStatistic) {
+        ImageUtils.loadProfileToImageView(requireActivity(),userStatistic.getUser().getProfile(),imageViewProfile);
+        textViewEmployeeName.setText(userStatistic.getUser().getFullName());
+        textViewBoards.setText(String.valueOf(userStatistic.getBoards()));
+        textViewCompletedTasks.setText(String.valueOf(userStatistic.getCompletedTask()));
     }
     private void showChart(List<Progress> progressList) {
         chart.setData(ChartUtils.getDataConfig(requireActivity(),progressList));

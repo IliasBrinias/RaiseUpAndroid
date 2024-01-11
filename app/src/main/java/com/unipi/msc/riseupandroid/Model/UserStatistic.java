@@ -9,7 +9,7 @@ import java.util.List;
 public class UserStatistic {
     private User user;
     private Long completedTask;
-    private List<UserBoardStatistics> userBoardStatistics = new ArrayList<>();
+    private Long boards;
 
     public UserStatistic() {
     }
@@ -30,12 +30,12 @@ public class UserStatistic {
         this.completedTask = completedTask;
     }
 
-    public List<UserBoardStatistics> getUserBoardStatistics() {
-        return userBoardStatistics;
+    public Long getBoards() {
+        return boards;
     }
 
-    public void setUserBoardStatistics(List<UserBoardStatistics> userBoardStatistics) {
-        this.userBoardStatistics = userBoardStatistics;
+    public void setBoards(Long boards) {
+        this.boards = boards;
     }
 
     public static UserStatistic buildFromJSON(JsonObject jsonObject){
@@ -50,10 +50,7 @@ public class UserStatistic {
         }catch (Exception ignore){}
 
         try {
-            JsonArray jsonArray = jsonObject.get("userBoard").getAsJsonArray();
-            for (int i = 0; i < jsonArray.size(); i++) {
-                userStatistic.getUserBoardStatistics().add(UserBoardStatistics.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
-            }
+            userStatistic.setBoards(jsonObject.get("boards").getAsLong());
         }catch (Exception ignore){}
 
         return userStatistic;

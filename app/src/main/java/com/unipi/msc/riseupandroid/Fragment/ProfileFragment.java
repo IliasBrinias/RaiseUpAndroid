@@ -128,7 +128,6 @@ public class ProfileFragment extends Fragment {
             textViewLastName.setText(user.getLastName());
         });
     }
-
     private void initListeners() {
         textListener = view -> {
             TextView textView = (TextView) view;

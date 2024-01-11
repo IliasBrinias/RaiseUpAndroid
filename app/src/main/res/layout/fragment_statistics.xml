@@ -88,6 +88,11 @@
             android:paddingEnd="10dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             tools:listitem="@layout/statistics_employee_layout" />
+        <include
+            android:id="@+id/includeUserStatistic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/single_statistics_employee_layout"/>
     </LinearLayout>
 
     <ProgressBar
