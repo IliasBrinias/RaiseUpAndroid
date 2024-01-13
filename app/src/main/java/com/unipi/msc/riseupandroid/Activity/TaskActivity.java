@@ -1,6 +1,7 @@
 package com.unipi.msc.riseupandroid.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.unipi.msc.riseupandroid.Adapter.EmployeeAdapter;
+import com.unipi.msc.riseupandroid.Adapter.RecommendedEmployeeAdapter;
 import com.unipi.msc.riseupandroid.Adapter.TagAdapter;
 import com.unipi.msc.riseupandroid.Interface.OnTagClick;
 import com.unipi.msc.riseupandroid.Model.Task;
@@ -42,14 +45,17 @@ public class TaskActivity extends AppCompatActivity {
     private TextView textViewDaysToExpire, textViewColumnName, textViewTaskTitle, textViewDescription, textViewDifficulty;
     private RecyclerView recyclerViewTags, recyclerViewEmployees, recyclerViewRecommendedEmployees;
     private ImageButton imageButtonExit, imageButtonAddEmployees, imageButtonAddTag;
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, progressBarRecommendation;
     private LinearLayout linearLayoutDueDate, linearLayoutCompleted;
+    private ConstraintLayout constraintLayoutRecommendation;
     private View expireLayout;
     private EmployeeAdapter employeeAdapter;
+    private RecommendedEmployeeAdapter recommendedEmployeeAdapter;
     private TagAdapter tagAdapter;
     private Task task;
     private RaiseUpAPI raiseUpAPI;
     private Toast t;
+    private List<User> recommendedUsers = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,12 +80,13 @@ public class TaskActivity extends AppCompatActivity {
         recyclerViewRecommendedEmployees = findViewById(R.id.recyclerViewRecommendedEmployees);
         imageButtonAddEmployees = findViewById(R.id.imageButtonAddEmployees);
         progressBar = findViewById(R.id.progressBar);
+        progressBarRecommendation = findViewById(R.id.progressBarRecommendation);
         expireLayout = findViewById(R.id.expireLayout);
         linearLayoutDueDate = findViewById(R.id.linearLayoutDueDate);
         imageButtonAddTag = findViewById(R.id.imageButtonAddTag);
         textViewDifficulty = findViewById(R.id.textViewDifficulty);
         linearLayoutCompleted = findViewById(R.id.linearLayoutCompleted);
-        ActivityUtils.hideProgressBar(progressBar);
+        constraintLayoutRecommendation = findViewById(R.id.constraintLayoutRecommendation);
     }
     private void initObjects() {
         task = new Task();
@@ -92,6 +99,19 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
         employeeAdapter = new EmployeeAdapter(this,task.getUsers(),(view, position) -> removeEmployee(position));
+        recommendedEmployeeAdapter = new RecommendedEmployeeAdapter(this,recommendedUsers,(view, position) -> {
+            List<Long> userIds = new ArrayList<>();
+            task.getUsers().add(recommendedUsers.get(position));
+            for (User user:task.getUsers()){
+                userIds.add(user.getId());
+            }
+
+            updateTask(new TaskRequest.Builder().setEmployeeIds(userIds).build());
+            recommendedEmployeeAdapter.remove(position);
+            if (recommendedUsers.isEmpty()){
+                constraintLayoutRecommendation.setVisibility(View.GONE);
+            }
+        });
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
     }
     private void initListeners() {
@@ -101,6 +121,8 @@ public class TaskActivity extends AppCompatActivity {
         recyclerViewTags.setAdapter(tagAdapter);
         recyclerViewEmployees.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
         recyclerViewEmployees.setAdapter(employeeAdapter);
+        recyclerViewRecommendedEmployees.setLayoutManager(RecyclerViewUtils.getFlexLayout(this));
+        recyclerViewRecommendedEmployees.setAdapter(recommendedEmployeeAdapter);
         textViewDescription.setOnClickListener(view->CustomBottomSheet.showEdit(TaskActivity.this,getString(R.string.description),textViewDescription.getText().toString(),dsc->updateTask(new TaskRequest.Builder().setDescription(dsc).build())));
         linearLayoutDueDate.setOnClickListener(view->CustomDatePicker.showPicker(TaskActivity.this,task.getDueDate(), date -> updateTask(new TaskRequest.Builder().setDueTo(date).build())));
         textViewTaskTitle.setOnClickListener(view->CustomBottomSheet.showEdit(TaskActivity.this,getString(R.string.task_name),textViewTaskTitle.getText().toString(),title->updateTask(new TaskRequest.Builder().setTitle(title).build())));
@@ -148,7 +170,41 @@ public class TaskActivity extends AppCompatActivity {
         tagAdapter.setData(this.task.getTags());
         employeeAdapter.setData(this.task.getUsers());
         linearLayoutCompleted.setSelected(task.getCompleted());
+        if (task.getUsers().isEmpty() || !recommendedUsers.isEmpty()) recommendUsers(task);
     }
+    private void recommendUsers(Task task) {
+        constraintLayoutRecommendation.setVisibility(View.VISIBLE);
+        if (!recommendedUsers.isEmpty()) return;
+        ActivityUtils.showProgressBar(progressBarRecommendation);
+        raiseUpAPI.proposeUsers(UserUtils.loadBearerToken(this),task.getId()).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (!response.isSuccessful()){
+                    String msg = RetrofitUtils.handleErrorResponse(TaskActivity.this,response);
+                    ActivityUtils.showToast(TaskActivity.this,t,msg);
+                }else {
+                    recommendedUsers.clear();
+                    JsonArray jsonArray = response.body().get("data").getAsJsonArray();
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        recommendedUsers.add(User.buildFromJSON(jsonArray.get(i).getAsJsonObject()));
+                    }
+                    if (recommendedUsers.isEmpty()){
+                        constraintLayoutRecommendation.setVisibility(View.GONE);
+                    }else {
+                        recommendedEmployeeAdapter.notifyDataSetChanged();
+                    }
+                }
+                ActivityUtils.hideProgressBar(progressBarRecommendation);
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                RetrofitUtils.handleException(TaskActivity.this,t);
+                ActivityUtils.hideProgressBar(progressBarRecommendation);
+            }
+        });
+    }
+
     private void removeTag(int position) {
         List<Long> tagIds = new ArrayList<>();
         Long deletedTagId = task.getTags().get(position).getId();

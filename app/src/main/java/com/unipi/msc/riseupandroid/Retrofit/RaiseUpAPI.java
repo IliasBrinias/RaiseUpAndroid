@@ -49,7 +49,6 @@ public interface RaiseUpAPI {
                               @Part("password") RequestBody password,
                               @Part("firstName") RequestBody firstName,
                               @Part("lastName") RequestBody lastName);
-
 //    Tag
     @GET("tag")
     Call<JsonObject> getTags(@Header("Authorization") String auth);
@@ -87,6 +86,8 @@ public interface RaiseUpAPI {
 //    Task
     @GET("task/{taskId}")
     Call<JsonObject> getTask(@Header("Authorization") String auth, @Path("taskId") Long taskId);
+    @GET("task/{taskId}/propose-users")
+    Call<JsonObject> proposeUsers(@Header("Authorization") String auth, @Path("taskId") Long taskId);
     @GET("task")
     Call<JsonObject> getTasks(@Header("Authorization") String auth);
     @GET("task/search")

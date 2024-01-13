@@ -26,4 +26,6 @@
     <color name="yellow">#FF9B2D</color>
     <color name="orange">#FF7880</color>
     <color name="red">#FF4F44</color>
+    <color name="commendationColor">#617E7CCF</color>
+
 </resources>

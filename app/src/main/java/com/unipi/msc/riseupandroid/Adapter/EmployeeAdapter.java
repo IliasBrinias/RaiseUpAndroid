@@ -51,6 +51,12 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
         users.remove(user);
         notifyDataSetChanged();
     }
+
+    public void addUser(User user) {
+        users.add(user);
+        notifyItemInserted(users.size() - 1);
+    }
+
     public static class EmployeeViewHolder extends RecyclerView.ViewHolder {
         ImageView imageViewProfile;
         TextView textViewName;

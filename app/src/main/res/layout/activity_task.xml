@@ -36,18 +36,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <ScrollView
             android:id="@+id/scrollView4"
             android:layout_width="match_parent"
@@ -248,34 +236,48 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/basic_padding_20dp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayoutRecommendation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_input_field_back"
-                    android:backgroundTint="#617E7CCF"
+                    android:backgroundTint="@color/commendationColor"
                     android:backgroundTintMode="add"
                     android:orientation="vertical"
                     android:padding="15dp">
-
                     <TextView
+                        android:id="@+id/textView3"
                         style="@style/task_activity_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/recommended"
-                        android:textColor="#7E7CCF" />
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
+                        android:textColor="?colorPrimary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewRecommendedEmployees"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
                         app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3"
                         tools:listitem="@layout/recommended_employee_layout" />
-                </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressBarRecommendation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="false"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <View
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"/>
@@ -303,6 +305,18 @@
                 android:textColor="?text_color"
                 android:padding="@dimen/basic_padding_20dp"/>
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

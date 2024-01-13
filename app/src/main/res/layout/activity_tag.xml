@@ -4,75 +4,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/activity"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    style="@style/activity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/title_reg_log"
-            android:text="@string/edit_tag"/>
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/title_reg_log"
+                android:text="@string/edit_tag"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <ImageButton
+                android:id="@+id/imageButtonExit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:padding="@dimen/basic_padding_20dp"
+                android:layout_marginEnd="-20dp"
+                android:src="@drawable/ic_close"/>
+        </LinearLayout>
         <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <ImageButton
-            android:id="@+id/imageButtonExit"
             android:layout_width="wrap_content"
+            android:layout_height="@dimen/basic_padding_20dp"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.madrapps.pikolo.HSLColorPicker
+                android:id="@+id/colorPickerHSL"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:arc_width="8dp"
+                app:indicator_radius="10dp"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:stroke_width="0dp" />
+            <ImageView
+                android:id="@+id/imageViewSelectedColor"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_circle"
+                app:tint="@color/light_primary"
+                app:layout_constraintBottom_toBottomOf="@+id/colorPickerHSL"
+                app:layout_constraintEnd_toEndOf="@+id/colorPickerHSL"
+                app:layout_constraintStart_toStartOf="@+id/colorPickerHSL"
+                app:layout_constraintTop_toTopOf="@+id/colorPickerHSL" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/basic_padding_20dp"/>
+        <EditText
+            android:id="@+id/editTextTagName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:padding="@dimen/basic_padding_20dp"
-            android:layout_marginEnd="-20dp"
-            android:src="@drawable/ic_close"/>
+            android:hint="@string/tag_name"
+            style="@style/input_field"/>
     </LinearLayout>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/basic_padding_20dp"/>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <com.madrapps.pikolo.HSLColorPicker
-            android:id="@+id/colorPickerHSL"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            app:arc_width="8dp"
-            app:indicator_radius="10dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:stroke_width="0dp" />
-        <ImageView
-            android:id="@+id/imageViewSelectedColor"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_circle"
-            app:tint="@color/light_primary"
-            app:layout_constraintBottom_toBottomOf="@+id/colorPickerHSL"
-            app:layout_constraintEnd_toEndOf="@+id/colorPickerHSL"
-            app:layout_constraintStart_toStartOf="@+id/colorPickerHSL"
-            app:layout_constraintTop_toTopOf="@+id/colorPickerHSL" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/basic_padding_20dp"/>
-    <EditText
-        android:id="@+id/editTextTagName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/tag_name"
-        style="@style/input_field"/>
-
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
     <Button
         android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
