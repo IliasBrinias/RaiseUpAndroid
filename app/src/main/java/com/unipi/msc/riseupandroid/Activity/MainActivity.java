@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
         initListeners();
         updateFCMToken();
         permissions();
+        loadUserData();
     }
     @Override
     protected void onResume() {
         super.onResume();
         resetSearch();
-        loadUserData();
     }
     private void updateFCMToken() {
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(this, s -> {
@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
     private void initObjects() {
         itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
         raiseUpAPI = RetrofitClient.getInstance(this).create(RaiseUpAPI.class);
-        user = UserUtils.loadUser(this);
-        itemViewModel.setUser(user);
     }
     private void initListeners() {
         setSupportActionBar(toolbar);
@@ -157,6 +155,10 @@ public class MainActivity extends AppCompatActivity {
                 finishAffinity();
             }
         });
+        itemViewModel.getUser().observe(this, user -> {
+            textViewUserName.setText(user.getFullName());
+            ImageUtils.loadProfileToImageView(MainActivity.this, user.getProfile(), imageViewUserImage);
+        });
     }
     private void resetSearch() {
         if (imageViewSearch.isSelected()) imageViewSearch.performClick();
@@ -171,8 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     user = User.buildFromJSON(response.body().get("data").getAsJsonObject());
                     UserUtils.saveUser(MainActivity.this,user);
-                    textViewUserName.setText(user.getFullName());
-                    ImageUtils.loadProfileToImageView(MainActivity.this, user.getProfile(), imageViewUserImage);
+                    itemViewModel.setUser(user);
                 }
             }
             @Override

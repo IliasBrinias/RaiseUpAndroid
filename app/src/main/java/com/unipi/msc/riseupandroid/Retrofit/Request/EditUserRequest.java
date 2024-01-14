@@ -1,5 +1,8 @@
 package com.unipi.msc.riseupandroid.Retrofit.Request;
 
+import java.io.File;
+
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
@@ -11,6 +14,12 @@ public class EditUserRequest {
 
     public void setMultipartFile(MultipartBody.Part multipartFile) {
         this.multipartFile = multipartFile;
+    }
+    public void setMultipartFile(File file) {
+        this.multipartFile = MultipartBody.Part.createFormData(
+                "multipartFile",
+                file.getName(),
+                RequestBody.create(MediaType.parse("image/*"), file));
     }
 
     public MultipartBody.Part getMultipartFile() {

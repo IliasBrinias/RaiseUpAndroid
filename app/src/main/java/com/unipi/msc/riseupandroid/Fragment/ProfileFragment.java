@@ -2,8 +2,6 @@ package com.unipi.msc.riseupandroid.Fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,10 +37,8 @@ import com.unipi.msc.riseupandroid.Tools.RetrofitUtils;
 import com.unipi.msc.riseupandroid.Tools.UserUtils;
 
 import java.io.File;
-import java.io.InputStream;
 
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,58 +49,30 @@ public class ProfileFragment extends Fragment {
     ImageView imageViewProfile;
     TextView textViewEmail, textViewUsername, textViewFirstName,
             textViewLastName, textViewPassword;
+    ProgressBar progressBar;
     View.OnClickListener textListener;
     private RaiseUpAPI raiseUpAPI;
     private Toast t;
-    ActivityResultLauncher<String> requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
-            isGranted -> {
-                if (isGranted) {
-                    openImageDialog();
-                }
-            });
-
-    ActivityResultLauncher<Intent> launchSomeActivity = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    if (data != null && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
-                        final InputStream imageStream;
-                        try {
-                            imageStream = requireActivity().getContentResolver().openInputStream(selectedImageUri);
-                            Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-                            imageViewProfile.setImageBitmap(bitmap);
-                            File file = FileUtils.saveBitmapToFile(requireActivity(), bitmap);
-                            EditUserRequest request = new EditUserRequest();
-                            request.setMultipartFile(MultipartBody.Part.createFormData("multipartFile",
-                                    file.getName(),
-                                    RequestBody.create(MediaType.parse("image/*"),file)));
-                            updateUserInfo(request);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            });
-
-    private void loadFileToImageView(Uri uri) {
-        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), uri.getPath());
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .error(R.drawable.ic_profile);
-
-        Glide.with(requireActivity())
-                .load(file)
-                .apply(options)
-                .into(imageViewProfile);
-    }
-
+    private ItemViewModel itemViewModel;
+    ActivityResultLauncher<Intent> launchGallery = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (result.getResultCode() != Activity.RESULT_OK) return;
+        Intent data = result.getData();
+        if (data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            try {
+                File file = FileUtils.UriToFile(requireActivity(), selectedImageUri);
+                EditUserRequest request = new EditUserRequest();
+                request.setMultipartFile(file);
+                updateUserInfo(request);
+            } catch (Exception ignore) {
+                ActivityUtils.showToast(requireActivity(),t,getString(R.string.something_happened));
+            }
+        }
+    });
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,22 +80,11 @@ public class ProfileFragment extends Fragment {
         initViews(view);
         initObjects();
         initListeners();
-        loadData();
         return view;
     }
-
     private void initObjects() {
         raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
-    }
-
-    private void loadData() {
-        new ViewModelProvider(requireActivity()).get(ItemViewModel.class).getUser().observe(getViewLifecycleOwner(), user -> {
-            ImageUtils.loadProfileToImageView(requireActivity(),user.getProfile(), imageViewProfile);
-            textViewEmail.setText(user.getEmail());
-            textViewUsername.setText(user.getUsername());
-            textViewFirstName.setText(user.getFirstName());
-            textViewLastName.setText(user.getLastName());
-        });
+        itemViewModel = new ViewModelProvider(requireActivity()).get(ItemViewModel.class);
     }
     private void initListeners() {
         textListener = view -> {
@@ -149,9 +107,19 @@ public class ProfileFragment extends Fragment {
         textViewLastName.setOnClickListener(textListener);
         textViewPassword.setOnClickListener(textListener);
         constraintLayoutProfile.setOnClickListener(this::openImage);
+        itemViewModel.getUser().observe(getViewLifecycleOwner(), this::loadUserData);
+    }
+
+    private void loadUserData(User user) {
+        ImageUtils.loadProfileToImageView(requireActivity(),user.getProfile(), imageViewProfile);
+        textViewEmail.setText(user.getEmail());
+        textViewUsername.setText(user.getUsername());
+        textViewFirstName.setText(user.getFirstName());
+        textViewLastName.setText(user.getLastName());
     }
 
     private void updateUserInfo(EditUserRequest request) {
+        ActivityUtils.showProgressBar(progressBar);
         raiseUpAPI.editUser(UserUtils.loadBearerToken(requireActivity()),
                 request.getMultipartFile(),
                 request.getPassword(),
@@ -164,27 +132,28 @@ public class ProfileFragment extends Fragment {
                     ActivityUtils.showToast(requireActivity(),t,msg);
                 }else {
                     JsonObject data = response.body().get("data").getAsJsonObject();
-                    UserUtils.saveUser(requireActivity(), User.buildFromJSON(data));
+                    User user = User.buildFromJSON(data);
+                    UserUtils.saveUser(requireActivity(), user);
+                    itemViewModel.setUser(user);
                 }
+                ActivityUtils.hideProgressBar(progressBar);
             }
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 RetrofitUtils.handleException(requireActivity(),t);
+                ActivityUtils.hideProgressBar(progressBar);
             }
         });
     }
-
     private void openImage(View view) {
         openImageDialog();
     }
-
     private void openImageDialog() {
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
-        launchSomeActivity.launch(i);
+        launchGallery.launch(i);
     }
-
     private String getLabel(int viewId){
         if (textViewFirstName.getId() == viewId){
             return getString(R.string.first_name);
@@ -195,7 +164,6 @@ public class ProfileFragment extends Fragment {
         }
         return "";
     }
-
     private void initViews(View view) {
         constraintLayoutProfile = view.findViewById(R.id.constraintLayoutProfile);
         imageViewProfile = view.findViewById(R.id.imageViewProfile);
@@ -204,5 +172,6 @@ public class ProfileFragment extends Fragment {
         textViewFirstName = view.findViewById(R.id.textViewFirstName);
         textViewLastName = view.findViewById(R.id.textViewLastName);
         textViewPassword = view.findViewById(R.id.textViewPassword);
+        progressBar = view.findViewById(R.id.progressBar);
     }
 }
