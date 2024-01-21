@@ -107,4 +107,5 @@
     <string name="junior">Junior</string>
     <string name="enter_a_difficulty_level">Enter a Difficulty Level</string>
     <string name="performance">Performance</string>
+    <string name="personal_info">Personal Info</string>
 </resources>

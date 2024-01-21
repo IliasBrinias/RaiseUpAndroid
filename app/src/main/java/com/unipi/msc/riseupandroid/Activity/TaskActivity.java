@@ -126,7 +126,7 @@ public class TaskActivity extends AppCompatActivity {
         textViewDescription.setOnClickListener(view->CustomBottomSheet.showEdit(TaskActivity.this,getString(R.string.description),textViewDescription.getText().toString(),dsc->updateTask(new TaskRequest.Builder().setDescription(dsc).build())));
         linearLayoutDueDate.setOnClickListener(view->CustomDatePicker.showPicker(TaskActivity.this,task.getDueDate(), date -> updateTask(new TaskRequest.Builder().setDueTo(date).build())));
         textViewTaskTitle.setOnClickListener(view->CustomBottomSheet.showEdit(TaskActivity.this,getString(R.string.task_name),textViewTaskTitle.getText().toString(),title->updateTask(new TaskRequest.Builder().setTitle(title).build())));
-        imageButtonAddTag.setOnClickListener(view->CustomBottomSheet.addTags(TaskActivity.this,tagIds -> updateTask(new TaskRequest.Builder().setTagIds(tagIds).build())));
+        imageButtonAddTag.setOnClickListener(view->CustomBottomSheet.addTags(TaskActivity.this, task.getTags(),tagIds -> updateTask(new TaskRequest.Builder().setTagIds(tagIds).build())));
         linearLayoutCompleted.setOnClickListener(view -> updateTask(new TaskRequest.Builder().setCompleted(!linearLayoutCompleted.isSelected()).build()));
         textViewColumnName.setOnClickListener((view -> CustomBottomSheet.changeColumn(TaskActivity.this,task,columnId -> updateTask(new TaskRequest.Builder().setColumnId(columnId).build()) )));
         textViewDifficulty.setOnClickListener(v -> CustomBottomSheet.changeDifficulty(TaskActivity.this, difficulty ->updateTask(new TaskRequest.Builder().setDifficulty(difficulty).build())));

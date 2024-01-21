@@ -18,10 +18,12 @@ import com.unipi.msc.riseupandroid.Model.Tag;
 import com.unipi.msc.riseupandroid.R;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     private final Context c;
     private List<Tag> tagList;
+    private List<Tag> allReadySelectedTags;
     private final int layout;
     private OnTagClick onTagClick;
     private boolean isDeletable = false;
@@ -39,9 +41,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         this.onTagClick = onTagClick;
     }
 
-    public TagAdapter(Context c, List<Tag> tagList, int layout, OnTagClick onTagClick) {
+    public TagAdapter(Context c, List<Tag> tagList, List<Tag> allReadySelectedTags, int layout, OnTagClick onTagClick) {
         this.c = c;
         this.tagList = tagList;
+        this.allReadySelectedTags = allReadySelectedTags;
         this.layout = layout;
         this.onTagClick = onTagClick;
     }
@@ -56,7 +59,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TagViewHolder holder, int position) {
         holder.onTagClick = onTagClick;
-        holder.bindData(c, isDeletable, tagList.get(position));
+        if (allReadySelectedTags == null){
+            holder.bindData(c, isDeletable, false, tagList.get(position));
+        }else {
+            holder.bindData(c, isDeletable, allReadySelectedTags.stream().anyMatch(selectedTag -> Objects.equals(selectedTag.getId(), tagList.get(position).getId())), tagList.get(position));
+        }
     }
 
     @Override
@@ -74,17 +81,19 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         private TextView textViewTagName;
         private ImageButton imageButtonDelete;
         private OnTagClick onTagClick;
+        private final View itemView;
 
         public TagViewHolder(@NonNull View itemView) {
             super(itemView);
-            initViews(itemView);
-            initListeners(itemView);
+            this.itemView = itemView;
+            initViews();
+            initListeners();
         }
 
-        private void initListeners(View itemView) {
+        private void initListeners() {
             itemView.setOnClickListener(v->{
                 if (onTagClick==null) return;
-                itemView.setSelected(!itemView.isSelected());
+                v.setSelected(!v.isSelected());
                 onTagClick.onClick(v,getAdapterPosition());
             });
             if (imageButtonDelete!=null){
@@ -95,12 +104,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
             }
         }
 
-        private void initViews(View view) {
-            imageViewTaskColor = view.findViewById(R.id.imageViewTaskColor);
-            textViewTagName = view.findViewById(R.id.textViewTagName);
-            imageButtonDelete = view.findViewById(R.id.imageButtonDelete);
+        private void initViews() {
+            imageViewTaskColor = itemView.findViewById(R.id.imageViewTaskColor);
+            textViewTagName = itemView.findViewById(R.id.textViewTagName);
+            imageButtonDelete = itemView.findViewById(R.id.imageButtonDelete);
         }
-        public void bindData(Context c, boolean isDeletable, Tag task){
+        public void bindData(Context c, boolean isDeletable, boolean isSelected, Tag task){
+
+            if (isSelected) itemView.performClick();
             imageViewTaskColor.setColorFilter(Color.parseColor(task.getColor()), PorterDuff.Mode.ADD);
             textViewTagName.setText(task.getName());
             if (imageButtonDelete != null) imageButtonDelete.setVisibility(isDeletable?View.VISIBLE:View.GONE);

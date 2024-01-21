@@ -91,7 +91,7 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
     public void deleteColumn(int columnPosition) {
         columnList.remove(columnPosition);
-        notifyItemRemoved(columnPosition);
+        notifyItemRemoved(columnPosition + 1);
     }
     public static class PaddingViewHolder extends RecyclerView.ViewHolder {
         public PaddingViewHolder(@NonNull View itemView) {

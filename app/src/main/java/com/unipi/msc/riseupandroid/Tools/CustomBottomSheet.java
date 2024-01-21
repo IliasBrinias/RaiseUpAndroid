@@ -211,7 +211,7 @@ public class CustomBottomSheet {
     public static void AddTaskName(Activity activity, OnTaskNameResponse onAddColumnResponse) {
         singleInput(activity,activity.getString(R.string.task_name), onAddColumnResponse::onResponse);
     }
-    public static void addTags(Activity activity, OnTagSelected onTagSelected){
+    public static void addTags(Activity activity, List<Tag> allReadySelectedTags, OnTagSelected onTagSelected){
 
         List<Tag> tags = new ArrayList<>();
         Map<Long,Boolean> selectedTags = new HashMap<>();
@@ -227,7 +227,7 @@ public class CustomBottomSheet {
         Button buttonSubmit = view.findViewById(R.id.buttonSubmit);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
 
-        TagAdapter tagAdapter = new TagAdapter(activity, new ArrayList<>(), R.layout.add_tag_line_layout, (v, position) -> {
+        TagAdapter tagAdapter = new TagAdapter(activity, new ArrayList<>(), allReadySelectedTags, R.layout.add_tag_line_layout, (v, position) -> {
             selectedTags.put(tags.get(position).getId(), v.isSelected());
             buttonSubmit.setActivated(selectedTags.containsValue(true));
         });

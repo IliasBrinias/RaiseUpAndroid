@@ -92,6 +92,7 @@ public class StatisticsFragment extends Fragment {
         raiseUpAPI = RetrofitClient.getInstance(requireActivity()).create(RaiseUpAPI.class);
         ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault()).with(LocalTime.of(2, 0));
         endUnixDate = now.toInstant().toEpochMilli();
+        endUnixDate = ActivityUtils.getEndOfDay(endUnixDate);
         now = now.plusDays(-7);
         startUnixDate = now.toInstant().toEpochMilli();
         textViewStartDate.setText(ActivityUtils.normalizeDate(startUnixDate));

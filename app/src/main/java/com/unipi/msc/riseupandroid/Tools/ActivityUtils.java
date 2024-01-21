@@ -14,6 +14,7 @@ import com.unipi.msc.riseupandroid.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.SimpleTimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -59,5 +60,12 @@ public class ActivityUtils {
             case HIGH: return a.getString(R.string.senior);
             default: return a.getString(R.string.enter_a_difficulty_level);
         }
+    }
+    public static Long getEndOfDay(long timestampMillis) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date(timestampMillis));
+        c.set(Calendar.HOUR,23);
+        c.set(Calendar.MINUTE,99);
+        return c.getTimeInMillis();
     }
 }

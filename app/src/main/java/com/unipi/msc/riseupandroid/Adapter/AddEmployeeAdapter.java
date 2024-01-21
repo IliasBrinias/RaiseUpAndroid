@@ -70,7 +70,7 @@ public class AddEmployeeAdapter extends RecyclerView.Adapter<AddEmployeeAdapter.
             imageViewProfile = itemView.findViewById(R.id.imageViewProfile);
             textViewName = itemView.findViewById(R.id.textViewName);
         }
-        public void bindData(Activity a,boolean isAllReadySelected, User user, OnAddEmployeeClickListener listener){
+        public void bindData(Activity a, boolean isAllReadySelected, User user, OnAddEmployeeClickListener listener){
             ImageUtils.loadProfileToImageView(a, user.getProfile(), imageViewProfile);
             textViewName.setText(user.getFullName());
             onAddEmployeeClickListener = listener;

@@ -105,7 +105,7 @@ public class SaveBoardActivity extends AppCompatActivity {
         CustomBottomSheet.AddBoardColumn(this, columnName -> columnAdapter.addData(Column.getInstance(columnName)));
     }
     private void addEmployees(View view) {
-        CustomBottomSheet.addEmployees(this, users, 0L, true,employees -> employeeAdapter.setData(employees));
+        CustomBottomSheet.addEmployees(this, users, 0L, true, employees -> employeeAdapter.setData(employees));
     }
     private void saveBoard(View view) {
         List<Long> userIds = new ArrayList<>();
