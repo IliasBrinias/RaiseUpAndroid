@@ -39,7 +39,14 @@ public class EmployeeStatisticsAdapter extends RecyclerView.Adapter<EmployeeStat
         if (userList.get(0).getCompletedTask() == 0) isWinner = false;
         holder.bindData(a, isWinner, userList.get(position));
     }
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     @Override
     public int getItemCount() {
         return userList.size();

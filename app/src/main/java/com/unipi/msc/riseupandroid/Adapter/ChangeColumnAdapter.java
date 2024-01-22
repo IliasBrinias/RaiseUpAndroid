@@ -49,7 +49,14 @@ public class ChangeColumnAdapter extends RecyclerView.Adapter<ChangeColumnAdapte
     public void refreshData() {
         notifyDataSetChanged();
     }
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public static class ColumnViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
         LinearLayout linearLayout;

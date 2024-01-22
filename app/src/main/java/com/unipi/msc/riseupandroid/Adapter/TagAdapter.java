@@ -75,7 +75,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
         tagList = tags;
         notifyDataSetChanged();
     }
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public static class TagViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageViewTaskColor;
         private TextView textViewTagName;

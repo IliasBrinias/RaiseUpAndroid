@@ -65,7 +65,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void refreshData() {
         notifyDataSetChanged();
     }
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageView0, imageView1, imageView2;
         private ImageButton imageButtonDeleteTask, imageButtonNextColumn, imageButtonPreviousColumn;

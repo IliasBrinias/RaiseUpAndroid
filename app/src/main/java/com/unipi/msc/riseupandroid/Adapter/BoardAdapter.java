@@ -67,6 +67,15 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
         notifyItemRemoved(position);
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public static class BoardViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageViewAddEmployees, imageView0, imageView1, imageView2, imageViewProfileAdmin;
         private TextView textViewTitle, textViewTasks, textViewEmployees;
@@ -102,14 +111,25 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.BoardViewHol
             textViewTasks.setText(String.valueOf(board.getTotalTasks()));
             textViewEmployees.setText(String.valueOf(board.getUsers().size()));
             textViewTitle.setText(String.valueOf(board.getTitle()));
-            try{
-                ImageUtils.loadProfileToImageView(a,board.getUsers().get(0).getProfile(),imageView0);
-                ImageUtils.loadProfileToImageView(a,board.getUsers().get(1).getProfile(),imageView1);
-                ImageUtils.loadProfileToImageView(a,board.getUsers().get(2).getProfile(),imageView2);
-            }catch (Exception ignore){}
             try {
-                ImageUtils.loadProfileToImageView(a,board.getOwner().getProfile(),imageViewProfileAdmin);
-            }catch (Exception ignore){}
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(0).getProfile(),imageView0);
+                imageView0.setVisibility(View.VISIBLE);
+            }catch (Exception ignore){
+                imageView0.setVisibility(View.GONE);
+            }
+            try{
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(1).getProfile(),imageView1);
+                imageView1.setVisibility(View.VISIBLE);
+            }catch (Exception ignore){
+                imageView1.setVisibility(View.GONE);
+            }
+            try{
+                ImageUtils.loadProfileToImageView(a,board.getUsers().get(2).getProfile(),imageView2);
+                imageView2.setVisibility(View.VISIBLE);
+            }catch (Exception ignore){
+                imageView2.setVisibility(View.GONE);
+            }
+            ImageUtils.loadProfileToImageView(a,board.getOwner().getProfile(),imageViewProfileAdmin);
         }
     }
 }

@@ -51,7 +51,14 @@ public class BoardCreationColumnAdapter extends RecyclerView.Adapter<BoardCreati
         return columns.size();
     }
 
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public void deleteItem(int position) {
         columns.remove(position);
         notifyItemRemoved(position);

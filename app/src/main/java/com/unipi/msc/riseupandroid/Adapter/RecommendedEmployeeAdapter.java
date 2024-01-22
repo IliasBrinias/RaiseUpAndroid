@@ -50,7 +50,14 @@ public class RecommendedEmployeeAdapter extends RecyclerView.Adapter<Recommended
         users.remove(position);
         notifyItemRemoved(position);
     }
-
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageViewProfile;
         TextView textViewName;

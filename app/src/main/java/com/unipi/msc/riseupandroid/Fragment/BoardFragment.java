@@ -42,6 +42,7 @@ import com.unipi.msc.riseupandroid.Tools.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -102,6 +103,7 @@ public class BoardFragment extends Fragment {
 
             @Override
             public boolean onLongClick(View view, int position) {
+                if (!Objects.equals(boardList.get(position).getOwner().getId(), UserUtils.loadUser(getActivity()).getId())) return false;
                 CustomBottomSheet.getBoardProperties(requireActivity(), choice -> {
                     if (choice == CustomBottomSheet.ADD_EMPLOYEES) {
                         BoardFragment.this.addEmployees(position);

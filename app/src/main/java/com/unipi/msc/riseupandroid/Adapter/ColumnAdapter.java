@@ -93,6 +93,10 @@ public class ColumnAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         columnList.remove(columnPosition);
         notifyItemRemoved(columnPosition + 1);
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
     public static class PaddingViewHolder extends RecyclerView.ViewHolder {
         public PaddingViewHolder(@NonNull View itemView) {
             super(itemView);

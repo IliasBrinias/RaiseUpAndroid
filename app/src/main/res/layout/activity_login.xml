@@ -91,16 +91,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="@string/login"
-        app:layout_constraintBottom_toTopOf="@+id/textViewChangePass"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewChangePass"
-        style="@style/alternative_option_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

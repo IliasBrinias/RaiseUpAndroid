@@ -40,17 +40,19 @@ public class GoogleCloudMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         String taskTitle = data.getOrDefault("taskTitle", null);
         String addedBy = data.getOrDefault("addedBy", null);
-        showNotification(addedBy, taskTitle);
+        Long taskId = Long.valueOf(data.getOrDefault("taskId", null));
+        showNotification(addedBy, taskTitle, taskId);
     }
 
     @SuppressLint("MissingPermission")
-    private void showNotification(String addedBy, String taskTitle) {
+    private void showNotification(String addedBy, String taskTitle, Long taskId) {
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
 
         notificationManager.createNotificationChannel(new NotificationChannel(NameTag.CHANNEL_ID, "Smart Alert", NotificationManager.IMPORTANCE_DEFAULT));
 
         Intent intent = new Intent(this, TaskActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(NameTag.TASK_ID, taskId);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NameTag.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_app_icon)
@@ -59,7 +61,7 @@ public class GoogleCloudMessagingService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(addedBy+getString(R.string.added_you_to)+taskTitle))
                 .setAutoCancel(true)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
+                .setContentIntent(PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE))
                 .setChannelId(NameTag.CHANNEL_ID);
         if (notificationManager.areNotificationsEnabled()) {
             notificationManager.notify(123, builder.build());

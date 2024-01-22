@@ -161,7 +161,6 @@ public class BoardActivity extends AppCompatActivity{
                             }
                             ActivityUtils.hideProgressBar(progressBar);
                         }
-
                         @Override
                         public void onFailure(Call<JsonObject> call, Throwable t) {
                             RetrofitUtils.handleException(BoardActivity.this, t);
@@ -193,7 +192,6 @@ public class BoardActivity extends AppCompatActivity{
                         ActivityUtils.hideProgressBar(progressBar);
                     }
                 });
-
             }
         });
         response = new Callback<JsonObject>() {

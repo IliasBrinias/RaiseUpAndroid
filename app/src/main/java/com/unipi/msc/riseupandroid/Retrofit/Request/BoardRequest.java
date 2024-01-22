@@ -5,8 +5,8 @@ import java.util.List;
 
 public class BoardRequest {
     private String title;
-    private List<Long> employeesId = new ArrayList<>();
-    private List<String> columns = new ArrayList<>();
+    private List<Long> employeesId;
+    private List<String> columns;
 
     public BoardRequest(String title, List<Long> employeesId, List<String> columns) {
         this.title = title;
@@ -45,8 +45,8 @@ public class BoardRequest {
     }
     public static class Builder{
         private String title;
-        private List<Long> employeesId = new ArrayList<>();
-        private List<String> columns = new ArrayList<>();
+        private List<Long> employeesId = null;
+        private List<String> columns = null;
 
         public Builder setTitle(String title) {
             this.title = title;

@@ -42,6 +42,14 @@ public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.Employ
     public int getItemCount() {
         return users.size();
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
     public void setData(List<User> employees) {
         users.clear();
         users.addAll(employees);

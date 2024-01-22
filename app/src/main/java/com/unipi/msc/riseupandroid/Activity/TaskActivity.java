@@ -170,7 +170,11 @@ public class TaskActivity extends AppCompatActivity {
         tagAdapter.setData(this.task.getTags());
         employeeAdapter.setData(this.task.getUsers());
         linearLayoutCompleted.setSelected(task.getCompleted());
-        if (task.getUsers().isEmpty() || !recommendedUsers.isEmpty()) recommendUsers(task);
+        if (task.getUsers().isEmpty() || !recommendedUsers.isEmpty()) {
+            recommendUsers(task);
+        }else{
+            constraintLayoutRecommendation.setVisibility(View.GONE);
+        }
     }
     private void recommendUsers(Task task) {
         constraintLayoutRecommendation.setVisibility(View.VISIBLE);

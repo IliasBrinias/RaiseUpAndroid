@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     View includeErrorMessage;
     EditText editTextUsername, editTextPassword;
     Button buttonLogin;
-    TextView textViewChangePass, textViewErrorMessage;
+    TextView textViewErrorMessage;
     RaiseUpAPI raiseUpAPI;
     ProgressBar progressBar;
     @Override
@@ -51,21 +51,14 @@ public class LoginActivity extends AppCompatActivity {
     private void initListeners() {
         imageButtonClose.setOnClickListener(view -> finish());
         buttonLogin.setOnClickListener(this::login);
-        textViewChangePass.setOnClickListener(this::forgotPassword);
         ActivityUtils.hideProgressBar(progressBar);
         KeyboardVisibilityEvent.setEventListener(this, isOpen -> {
             if (isOpen){
                 buttonLogin.setVisibility(View.GONE);
-                textViewChangePass.setVisibility(View.GONE);
             }else {
                 buttonLogin.setVisibility(View.VISIBLE);
-                textViewChangePass.setVisibility(View.VISIBLE);
             }
         });
-    }
-
-    private void forgotPassword(View view) {
-//        TODO: Forgot Password
     }
 
     private void login(View view) {
@@ -106,7 +99,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
-        textViewChangePass = findViewById(R.id.textViewChangePass);
         includeErrorMessage = findViewById(R.id.includeErrorMessage);
         textViewErrorMessage = includeErrorMessage.findViewById(R.id.textViewErrorMessage);
         progressBar = findViewById(R.id.progressBar);
